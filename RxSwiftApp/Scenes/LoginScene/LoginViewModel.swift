@@ -41,13 +41,11 @@ final class LoginViewModel: ViewModelType {
         let errorMessage: Driver<String>
     }
 
-    private let loginUsecase: LoginUsecase
-    private let userUsecase: UserUsecase
+    private let usecase: LoginUsecase
     private let navigator: LoginNavigator
 
-    init(loginUsecase: LoginUsecase, userUsecase: UserUsecase, navigator: LoginNavigator) {
-        self.loginUsecase = loginUsecase
-        self.userUsecase = userUsecase
+    init(usecase: LoginUsecase, navigator: LoginNavigator) {
+        self.usecase = usecase
         self.navigator = navigator
     }
 
@@ -94,18 +92,15 @@ final class LoginViewModel: ViewModelType {
         let onLogin = input.loginTrigger
             .withLatestFrom(loginCredential)
             .filter { combined in return combined.3 }
-            .debug()
             .map { combined in return (combined.0, combined.1, combined.2) }
             .flatMapLatest { [weak self] name, email, password -> Driver<Void> in
                 guard let self = self else { return .empty() }
                 let request: Observable<Void> = {
                     switch kind.value {
                     case .signIn:
-                        return self.loginUsecase.signIn(withEmail: email, password: password)
+                        return self.usecase.signIn(withEmail: email, password: password)
                     case .signUp:
-                        return self.loginUsecase
-                            .createUser(withEmail: email, password: password)
-                            .concatMap { self.userUsecase.updateUserName(name, for: $0) }
+                        return self.usecase.signUp(withName: name, email: email, password: password)
                     }
                 }()
                 return request

@@ -25,7 +25,7 @@ final class UserViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let errorTracker = ErrorTracker()
-        let user = Driver.of(usecase.getUser()).compactMap { $0 }
+        let user = usecase.getUser().asDriverOnErrorJustComplete()
         let uid = user.map { "UID: \($0.uid)" }
         let displayName = user.compactMap { $0.displayName }.map { "Name: \($0)" }
         let email = user.compactMap { $0.email }.map { "Email: \($0)" }

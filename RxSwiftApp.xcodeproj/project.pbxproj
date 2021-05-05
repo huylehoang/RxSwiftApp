@@ -17,8 +17,7 @@
 		1022F76F26404930007AE3F2 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F76E26404930007AE3F2 /* ViewModelType.swift */; };
 		1022F77326404989007AE3F2 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F77226404989007AE3F2 /* LoginViewModel.swift */; };
 		1022F77626414127007AE3F2 /* LoginUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F77526414127007AE3F2 /* LoginUsecase.swift */; };
-		104C9BBE2643221A00D4FB8B /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BBD2643221A00D4FB8B /* LoginService.swift */; };
-		104C9BC22643226700D4FB8B /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BC12643226700D4FB8B /* UserService.swift */; };
+		104C9BBE2643221A00D4FB8B /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BBD2643221A00D4FB8B /* AuthService.swift */; };
 		108E9270263FA62600C70AD8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E926F263FA62600C70AD8 /* AppDelegate.swift */; };
 		108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9271263FA62600C70AD8 /* SceneDelegate.swift */; };
 		108E9279263FA62700C70AD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 108E9278263FA62700C70AD8 /* Assets.xcassets */; };
@@ -49,8 +48,7 @@
 		1022F76E26404930007AE3F2 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		1022F77226404989007AE3F2 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		1022F77526414127007AE3F2 /* LoginUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUsecase.swift; sourceTree = "<group>"; };
-		104C9BBD2643221A00D4FB8B /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
-		104C9BC12643226700D4FB8B /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		104C9BBD2643221A00D4FB8B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		108E926C263FA62600C70AD8 /* RxSwiftApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxSwiftApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		108E926F263FA62600C70AD8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		108E9271263FA62600C70AD8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -145,8 +143,7 @@
 		104C9BBC2643220600D4FB8B /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				104C9BBD2643221A00D4FB8B /* LoginService.swift */,
-				104C9BC12643226700D4FB8B /* UserService.swift */,
+				104C9BBD2643221A00D4FB8B /* AuthService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -360,14 +357,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				84687ABF264299660071ADA7 /* Reactive+Extensions.swift in Sources */,
-				104C9BC22643226700D4FB8B /* UserService.swift in Sources */,
 				1022F77626414127007AE3F2 /* LoginUsecase.swift in Sources */,
 				1022F75B26400F47007AE3F2 /* Observable+Extension.swift in Sources */,
 				8476D0CE26428B00002C8CB9 /* Application.swift in Sources */,
 				1022F75426400EC1007AE3F2 /* ActivityIndicator.swift in Sources */,
 				1022F76326402BB0007AE3F2 /* LoginScene.swift in Sources */,
 				1022F75E26400FAE007AE3F2 /* TextValidator.swift in Sources */,
-				104C9BBE2643221A00D4FB8B /* LoginService.swift in Sources */,
+				104C9BBE2643221A00D4FB8B /* AuthService.swift in Sources */,
 				8476D0B5264251E3002C8CB9 /* UIApplication+Extensions.swift in Sources */,
 				8476D0B8264259F2002C8CB9 /* IndicatorView.swift in Sources */,
 				8476D0CA26427E8A002C8CB9 /* UserNavigator.swift in Sources */,

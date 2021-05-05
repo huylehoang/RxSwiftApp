@@ -1,33 +1,20 @@
 import RxSwift
 import FirebaseAuth
 
-final class UserUsecase {
-    private let service: UserService
+protocol UserUsecase {
+    func getUser() -> Observable<User>
+    func signOut() -> Observable<Void>
+}
 
-    init(service: UserService = DefaultUserService()) {
+final class DefaultUserUsecase: UserUsecase {
+    private let service: AuthService
+
+    init(service: AuthService = DefaultAuthService()) {
         self.service = service
     }
 
-    func getUser() -> User? {
-        return service.getUser()
-    }
-
-    func updateUserName(_ name: String, for user: User) -> Observable<Void> {
-        return .create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            self.service.updateUserName(name, for: user) { result in
-                switch result {
-                case .success:
-                    observer.onNext(())
-                case .failure(let error):
-                    observer.onError(error)
-                }
-            }
-            return Disposables.create()
-        }
+    func getUser() -> Observable<User> {
+        return Observable.just(service.getUser()).compactMap { $0 }
     }
 
     func signOut() -> Observable<Void> {

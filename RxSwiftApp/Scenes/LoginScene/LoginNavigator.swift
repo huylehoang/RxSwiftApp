@@ -1,6 +1,10 @@
 import UIKit
 
-final class LoginNavigator {
+protocol LoginNavigator {
+    func toUser()
+}
+
+final class DefaultLoginNavigator: LoginNavigator {
     private let navigationController: UINavigationController
 
     init(navigationController: UINavigationController) {
@@ -8,9 +12,9 @@ final class LoginNavigator {
     }
 
     func toUser() {
-        let userUsecase = UserUsecase()
-        let userNavigator = UserNavigator(navigationController: navigationController)
-        let userViewModel = UserViewModel(usecase: userUsecase, navigator: userNavigator)
+        let usecase = DefaultUserUsecase()
+        let userNavigator = DefaultUserNavigator(navigationController: navigationController)
+        let userViewModel = UserViewModel(usecase: usecase, navigator: userNavigator)
         let userScene = UserScene(viewModel: userViewModel)
         navigationController.pushViewController(userScene, animated: true)
     }

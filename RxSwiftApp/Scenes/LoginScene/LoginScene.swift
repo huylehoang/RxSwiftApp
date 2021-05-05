@@ -12,6 +12,7 @@ final class LoginScene: BaseViewController {
     private lazy var nameField: ValidationTextfield = {
         let view = ValidationTextfield()
         view.placeholder = "Enter name..."
+        view.isHidden = true
         return view
     }()
 
