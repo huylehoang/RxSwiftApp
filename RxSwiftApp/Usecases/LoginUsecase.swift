@@ -7,14 +7,4 @@ final class LoginUsecase {
             completion(error)
         }
     }
-
-    func signOut() -> String? {
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-            return nil
-        } catch {
-            return String(format: "Error signing out: %@", error.localizedDescription)
-        }
-    }
 }

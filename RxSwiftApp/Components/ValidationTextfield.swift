@@ -35,29 +35,20 @@ final class ValidationTextfield: UIStackView {
         }
     }
 
-    fileprivate let isEditing = BehaviorRelay(value: false)
-    private let disposeBag = DisposeBag()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        setupObserver()
     }
 
     required init(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
-        setupObserver()
     }
 }
 
 extension Reactive where Base: ValidationTextfield {
     var text: ControlProperty<String> {
         return base.textfield.rx.text.orEmpty
-    }
-
-    var isEditing: Driver<Bool> {
-        return base.isEditing.asDriver()
     }
 
     var error: Binder<String> {
@@ -87,17 +78,5 @@ private extension ValidationTextfield {
             separator.heightAnchor.constraint(equalToConstant: 1)
         ]
         NSLayoutConstraint.activate(constraints)
-    }
-
-    func setupObserver() {
-        textfield.rx.controlEvent(.editingChanged)
-            .map { true }
-            .bind(to: isEditing)
-            .disposed(by: disposeBag)
-
-        textfield.rx.controlEvent(.editingDidEnd)
-            .map { false }
-            .bind(to: isEditing)
-            .disposed(by: disposeBag)
     }
 }

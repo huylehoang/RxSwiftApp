@@ -2,7 +2,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class LoginScene: UIViewController {
+final class LoginScene: BaseViewController {
     private lazy var emailField: ValidationTextfield = {
         let view = ValidationTextfield()
         view.placeholder = "Enter email..."
@@ -23,50 +23,50 @@ final class LoginScene: UIViewController {
         view.setTitle("LOGIN", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.setTitleColor(.lightGray, for: .disabled)
+        view.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         return view
     }()
 
-    private var viewModel: LoginViewModel!
+    private let viewModel: LoginViewModel
 
     private let disposeBag = DisposeBag()
 
-    override func loadView() {
-        super.loadView()
-        viewModel = LoginViewModel(usecase: LoginUsecase())
-        setupView()
-        setupObserver()
+    init(viewModel: LoginViewModel) {
+        self.viewModel = viewModel
+        super.init()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
+    override func loadView() {
+        super.loadView()
+        setupView()
+        setupBinding()
     }
 }
 
 private extension LoginScene {
     func setupView() {
-        view.backgroundColor = .white
+        contentView.backgroundColor = .white
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 16
+        stackView.spacing = 32
         stackView.distribution = .fill
         stackView.alignment = .fill
-        view.addSubview(stackView)
+        contentView.addSubview(stackView)
         stackView.addArrangedSubview(emailField)
         stackView.addArrangedSubview(passwordField)
         stackView.addArrangedSubview(loginButton)
         let constraints = [
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
             loginButton.heightAnchor.constraint(equalToConstant: 40),
         ]
         NSLayoutConstraint.activate(constraints)
     }
 
-    func setupObserver() {
+    func setupBinding() {
         loginButton.rx.tap
             .bind { [weak self] _ in
                 self?.view.endEditing(true)
@@ -75,9 +75,7 @@ private extension LoginScene {
 
         let input = LoginViewModel.Input(
             email: emailField.rx.text.asDriver(),
-            emailIsEditing: emailField.rx.isEditing,
             password: passwordField.rx.text.asDriver(),
-            passwordIsEditing: passwordField.rx.isEditing,
             loginTrigger: loginButton.rx.tap.asDriver())
 
         let output = viewModel.transform(input: input)
@@ -86,9 +84,10 @@ private extension LoginScene {
             output.emailError.drive(emailField.rx.error),
             output.passwordError.drive(passwordField.rx.error),
             output.enableLogin.drive(loginButton.rx.isEnabled),
+            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
+            output.errorMessage.drive(rx.showErrorMessage),
             output.onLogin.drive(),
         ]
         .forEach { $0.disposed(by: disposeBag) }
-
     }
 }
