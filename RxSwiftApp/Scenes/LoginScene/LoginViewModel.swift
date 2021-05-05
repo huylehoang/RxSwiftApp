@@ -36,7 +36,7 @@ final class LoginViewModel: ViewModelType {
         let selectedSegmentIndex: Driver<Int>
         let hideNameField: Driver<Bool>
         let loginButtonTitle: Driver<String>
-        let resetField: Driver<String>
+        let emptyField: Driver<String>
         let embeddedLoading: Driver<Bool>
         let errorMessage: Driver<String>
     }
@@ -130,7 +130,7 @@ final class LoginViewModel: ViewModelType {
 
         let loginButtonTitle = kind.map { $0.title }.asDriverOnErrorJustComplete()
 
-        let resetField = kind.map { _ in return "" }.asDriverOnErrorJustComplete()
+        let emptyField = kind.map { _ in return "" }.asDriverOnErrorJustComplete()
 
         let embeddedLoading = indicator.asDriver()
 
@@ -147,7 +147,7 @@ final class LoginViewModel: ViewModelType {
             selectedSegmentIndex: selectedSegmentIndex,
             hideNameField: hideNameField,
             loginButtonTitle: loginButtonTitle,
-            resetField: resetField,
+            emptyField: emptyField,
             embeddedLoading: embeddedLoading,
             errorMessage: errorMessage)
     }

@@ -71,7 +71,7 @@ extension Reactive where Base: ValidationTextfield {
         }
     }
 
-    var animtedHiddden: Binder<Bool> {
+    var animatedHiddden: Binder<Bool> {
         return Binder(base) { view, hidden in
             guard view.isHidden != hidden else { return }
             UIView.animate(withDuration: 0.25) {
@@ -79,6 +79,13 @@ extension Reactive where Base: ValidationTextfield {
                 view.alpha = hidden ? 0 : 1
                 view.superview?.layoutIfNeeded()
             }
+        }
+    }
+
+    var forceEmpty: Binder<String> {
+        return Binder(base) { view, empty in
+            text.onNext(empty)
+            error.onNext(empty)
         }
     }
 }
