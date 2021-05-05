@@ -20,6 +20,14 @@ final class ValidationTextfield: UIStackView {
         view.numberOfLines = 0
         view.textColor = .systemRed
         view.font = .systemFont(ofSize: 16, weight: .regular)
+        view.isHidden = true
+        return view
+    }()
+
+    private lazy var separator: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBlue
         return view
     }()
 
@@ -54,8 +62,21 @@ extension Reactive where Base: ValidationTextfield {
     var error: Binder<String> {
         return Binder(base) { view, error in
             view.errorLabel.text = error
+            let isHidden = error.isEmpty
+            guard view.errorLabel.isHidden != isHidden else { return }
             UIView.animate(withDuration: 0.25) {
-                view.errorLabel.isHidden = error.isEmpty
+                view.errorLabel.isHidden = isHidden
+                view.layoutIfNeeded()
+            }
+        }
+    }
+
+    var animtedHiddden: Binder<Bool> {
+        return Binder(base) { view, hidden in
+            guard view.isHidden != hidden else { return }
+            UIView.animate(withDuration: 0.25) {
+                view.isHidden = hidden
+                view.alpha = hidden ? 0 : 1
                 view.superview?.layoutIfNeeded()
             }
         }
@@ -67,9 +88,6 @@ private extension ValidationTextfield {
         axis = .vertical
         distribution = .fill
         spacing = 8
-        let separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .systemBlue
         addArrangedSubview(textfield)
         addArrangedSubview(separator)
         addArrangedSubview(errorLabel)

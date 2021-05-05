@@ -25,6 +25,7 @@ final class TextValidator {
 
 extension TextValidator {
     enum Kind {
+        case name
         case email
         case password
     }
@@ -33,6 +34,8 @@ extension TextValidator {
 private extension TextValidator.Kind {
     var regEx: String {
         switch self {
+        case .name:
+            return "\\w{7,18}"
         case .email:
             return "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         case .password:
@@ -42,6 +45,8 @@ private extension TextValidator.Kind {
 
     var error: String {
         switch self {
+        case .name:
+            return "7 - 18 characters"
         case .email:
             return "Please enter a valid email address"
         case .password:

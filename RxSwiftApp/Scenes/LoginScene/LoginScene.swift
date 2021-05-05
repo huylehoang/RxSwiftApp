@@ -3,6 +3,18 @@ import RxSwift
 import RxCocoa
 
 final class LoginScene: BaseViewController {
+    private lazy var segmentControl: UISegmentedControl = {
+        let items = LoginViewModel.Kind.allCases.map { $0.title }
+        let view = UISegmentedControl(items: items)
+        return view
+    }()
+
+    private lazy var nameField: ValidationTextfield = {
+        let view = ValidationTextfield()
+        view.placeholder = "Enter name..."
+        return view
+    }()
+
     private lazy var emailField: ValidationTextfield = {
         let view = ValidationTextfield()
         view.placeholder = "Enter email..."
@@ -20,7 +32,6 @@ final class LoginScene: BaseViewController {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBlue
-        view.setTitle("LOGIN", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.setTitleColor(.lightGray, for: .disabled)
         view.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
@@ -54,6 +65,8 @@ private extension LoginScene {
         stackView.distribution = .fill
         stackView.alignment = .fill
         contentView.addSubview(stackView)
+        stackView.addArrangedSubview(segmentControl)
+        stackView.addArrangedSubview(nameField)
         stackView.addArrangedSubview(emailField)
         stackView.addArrangedSubview(passwordField)
         stackView.addArrangedSubview(loginButton)
@@ -74,19 +87,31 @@ private extension LoginScene {
             .disposed(by: disposeBag)
 
         let input = LoginViewModel.Input(
+            name: nameField.rx.text.asDriver(),
             email: emailField.rx.text.asDriver(),
             password: passwordField.rx.text.asDriver(),
-            loginTrigger: loginButton.rx.tap.asDriver())
+            segmentChanged: segmentControl.rx.selectedSegmentIndex.asDriver(),
+            loginTrigger: loginButton.rx.tap.asDriver(),
+            viewDidDisappear: rx.viewDidDisappear.asDriver())
 
         let output = viewModel.transform(input: input)
 
         [
+            output.nameError.drive(nameField.rx.error),
             output.emailError.drive(emailField.rx.error),
             output.passwordError.drive(passwordField.rx.error),
             output.enableLogin.drive(loginButton.rx.isEnabled),
+            output.onLogin.drive(),
+            output.onSegmentChanged.drive(),
+            output.resetSegment.drive(),
+            output.selectedSegmentIndex.drive(segmentControl.rx.selectedSegmentIndex),
+            output.hideNameField.drive(nameField.rx.animtedHiddden),
+            output.loginButtonTitle.drive(loginButton.rx.title()),
+            output.resetField.drive(nameField.rx.text),
+            output.resetField.drive(emailField.rx.text),
+            output.resetField.drive(passwordField.rx.text),
             output.embeddedLoading.drive(rx.showEmbeddedIndicator),
             output.errorMessage.drive(rx.showErrorMessage),
-            output.onLogin.drive(),
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }
