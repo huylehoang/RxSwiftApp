@@ -14,7 +14,6 @@ extension Reactive where Base: BaseViewController {
 }
 
 extension Reactive where Base: BaseViewController {
-    // Reactive wrapper for showing error message alert on topViewController
     var showErrorMessage: Binder<String> {
         return Binder(base) { _, message in
             showErrorAlert(message: message)

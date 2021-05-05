@@ -33,7 +33,7 @@ final class UserViewModel: ViewModelType {
         let onSignOut = input.signOutTrigger
             .flatMapLatest { [weak self] _ -> Driver<Void> in
                 guard let self = self else { return .empty() }
-                return self.signOut()
+                return self.usecase.signOut()
                     .trackError(errorTracker)
                     .asDriverOnErrorJustComplete()
             }
@@ -48,22 +48,5 @@ final class UserViewModel: ViewModelType {
             email: email,
             onSignOut: onSignOut,
             errorMessage: errorMessage)
-    }
-}
-
-private extension UserViewModel {
-    func signOut() -> Observable<Void> {
-        return Observable.create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            if let error = self.usecase.signOut() {
-                observer.onError(error)
-            } else {
-                observer.onNext(())
-            }
-            return Disposables.create()
-        }
     }
 }

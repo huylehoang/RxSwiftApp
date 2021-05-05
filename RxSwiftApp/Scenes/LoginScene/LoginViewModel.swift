@@ -101,9 +101,11 @@ final class LoginViewModel: ViewModelType {
                 let request: Observable<Void> = {
                     switch kind.value {
                     case .signIn:
-                        return self.login(withEmail: email, password: password)
+                        return self.loginUsecase.signIn(withEmail: email, password: password)
                     case .signUp:
-                        return self.register(withName: name, email: email, password: password)
+                        return self.loginUsecase
+                            .createUser(withEmail: email, password: password)
+                            .concatMap { self.userUsecase.updateUserName(name, for: $0) }
                     }
                 }()
                 return request
@@ -150,69 +152,5 @@ final class LoginViewModel: ViewModelType {
             emptyField: emptyField,
             embeddedLoading: embeddedLoading,
             errorMessage: errorMessage)
-    }
-}
-
-private extension LoginViewModel {
-    func login(withEmail email: String, password: String) -> Observable<Void> {
-        return Observable.create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            self.loginUsecase.login(withEmail: email, password: password) { result in
-                switch result {
-                case .success:
-                    observer.onNext(())
-                case .failure(let error):
-                    observer.onError(error)
-                }
-            }
-            return Disposables.create()
-        }
-    }
-
-    func register(withName name: String, email: String, password: String) -> Observable<Void> {
-        return register(withEmail: email, password: password)
-            .concatMap { [weak self] user -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                return self.updateUserName(name, for: user)
-            }
-    }
-
-    func register(withEmail email: String, password: String) -> Observable<User> {
-        return .create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            self.loginUsecase.register(withEmail: email, password: password) { result in
-                switch result {
-                case .success(let user):
-                    observer.onNext(user)
-                case .failure(let error):
-                    observer.onError(error)
-                }
-            }
-            return Disposables.create()
-        }
-    }
-
-    func updateUserName(_ name: String, for user: User) -> Observable<Void> {
-        return .create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            self.userUsecase.updateUserName(name, for: user) { result in
-                switch result {
-                case .success:
-                    observer.onNext(())
-                case .failure(let error):
-                    observer.onError(error)
-                }
-            }
-            return Disposables.create()
-        }
     }
 }

@@ -1,34 +1,46 @@
-import Foundation
+import RxSwift
 import FirebaseAuth
 
 final class LoginUsecase {
-    func login(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        Auth.auth().signIn(withEmail: email, password: password) { _, error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    private let service: LoginService
+
+    init(service: LoginService = DefaultLoginService()) {
+        self.service = service
+    }
+
+    func signIn(withEmail email: String, password: String) -> Observable<Void> {
+        return Observable.create { [weak self] observer -> Disposable in
+            guard let self = self else {
+                observer.onCompleted()
+                return Disposables.create()
             }
+            self.service.signIn(withEmail: email, password: password) { result in
+                switch result {
+                case .success:
+                    observer.onNext(())
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
         }
     }
 
-    func register(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<User, Error>) -> Void
-    ) {
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            if let user = authResult?.user {
-                completion(.success(user))
-            } else if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.failure(NSError(domain: "Something wrong!!!", code: 0, userInfo: nil)))
+    func createUser(withEmail email: String, password: String) -> Observable<User> {
+        return .create { [weak self] observer -> Disposable in
+            guard let self = self else {
+                observer.onCompleted()
+                return Disposables.create()
             }
+            self.service.createUser(withEmail: email, password: password) { result in
+                switch result {
+                case .success(let user):
+                    observer.onNext(user)
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
         }
     }
 }

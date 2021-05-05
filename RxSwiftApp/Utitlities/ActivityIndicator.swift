@@ -15,7 +15,9 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
             .distinctUntilChanged()
     }
 
-    fileprivate func trackActivityOfObservable<O: ObservableConvertibleType>(_ source: O) -> Observable<O.Element> {
+    fileprivate func trackActivityOfObservable<O: ObservableConvertibleType>(
+        _ source: O
+    ) -> Observable<O.Element> {
         return source.asObservable()
             .do(onNext: { _ in
                 self.sendStopLoading()

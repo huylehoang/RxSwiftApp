@@ -7,7 +7,6 @@ extension ObservableType where Element == Bool {
     public func not() -> Observable<Bool> {
         return self.map(!)
     }
-
 }
 
 extension SharedSequenceConvertibleType {
@@ -17,7 +16,6 @@ extension SharedSequenceConvertibleType {
 }
 
 extension ObservableType {
-
     func catchErrorJustComplete() -> Observable<Element> {
         return catchError { _ in
             return Observable.empty()
