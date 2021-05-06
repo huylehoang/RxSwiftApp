@@ -46,7 +46,7 @@ private extension TextValidator.Kind {
     var error: String {
         switch self {
         case .name:
-            return "7 - 18 characters"
+            return "7 - 18 characters without special characters"
         case .email:
             return "Please enter a valid email address"
         case .password:
