@@ -109,7 +109,6 @@ final class LoginViewModel: ViewModelType {
                     .asDriverOnErrorJustComplete()
             }
             .do(onNext: navigator.toUser)
-            .mapToVoid()
 
         let onSegmentChanged = input.segmentChanged
             .compactMap(Kind.init)

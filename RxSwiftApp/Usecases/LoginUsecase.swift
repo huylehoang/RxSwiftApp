@@ -15,13 +15,17 @@ final class DefaultLoginUsecase: LoginUsecase {
 
     func signIn(withEmail email: String, password: String) -> Observable<Void> {
         return service.signIn(withEmail: email, password: password)
+            .flatMap { UserDefaults.setValue(password, forKey: .userPassword) }
     }
 
     func signUp(withName name: String, email: String, password: String) -> Observable<Void> {
         return service.createUser(withEmail: email, password: password)
-            .concatMap { [weak self] user -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                return self.service.updateUserName(name, for: user)
+            .flatMap { [weak self] user in
+                return self?.service.updateUserName(name, for: user) ?? .empty()
             }
+            .catchError { [weak self] error in
+                return self?.service.deleteUser(by: error) ?? .empty()
+            }
+            .flatMap { UserDefaults.setValue(password, forKey: .userPassword) }
     }
 }

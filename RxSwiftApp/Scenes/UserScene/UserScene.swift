@@ -15,12 +15,15 @@ final class UserScene: BaseViewController {
         return makeLabel()
     }()
 
+    private lazy var reAuthenticateButton: UIButton = {
+        let view = makeUserActionButton()
+        view.setTitle("Re-Authenticate", for: .normal)
+        return view
+    }()
+
     private lazy var deleteButton: UIButton = {
-        let view = UIButton()
+        let view = makeUserActionButton()
         view.setTitle("Delete", for: .normal)
-        view.setTitleColor(.systemBlue, for: .normal)
-        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
-        view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
     }()
 
@@ -64,6 +67,7 @@ private extension UserScene {
         stackView.addArrangedSubview(uidLabel)
         stackView.addArrangedSubview(displayNameLabel)
         stackView.addArrangedSubview(emailLabel)
+        stackView.addArrangedSubview(reAuthenticateButton)
         stackView.addArrangedSubview(deleteButton)
         contentView.addSubview(signOutButton)
         let constraints = [
@@ -108,17 +112,20 @@ private extension UserScene {
             }
 
         let input = UserViewModel.Input(
+            viewDidLoad: rx.viewDidLoad.asDriver(),
+            reAuthenticateTrigger: reAuthenticateButton.rx.tap.asDriver(),
             deleteTrigger: deleteTrigger.asDriverOnErrorJustComplete(),
             signOutTrigger: signOutButton.rx.tap.asDriver())
 
         let output = viewModel.transform(input: input)
 
         [
+            output.onReAuthenticate.drive(),
+            output.onDelete.drive(),
+            output.onSignOut.drive(),
             output.uid.drive(uidLabel.rx.text),
             output.displayName.drive(displayNameLabel.rx.text),
             output.email.drive(emailLabel.rx.text),
-            output.onDelete.drive(),
-            output.onSignOut.drive(),
             output.embeddedLoading.drive(rx.showEmbeddedIndicator),
             output.errorMessage.drive(rx.showErrorMessage),
         ]
@@ -132,6 +139,14 @@ private extension UserScene {
         view.font = .systemFont(ofSize: 18)
         view.textColor = .darkText
         view.numberOfLines = 0
+        return view
+    }
+
+    func makeUserActionButton() -> UIButton {
+        let view = UIButton()
+        view.setTitleColor(.systemBlue, for: .normal)
+        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
+        view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
     }
 }

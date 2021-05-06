@@ -6,7 +6,9 @@ protocol AuthService {
     func createUser(withEmail email: String, password: String) -> Observable<User>
     func updateUserName(_ name: String, for user: User) -> Observable<Void>
     func getUser() -> Observable<User>
+    func reAuthenticate(withEmail email: String, password: String) -> Observable<Void>
     func deleteUser() -> Observable<Void>
+    func deleteUser(by error: Error) -> Observable<Void>
     func signOut() -> Observable<Void>
 }
 
@@ -62,6 +64,25 @@ final class DefaultAuthService: AuthService {
         return Observable.just(Auth.auth().currentUser).compactMap { $0 }
     }
 
+    func reAuthenticate(withEmail email: String, password: String) -> Observable<Void> {
+        return .create { observer -> Disposable in
+            guard let user = Auth.auth().currentUser else {
+                observer.onCompleted()
+                return Disposables.create()
+            }
+            let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+            user.reauthenticate(with: credential) { _, error in
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onNext(())
+                    observer.onCompleted()
+                }
+            }
+            return Disposables.create()
+        }
+    }
+
     func deleteUser() -> Observable<Void> {
         return .create { observer -> Disposable in
             guard let user = Auth.auth().currentUser else {
@@ -74,6 +95,23 @@ final class DefaultAuthService: AuthService {
                 } else {
                     observer.onNext(())
                     observer.onCompleted()
+                }
+            }
+            return Disposables.create()
+        }
+    }
+
+    func deleteUser(by error: Error) -> Observable<Void> {
+        return .create { observer -> Disposable in
+            guard let user = Auth.auth().currentUser else {
+                observer.onCompleted()
+                return Disposables.create()
+            }
+            user.delete { deletingError in
+                if let deletingError = deletingError {
+                    observer.onError(deletingError)
+                } else {
+                    observer.onError(error)
                 }
             }
             return Disposables.create()
