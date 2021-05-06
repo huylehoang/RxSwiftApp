@@ -14,8 +14,7 @@ final class Application {
         let loginScene = LoginScene(viewModel: loginViewModel)
         var scenes: [UIViewController] = [loginScene]
 
-        let authService = DefaultAuthService()
-        if authService.getUser() != nil {
+        if Auth.auth().currentUser != nil {
             let userUsecase = DefaultUserUsecase()
             let userNavigator = DefaultUserNavigator(navigationController: navigationController)
             let userViewModel = UserViewModel(usecase: userUsecase, navigator: userNavigator)

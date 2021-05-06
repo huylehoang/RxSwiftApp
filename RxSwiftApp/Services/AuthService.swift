@@ -1,80 +1,96 @@
 import FirebaseAuth
+import RxSwift
 
 protocol AuthService {
-    func signIn(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<Void, Error>) -> Void)
-    func createUser(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<User, Error>) -> Void)
-    func updateUserName(
-        _ name: String,
-        for user: User,
-        completion: @escaping (Result<Void, Error>) -> Void)
-    func getUser() -> User?
-    func signOut() -> Error?
+    func signIn(withEmail email: String, password: String) -> Observable<Void>
+    func createUser(withEmail email: String, password: String) -> Observable<User>
+    func updateUserName(_ name: String, for user: User) -> Observable<Void>
+    func getUser() -> Observable<User>
+    func deleteUser() -> Observable<Void>
+    func signOut() -> Observable<Void>
 }
 
 final class DefaultAuthService: AuthService {
-    func signIn(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        Auth.auth().signIn(withEmail: email, password: password) { _, error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    func signIn(withEmail email: String, password: String) -> Observable<Void> {
+        return .create { observer -> Disposable in
+            Auth.auth().signIn(withEmail: email, password: password) { _, error in
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onNext(())
+                    observer.onCompleted()
+                }
+                observer.onCompleted()
             }
+            return Disposables.create()
         }
     }
 
-    func createUser(
-        withEmail email: String,
-        password: String,
-        completion: @escaping (Result<User, Error>) -> Void
-    ) {
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            if let user = authResult?.user {
-                completion(.success(user))
-            } else if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.failure(NSError(domain: "Something wrong!!!", code: 0, userInfo: nil)))
+    func createUser(withEmail email: String, password: String) -> Observable<User> {
+        return .create { observer -> Disposable in
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                if let user = authResult?.user {
+                    observer.onNext(user)
+                    observer.onCompleted()
+                } else if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onError(NSError(domain: "Something wrong!!!", code: 0, userInfo: nil))
+                }
             }
+            return Disposables.create()
         }
     }
 
-    func updateUserName(
-        _ name: String,
-        for user: User,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        let changeRequest = user.createProfileChangeRequest()
-        changeRequest.displayName = name
-        changeRequest.commitChanges { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    func updateUserName(_ name: String, for user: User) -> Observable<Void> {
+        return .create { observer -> Disposable in
+            let changeRequest = user.createProfileChangeRequest()
+            changeRequest.displayName = name
+            changeRequest.commitChanges { error in
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onNext(())
+                    observer.onCompleted()
+                }
             }
+            return Disposables.create()
         }
     }
 
-    func getUser() -> User? {
-        return Auth.auth().currentUser
+    func getUser() -> Observable<User> {
+        return Observable.just(Auth.auth().currentUser).compactMap { $0 }
     }
 
-    func signOut() -> Error? {
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-            return nil
-        } catch {
-            return error
+    func deleteUser() -> Observable<Void> {
+        return .create { observer -> Disposable in
+            guard let user = Auth.auth().currentUser else {
+                observer.onCompleted()
+                return Disposables.create()
+            }
+            user.delete { error in
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onNext(())
+                    observer.onCompleted()
+                }
+            }
+            return Disposables.create()
         }
+    }
+
+    func signOut() -> Observable<Void> {
+        return .create { observer -> Disposable in
+            do {
+                try Auth.auth().signOut()
+                observer.onNext(())
+                observer.onCompleted()
+            } catch {
+                observer.onError(error)
+            }
+            return Disposables.create()
+        }
+
     }
 }

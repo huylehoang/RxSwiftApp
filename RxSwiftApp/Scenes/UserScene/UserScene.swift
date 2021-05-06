@@ -15,6 +15,15 @@ final class UserScene: BaseViewController {
         return makeLabel()
     }()
 
+    private lazy var deleteButton: UIButton = {
+        let view = UIButton()
+        view.setTitle("Delete", for: .normal)
+        view.setTitleColor(.systemBlue, for: .normal)
+        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
+        view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
+        return view
+    }()
+
     private lazy var signOutButton: UIButton = {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -22,6 +31,7 @@ final class UserScene: BaseViewController {
         view.setTitleColor(.systemBlue, for: .normal)
         view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
+        view.contentHorizontalAlignment = .leading
         return view
     }()
 
@@ -54,6 +64,7 @@ private extension UserScene {
         stackView.addArrangedSubview(uidLabel)
         stackView.addArrangedSubview(displayNameLabel)
         stackView.addArrangedSubview(emailLabel)
+        stackView.addArrangedSubview(deleteButton)
         contentView.addSubview(signOutButton)
         let constraints = [
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -68,7 +79,37 @@ private extension UserScene {
     }
 
     func setupBinding() {
-        let input = UserViewModel.Input(signOutTrigger: signOutButton.rx.tap.asDriver())
+        let deleteTrigger = deleteButton.rx.tap
+            .flatMap { _ -> Observable<Void> in
+                return .create { [weak self] observer -> Disposable in
+                    guard let self = self else {
+                        observer.onCompleted()
+                        return Disposables.create()
+                    }
+                    let alert = UIAlertController(
+                        title: "Delete User",
+                        message: "Are you sure you want delete this user?",
+                        preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+                    let confirmAction = UIAlertAction(
+                        title: "Confirm",
+                        style: .destructive,
+                        handler: { _ in
+                            observer.onNext(())
+                            observer.onCompleted()
+                        })
+                    alert.addAction(cancelAction)
+                    alert.addAction(confirmAction)
+                    self.present(alert, animated: true)
+                    return Disposables.create {
+                        alert.dismiss(animated: true)
+                    }
+                }
+            }
+
+        let input = UserViewModel.Input(
+            deleteTrigger: deleteTrigger.asDriverOnErrorJustComplete(),
+            signOutTrigger: signOutButton.rx.tap.asDriver())
 
         let output = viewModel.transform(input: input)
 
@@ -76,8 +117,10 @@ private extension UserScene {
             output.uid.drive(uidLabel.rx.text),
             output.displayName.drive(displayNameLabel.rx.text),
             output.email.drive(emailLabel.rx.text),
+            output.onDelete.drive(),
+            output.onSignOut.drive(),
+            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
             output.errorMessage.drive(rx.showErrorMessage),
-            output.onSignOut.drive()
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }

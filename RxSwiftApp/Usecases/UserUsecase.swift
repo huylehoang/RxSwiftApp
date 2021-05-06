@@ -3,6 +3,7 @@ import FirebaseAuth
 
 protocol UserUsecase {
     func getUser() -> Observable<User>
+    func deleteUser() -> Observable<Void>
     func signOut() -> Observable<Void>
 }
 
@@ -14,21 +15,14 @@ final class DefaultUserUsecase: UserUsecase {
     }
 
     func getUser() -> Observable<User> {
-        return Observable.just(service.getUser()).compactMap { $0 }
+        return service.getUser()
+    }
+
+    func deleteUser() -> Observable<Void> {
+        return service.deleteUser()
     }
 
     func signOut() -> Observable<Void> {
-        return .create { [weak self] observer -> Disposable in
-            guard let self = self else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            if let error = self.service.signOut() {
-                observer.onError(error)
-            } else {
-                observer.onNext(())
-            }
-            return Disposables.create()
-        }
+        return service.signOut()
     }
 }
