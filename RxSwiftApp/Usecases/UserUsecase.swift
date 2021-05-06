@@ -23,9 +23,8 @@ final class DefaultUserUsecase: UserUsecase {
         return Observable.combineLatest(
             getUser().compactMap { $0.email },
             UserDefaults.getStringValue(forKey: .userPassword))
-            .flatMap { [weak self] email, password -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                return self.service.reAuthenticate(withEmail: email, password: password)
+            .flatMap { [weak self] in
+                return self?.service.reAuthenticate(withEmail: $0, password: $1) ?? .empty()
             }
     }
 

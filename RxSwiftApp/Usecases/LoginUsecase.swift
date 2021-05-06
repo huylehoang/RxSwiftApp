@@ -20,12 +20,14 @@ final class DefaultLoginUsecase: LoginUsecase {
 
     func signUp(withName name: String, email: String, password: String) -> Observable<Void> {
         return service.createUser(withEmail: email, password: password)
-            .flatMap { [weak self] user in
-                return self?.service.updateUserName(name, for: user) ?? .empty()
-            }
-            .catchError { [weak self] error in
-                return self?.service.deleteUser(by: error) ?? .empty()
-            }
+            .flatMap { [weak self] in return self?.updateUserName(name, for: $0) ?? .empty() }
             .flatMap { UserDefaults.setValue(password, forKey: .userPassword) }
+    }
+}
+
+private extension DefaultLoginUsecase {
+    func updateUserName(_ name: String, for user: User) -> Observable<Void> {
+        return service.updateUserName(name, for: user)
+            .catchError { [weak self] in  return self?.service.deleteUser(by: $0) ?? .empty() }
     }
 }
