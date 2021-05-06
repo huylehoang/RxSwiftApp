@@ -28,6 +28,6 @@ final class DefaultLoginUsecase: LoginUsecase {
 private extension DefaultLoginUsecase {
     func updateUserName(_ name: String, for user: User) -> Observable<Void> {
         return service.updateUserName(name, for: user)
-            .catchError { [weak self] in  return self?.service.deleteUser(by: $0) ?? .empty() }
+            .catchError { [weak self] in return self?.service.deleteUser(by: $0) ?? .empty() }
     }
 }
