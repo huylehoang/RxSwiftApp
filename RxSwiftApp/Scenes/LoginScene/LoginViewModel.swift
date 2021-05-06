@@ -57,13 +57,15 @@ final class LoginViewModel: ViewModelType {
         let passwordValidator = TextValidator(.password, input: input.password)
         let kind = BehaviorRelay(value: Kind.signIn)
 
+        let fields = Driver.combineLatest(input.name, input.email, input.password)
+
         let nameError = input.loginTrigger.withLatestFrom(nameValidator.validate())
 
         let emailError = input.loginTrigger.withLatestFrom(emailValidator.validate())
 
         let passwordError = input.loginTrigger.withLatestFrom(passwordValidator.validate())
 
-        let enableLogin = Driver.combineLatest(input.name, input.email, input.password)
+        let enableLogin = fields
             .map { combined -> Bool in
                 switch kind.value {
                 case .signIn:
@@ -83,16 +85,12 @@ final class LoginViewModel: ViewModelType {
                 }
             }
 
-        let loginCredential = Driver.combineLatest(
-            input.name,
-            input.email,
-            input.password,
-            loginAvailable)
+        let loginCredential = Driver.combineLatest(fields, loginAvailable)
 
         let onLogin = input.loginTrigger
             .withLatestFrom(loginCredential)
-            .filter { combined in return combined.3 }
-            .map { combined in return (combined.0, combined.1, combined.2) }
+            .filter { combined in return combined.1 }
+            .map { combined in return combined.0 }
             .flatMapLatest { [weak self] name, email, password -> Driver<Void> in
                 guard let self = self else { return .empty() }
                 let request: Observable<Void> = {
