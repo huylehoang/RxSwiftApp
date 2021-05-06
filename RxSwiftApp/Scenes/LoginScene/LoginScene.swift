@@ -12,7 +12,6 @@ final class LoginScene: BaseViewController {
     private lazy var nameField: ValidationTextfield = {
         let view = ValidationTextfield()
         view.placeholder = "Enter name..."
-        view.isHidden = true
         return view
     }()
 
@@ -88,6 +87,7 @@ private extension LoginScene {
             .disposed(by: disposeBag)
 
         let input = LoginViewModel.Input(
+            viewDidLoad: rx.viewDidLoad.asDriver(),
             name: nameField.rx.text.asDriver(),
             email: emailField.rx.text.asDriver(),
             password: passwordField.rx.text.asDriver(),
@@ -106,7 +106,8 @@ private extension LoginScene {
             output.onSegmentChanged.drive(),
             output.resetSegment.drive(),
             output.selectedSegmentIndex.drive(segmentControl.rx.selectedSegmentIndex),
-            output.hideNameField.drive(nameField.rx.animatedHiddden),
+            output.hideNameField.drive(nameField.rx.isHidden),
+            output.animateHideNameField.drive(nameField.rx.animatedHiddden),
             output.loginButtonTitle.drive(loginButton.rx.title()),
             output.emptyField.drive(nameField.rx.forceEmpty),
             output.emptyField.drive(emailField.rx.forceEmpty),

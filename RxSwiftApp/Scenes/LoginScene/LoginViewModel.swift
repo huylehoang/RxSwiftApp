@@ -17,6 +17,7 @@ final class LoginViewModel: ViewModelType {
     }
 
     struct Input {
+        let viewDidLoad: Driver<Void>
         let name: Driver<String>
         let email: Driver<String>
         let password: Driver<String>
@@ -35,6 +36,7 @@ final class LoginViewModel: ViewModelType {
         let resetSegment: Driver<Void>
         let selectedSegmentIndex: Driver<Int>
         let hideNameField: Driver<Bool>
+        let animateHideNameField: Driver<Bool>
         let loginButtonTitle: Driver<String>
         let emptyField: Driver<String>
         let embeddedLoading: Driver<Bool>
@@ -120,7 +122,11 @@ final class LoginViewModel: ViewModelType {
 
         let selectedSegmentIndex = kind.map { $0.rawValue }.asDriverOnErrorJustComplete()
 
-        let hideNameField = kind.compactMap { $0 == .signIn }.asDriverOnErrorJustComplete()
+        let isSignIn = kind.compactMap { $0 == .signIn }.asDriverOnErrorJustComplete()
+
+        let hideNameField = input.viewDidLoad.withLatestFrom(isSignIn)
+
+        let animateHideNameField = isSignIn.skip(1)
 
         let loginButtonTitle = kind.map { $0.title }.asDriverOnErrorJustComplete()
 
@@ -140,6 +146,7 @@ final class LoginViewModel: ViewModelType {
             resetSegment: resetSegment,
             selectedSegmentIndex: selectedSegmentIndex,
             hideNameField: hideNameField,
+            animateHideNameField: animateHideNameField,
             loginButtonTitle: loginButtonTitle,
             emptyField: emptyField,
             embeddedLoading: embeddedLoading,
