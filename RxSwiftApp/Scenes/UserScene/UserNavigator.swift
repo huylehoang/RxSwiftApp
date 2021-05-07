@@ -1,10 +1,10 @@
 import UIKit
 
-protocol UserNavigator {
+protocol UserNavigator: NavigatorType {
     func toLogin()
 }
 
-final class DefaultUserNavigator: UserNavigator {
+struct DefaultUserNavigator: UserNavigator {
     private let navigationController: UINavigationController
 
     init(navigationController: UINavigationController) {

@@ -1,7 +1,7 @@
 import RxSwift
 import FirebaseAuth
 
-protocol UserUsecase {
+protocol UserUsecase: UsecaseType {
     func getUser() -> Observable<User>
     func reAuthenticate() -> Observable<Void>
     func deleteUser() -> Observable<Void>

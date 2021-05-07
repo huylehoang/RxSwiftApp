@@ -1,7 +1,7 @@
 import RxSwift
 import FirebaseAuth
 
-protocol LoginUsecase {
+protocol LoginUsecase: UsecaseType {
     func signIn(withEmail email: String, password: String) -> Observable<Void>
     func signUp(withName name: String, email: String, password: String) -> Observable<Void>
 }

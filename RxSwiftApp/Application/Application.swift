@@ -8,17 +8,11 @@ final class Application {
 
     func confirgureMainInterface(in window: UIWindow) {
         let navigationController = UINavigationController()
-        let loginUsecase = DefaultLoginUsecase()
-        let loginNavigator = DefaultLoginNavigator(navigationController: navigationController)
-        let loginViewModel = LoginViewModel(usecase: loginUsecase, navigator: loginNavigator)
-        let loginScene = LoginScene(viewModel: loginViewModel)
+        let loginScene = LoginSceneBuilder(navigationController: navigationController).build()
         var scenes: [UIViewController] = [loginScene]
 
         if Auth.auth().currentUser != nil {
-            let userUsecase = DefaultUserUsecase()
-            let userNavigator = DefaultUserNavigator(navigationController: navigationController)
-            let userViewModel = UserViewModel(usecase: userUsecase, navigator: userNavigator)
-            let userScene = UserScene(viewModel: userViewModel)
+            let userScene = UserSceneBuilder(navigationController: navigationController).build()
             scenes.append(userScene)
         }
 

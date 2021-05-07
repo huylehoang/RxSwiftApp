@@ -22,6 +22,11 @@
 		108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9271263FA62600C70AD8 /* SceneDelegate.swift */; };
 		108E9279263FA62700C70AD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 108E9278263FA62700C70AD8 /* Assets.xcassets */; };
 		108E927C263FA62700C70AD8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 108E927A263FA62700C70AD8 /* LaunchScreen.storyboard */; };
+		84171C002644FF6100DD0074 /* SceneBuilderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */; };
+		84171C052645166E00DD0074 /* UsecaseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C042645166E00DD0074 /* UsecaseType.swift */; };
+		84171C09264516A200DD0074 /* NavigatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C08264516A200DD0074 /* NavigatorType.swift */; };
+		84171C0C2645189F00DD0074 /* LoginSceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C0B2645189F00DD0074 /* LoginSceneBuilder.swift */; };
+		84171C0F26451C2100DD0074 /* UserSceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C0E26451C2100DD0074 /* UserSceneBuilder.swift */; };
 		8442B34F2643C86E006A6312 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442B34E2643C86E006A6312 /* UserDefaults+Extensions.swift */; };
 		84687ABF264299660071ADA7 /* Reactive+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84687ABE264299660071ADA7 /* Reactive+Extensions.swift */; };
 		8476D0AB26424814002C8CB9 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8476D0AA26424814002C8CB9 /* BaseViewController.swift */; };
@@ -58,6 +63,11 @@
 		108E927D263FA62700C70AD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A0DB3696DBC2A9F3DD1715F /* Pods-RxSwiftApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwiftApp.debug.xcconfig"; path = "Target Support Files/Pods-RxSwiftApp/Pods-RxSwiftApp.debug.xcconfig"; sourceTree = "<group>"; };
 		4F4E19F399083403F740F4B7 /* Pods-RxSwiftApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwiftApp.release.xcconfig"; path = "Target Support Files/Pods-RxSwiftApp/Pods-RxSwiftApp.release.xcconfig"; sourceTree = "<group>"; };
+		84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilderType.swift; sourceTree = "<group>"; };
+		84171C042645166E00DD0074 /* UsecaseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsecaseType.swift; sourceTree = "<group>"; };
+		84171C08264516A200DD0074 /* NavigatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorType.swift; sourceTree = "<group>"; };
+		84171C0B2645189F00DD0074 /* LoginSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSceneBuilder.swift; sourceTree = "<group>"; };
+		84171C0E26451C2100DD0074 /* UserSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSceneBuilder.swift; sourceTree = "<group>"; };
 		8442B34E2643C86E006A6312 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		84687ABE264299660071ADA7 /* Reactive+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactive+Extensions.swift"; sourceTree = "<group>"; };
 		8476D0AA26424814002C8CB9 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +140,9 @@
 			isa = PBXGroup;
 			children = (
 				1022F76E26404930007AE3F2 /* ViewModelType.swift */,
+				84171C042645166E00DD0074 /* UsecaseType.swift */,
+				84171C08264516A200DD0074 /* NavigatorType.swift */,
+				84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -215,6 +228,7 @@
 				1022F76226402BB0007AE3F2 /* LoginScene.swift */,
 				1022F77226404989007AE3F2 /* LoginViewModel.swift */,
 				8476D0C626427C9F002C8CB9 /* LoginNavigator.swift */,
+				84171C0B2645189F00DD0074 /* LoginSceneBuilder.swift */,
 			);
 			path = LoginScene;
 			sourceTree = "<group>";
@@ -225,6 +239,7 @@
 				8476D0C0264279E3002C8CB9 /* UserScene.swift */,
 				8476D0C326427C80002C8CB9 /* UserViewModel.swift */,
 				8476D0C926427E8A002C8CB9 /* UserNavigator.swift */,
+				84171C0E26451C2100DD0074 /* UserSceneBuilder.swift */,
 			);
 			path = UserScene;
 			sourceTree = "<group>";
@@ -360,12 +375,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				84687ABF264299660071ADA7 /* Reactive+Extensions.swift in Sources */,
+				84171C0F26451C2100DD0074 /* UserSceneBuilder.swift in Sources */,
 				1022F77626414127007AE3F2 /* LoginUsecase.swift in Sources */,
 				1022F75B26400F47007AE3F2 /* Observable+Extension.swift in Sources */,
+				84171C0C2645189F00DD0074 /* LoginSceneBuilder.swift in Sources */,
 				8476D0CE26428B00002C8CB9 /* Application.swift in Sources */,
 				1022F75426400EC1007AE3F2 /* ActivityIndicator.swift in Sources */,
 				1022F76326402BB0007AE3F2 /* LoginScene.swift in Sources */,
 				1022F75E26400FAE007AE3F2 /* TextValidator.swift in Sources */,
+				84171C09264516A200DD0074 /* NavigatorType.swift in Sources */,
+				84171C052645166E00DD0074 /* UsecaseType.swift in Sources */,
 				104C9BBE2643221A00D4FB8B /* AuthService.swift in Sources */,
 				8476D0B5264251E3002C8CB9 /* UIApplication+Extensions.swift in Sources */,
 				8476D0B8264259F2002C8CB9 /* IndicatorView.swift in Sources */,
@@ -378,6 +397,7 @@
 				1022F74F263FAE8D007AE3F2 /* ValidationTextfield.swift in Sources */,
 				108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */,
 				8476D0C426427C80002C8CB9 /* UserViewModel.swift in Sources */,
+				84171C002644FF6100DD0074 /* SceneBuilderType.swift in Sources */,
 				1022F75826400F1E007AE3F2 /* ErrorTracker.swift in Sources */,
 				8476D0C726427C9F002C8CB9 /* LoginNavigator.swift in Sources */,
 				1022F77326404989007AE3F2 /* LoginViewModel.swift in Sources */,
