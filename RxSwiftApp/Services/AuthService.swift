@@ -12,7 +12,7 @@ protocol AuthService {
     func signOut() -> Observable<Void>
 }
 
-final class DefaultAuthService: AuthService {
+struct DefaultAuthService: AuthService {
     func signIn(withEmail email: String, password: String) -> Observable<Void> {
         return .create { observer -> Disposable in
             Auth.auth().signIn(withEmail: email, password: password) { _, error in
