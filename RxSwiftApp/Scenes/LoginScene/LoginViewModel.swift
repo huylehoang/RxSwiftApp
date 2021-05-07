@@ -102,7 +102,7 @@ struct LoginViewModel: ViewModelType {
                     indicator: indicator,
                     errorTracker: errorTracker)
             }
-            .flatMapLatest(login(_:))
+            .flatMapLatest(login)
             .do(onNext: navigator.toUser)
 
         let onSegmentChanged = input.segmentChanged

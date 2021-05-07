@@ -35,17 +35,17 @@ struct UserViewModel: ViewModelType {
 
         let onReAuthenticate = input.reAuthenticateTrigger
             .map { (indicator, errorTracker) }
-            .flatMapLatest(reAuthenticate(_:))
+            .flatMapLatest(reAuthenticate)
             .do()
 
         let onDelete = input.deleteTrigger
             .map { (indicator, errorTracker) }
-            .flatMapLatest(deleteUser(_:))
+            .flatMapLatest(deleteUser)
             .do(onNext: navigator.toLogin)
 
         let onSignOut = input.signOutTrigger
             .map { errorTracker }
-            .flatMapLatest(signOut(_:))
+            .flatMapLatest(signOut)
             .do(onNext: navigator.toLogin)
 
         let user = Driver.merge(input.viewDidLoad, onReAuthenticate)

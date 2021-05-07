@@ -16,15 +16,15 @@ struct DefaultLoginUsecase: LoginUsecase {
     func signIn(withEmail email: String, password: String) -> Observable<Void> {
         return service.signIn(withEmail: email, password: password)
             .map { password }
-            .flatMap(savePassword(_:))
+            .flatMap(savePassword)
     }
 
     func signUp(withName name: String, email: String, password: String) -> Observable<Void> {
         return service.createUser(withEmail: email, password: password)
             .map { (name, $0) }
-            .flatMap(updateUserName(_:))
+            .flatMap(updateUserName)
             .map { password }
-            .flatMap(savePassword(_:))
+            .flatMap(savePassword)
     }
 }
 
@@ -32,7 +32,7 @@ private extension DefaultLoginUsecase {
     func updateUserName(_ credential: (name: String, user: User)) -> Observable<Void> {
         return service
             .updateUserName(credential.name, for: credential.user)
-            .catchError(service.deleteUser(by:))
+            .catchError(service.deleteUser)
     }
 
     func savePassword(_ password: String) -> Observable<Void> {
