@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class UserViewModel: ViewModelType {
+struct UserViewModel: ViewModelType {
     struct Input {
         let viewDidLoad: Driver<Void>
         let reAuthenticateTrigger: Driver<Void>
@@ -34,32 +34,18 @@ final class UserViewModel: ViewModelType {
         let errorTracker = ErrorTracker()
 
         let onReAuthenticate = input.reAuthenticateTrigger
-            .flatMapLatest { [weak self] _ -> Driver<Void> in
-                guard let self = self else { return .empty() }
-                return self.usecase.reAuthenticate()
-                    .trackActivity(indicator)
-                    .trackError(errorTracker)
-                    .asDriverOnErrorJustComplete()
-            }
+            .map { (indicator, errorTracker) }
+            .flatMapLatest(reAuthenticate(_:))
             .do()
 
         let onDelete = input.deleteTrigger
-            .flatMapLatest { [weak self] _ -> Driver<Void> in
-                guard let self = self else { return .empty() }
-                return self.usecase.deleteUser()
-                    .trackActivity(indicator)
-                    .trackError(errorTracker)
-                    .asDriverOnErrorJustComplete()
-            }
+            .map { (indicator, errorTracker) }
+            .flatMapLatest(deleteUser(_:))
             .do(onNext: navigator.toLogin)
 
         let onSignOut = input.signOutTrigger
-            .flatMapLatest { [weak self] _ -> Driver<Void> in
-                guard let self = self else { return .empty() }
-                return self.usecase.signOut()
-                    .trackError(errorTracker)
-                    .asDriverOnErrorJustComplete()
-            }
+            .map { errorTracker }
+            .flatMapLatest(signOut(_:))
             .do(onNext: navigator.toLogin)
 
         let user = Driver.merge(input.viewDidLoad, onReAuthenticate)
@@ -84,5 +70,31 @@ final class UserViewModel: ViewModelType {
             email: email,
             embeddedLoading: embeddedLoading,
             errorMessage: errorMessage)
+    }
+}
+
+private extension UserViewModel {
+    func reAuthenticate(
+        _ credential: (indicator: ActivityIndicator, errorTracker: ErrorTracker)
+    ) -> Driver<Void> {
+        return usecase.reAuthenticate()
+            .trackActivity(credential.indicator)
+            .trackError(credential.errorTracker)
+            .asDriverOnErrorJustComplete()
+    }
+
+    func deleteUser(
+        _ credential: (indicator: ActivityIndicator, errorTracker: ErrorTracker)
+    ) -> Driver<Void> {
+        return usecase.deleteUser()
+            .trackActivity(credential.indicator)
+            .trackError(credential.errorTracker)
+            .asDriverOnErrorJustComplete()
+    }
+
+    func signOut(_ errorTracker: ErrorTracker) -> Driver<Void> {
+        return usecase.signOut()
+            .trackError(errorTracker)
+            .asDriverOnErrorJustComplete()
     }
 }

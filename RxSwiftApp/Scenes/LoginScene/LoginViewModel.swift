@@ -3,7 +3,7 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-final class LoginViewModel: ViewModelType {
+struct LoginViewModel: ViewModelType {
     enum Kind: Int, CaseIterable {
         case signIn = 0
         case signUp = 1
@@ -93,21 +93,16 @@ final class LoginViewModel: ViewModelType {
             .withLatestFrom(loginCredential)
             .filter { combined in return combined.1 }
             .map { combined in return combined.0 }
-            .flatMapLatest { [weak self] name, email, password -> Driver<Void> in
-                guard let self = self else { return .empty() }
-                let request: Observable<Void> = {
-                    switch kind.value {
-                    case .signIn:
-                        return self.usecase.signIn(withEmail: email, password: password)
-                    case .signUp:
-                        return self.usecase.signUp(withName: name, email: email, password: password)
-                    }
-                }()
-                return request
-                    .trackActivity(indicator)
-                    .trackError(errorTracker)
-                    .asDriverOnErrorJustComplete()
+            .map { name, email, password in
+                return LoginCredential(
+                    kind: kind.value,
+                    name: name,
+                    email: email,
+                    password: password,
+                    indicator: indicator,
+                    errorTracker: errorTracker)
             }
+            .flatMapLatest(login(_:))
             .do(onNext: navigator.toUser)
 
         let onSegmentChanged = input.segmentChanged
@@ -151,5 +146,34 @@ final class LoginViewModel: ViewModelType {
             emptyField: emptyField,
             embeddedLoading: embeddedLoading,
             errorMessage: errorMessage)
+    }
+}
+
+private extension LoginViewModel {
+    struct LoginCredential {
+        let kind: Kind
+        let name: String
+        let email: String
+        let password: String
+        let indicator: ActivityIndicator
+        let errorTracker: ErrorTracker
+    }
+
+    func login(_ credential: LoginCredential) -> Driver<Void> {
+        let request: Observable<Void> = {
+            switch credential.kind {
+            case .signIn:
+                return usecase.signIn(withEmail: credential.email, password: credential.password)
+            case .signUp:
+                return usecase.signUp(
+                    withName: credential.name,
+                    email: credential.email,
+                    password: credential.password)
+            }
+        }()
+        return request
+            .trackActivity(credential.indicator)
+            .trackError(credential.errorTracker)
+            .asDriverOnErrorJustComplete()
     }
 }

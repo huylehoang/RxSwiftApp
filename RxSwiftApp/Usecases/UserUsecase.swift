@@ -8,7 +8,7 @@ protocol UserUsecase: UsecaseType {
     func signOut() -> Observable<Void>
 }
 
-final class DefaultUserUsecase: UserUsecase {
+struct DefaultUserUsecase: UserUsecase {
     private let service: AuthService
 
     init(service: AuthService = DefaultAuthService()) {
@@ -20,19 +20,28 @@ final class DefaultUserUsecase: UserUsecase {
     }
 
     func reAuthenticate() -> Observable<Void> {
-        return Observable.combineLatest(
-            getUser().compactMap { $0.email },
-            UserDefaults.getStringValue(forKey: .userPassword))
-            .flatMap { [weak self] in
-                return self?.service.reAuthenticate(withEmail: $0, password: $1) ?? .empty()
-            }
+        return Observable.combineLatest(email, password).flatMap(reAuthenticate)
     }
 
     func deleteUser() -> Observable<Void> {
-        return service.deleteUser().flatMap { UserDefaults.removeAllValue() }
+        return service.deleteUser().flatMap(UserDefaults.removeAllValue)
     }
 
     func signOut() -> Observable<Void> {
-        return service.signOut().flatMap { UserDefaults.removeAllValue() }
+        return service.signOut().flatMap(UserDefaults.removeAllValue)
+    }
+}
+
+private extension DefaultUserUsecase {
+    var email: Observable<String> {
+        return getUser().compactMap { $0.email }
+    }
+
+    var password: Observable<String> {
+        return UserDefaults.getStringValue(forKey: .userPassword)
+    }
+
+    func reAuthenticate(_ credential: (email: String, password: String)) -> Observable<Void> {
+        return service.reAuthenticate(withEmail: credential.email, password: credential.password)
     }
 }
