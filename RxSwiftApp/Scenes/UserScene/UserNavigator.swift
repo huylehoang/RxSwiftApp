@@ -5,13 +5,14 @@ protocol UserNavigator: NavigatorType {
 }
 
 struct DefaultUserNavigator: UserNavigator {
-    private let navigationController: UINavigationController
+    private weak var navigationController: UINavigationController?
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 
     func toLogin() {
+        guard let navigationController = navigationController else { return }
         navigationController.popViewController(animated: true)
     }
 }

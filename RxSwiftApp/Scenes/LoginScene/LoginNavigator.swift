@@ -5,13 +5,14 @@ protocol LoginNavigator: NavigatorType {
 }
 
 struct DefaultLoginNavigator: LoginNavigator {
-    private let navigationController: UINavigationController
+    private weak var navigationController: UINavigationController?
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 
     func toUser() {
+        guard let navigationController = navigationController else { return }
         let userScene = UserSceneBuilder(navigationController: navigationController).build()
         navigationController.pushViewController(userScene, animated: true)
     }
