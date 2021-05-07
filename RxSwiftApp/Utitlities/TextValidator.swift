@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class TextValidator {
+struct TextValidator {
     private let kind: Kind
     private let input: Driver<String>
 
