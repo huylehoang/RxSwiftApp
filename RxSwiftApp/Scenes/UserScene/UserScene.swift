@@ -85,7 +85,7 @@ private extension UserScene {
     func setupBinding() {
         let deleteTrigger = deleteButton.rx.tap
             .flatMap { _ -> Observable<Void> in
-                return .create { [weak self] observer -> Disposable in
+                return .create { [weak self] observer in
                     guard let self = self else {
                         observer.onCompleted()
                         return Disposables.create()

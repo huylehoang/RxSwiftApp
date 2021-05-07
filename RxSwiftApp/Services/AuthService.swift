@@ -14,7 +14,7 @@ protocol AuthService {
 
 struct DefaultAuthService: AuthService {
     func signIn(withEmail email: String, password: String) -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             Auth.auth().signIn(withEmail: email, password: password) { _, error in
                 if let error = error {
                     observer.onError(error)
@@ -29,7 +29,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func createUser(withEmail email: String, password: String) -> Observable<User> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let user = authResult?.user {
                     observer.onNext(user)
@@ -45,7 +45,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func updateUserName(_ name: String, for user: User) -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             let changeRequest = user.createProfileChangeRequest()
             changeRequest.displayName = name
             changeRequest.commitChanges { error in
@@ -65,7 +65,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func reAuthenticate(withEmail email: String, password: String) -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             guard let user = Auth.auth().currentUser else {
                 observer.onCompleted()
                 return Disposables.create()
@@ -84,7 +84,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func deleteUser() -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             guard let user = Auth.auth().currentUser else {
                 observer.onCompleted()
                 return Disposables.create()
@@ -102,7 +102,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func deleteUser(by error: Error) -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             guard let user = Auth.auth().currentUser else {
                 observer.onCompleted()
                 return Disposables.create()
@@ -119,7 +119,7 @@ struct DefaultAuthService: AuthService {
     }
 
     func signOut() -> Observable<Void> {
-        return .create { observer -> Disposable in
+        return .create { observer in
             do {
                 try Auth.auth().signOut()
                 observer.onNext(())
