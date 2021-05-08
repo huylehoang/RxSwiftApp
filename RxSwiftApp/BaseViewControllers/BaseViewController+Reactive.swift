@@ -15,15 +15,11 @@ extension Reactive where Base: BaseViewController {
 
 extension Reactive where Base: BaseViewController {
     var showErrorMessage: Binder<String> {
-        return Binder(base) { _, message in
-            showErrorAlert(message: message)
+        return Binder(base) { base, message in
+            let topViewController = UIApplication.shared.getTopViewController() ?? base
+            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            topViewController.present(alert, animated: true)
         }
-    }
-
-    private func showErrorAlert(message: String) {
-        let topViewController = UIApplication.shared.topViewController ?? base
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        topViewController.present(alert, animated: true)
     }
 }

@@ -83,33 +83,23 @@ private extension UserScene {
     }
 
     func setupBinding() {
-        let deleteTrigger = deleteButton.rx.tap
-            .flatMap { _ -> Observable<Void> in
-                return .create { [weak self] observer in
-                    guard let self = self else {
-                        observer.onCompleted()
-                        return Disposables.create()
-                    }
-                    let alert = UIAlertController(
-                        title: "Delete User",
-                        message: "Are you sure you want delete this user?",
-                        preferredStyle: .alert)
-                    let cancelAction = UIAlertAction(title: "Cancel", style: .default)
-                    let confirmAction = UIAlertAction(
-                        title: "Confirm",
-                        style: .destructive,
-                        handler: { _ in
-                            observer.onNext(())
-                            observer.onCompleted()
-                        })
-                    alert.addAction(cancelAction)
-                    alert.addAction(confirmAction)
-                    self.present(alert, animated: true)
-                    return Disposables.create {
-                        alert.dismiss(animated: true)
-                    }
+        let deleteTrigger = PublishRelay<Void>()
+        deleteButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                let alert = UIAlertController(
+                    title: "Delete User",
+                    message: "Are you sure you want delete this user?",
+                    preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+                let confirmAction = UIAlertAction(title: "Confirm", style: .destructive) { _ in
+                    deleteTrigger.accept(())
                 }
+                alert.addAction(cancelAction)
+                alert.addAction(confirmAction)
+                self.present(alert, animated: true)
             }
+            .disposed(by: disposeBag)
 
         let input = UserViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
