@@ -129,6 +129,5 @@ struct DefaultAuthService: AuthService {
             }
             return Disposables.create()
         }
-
     }
 }

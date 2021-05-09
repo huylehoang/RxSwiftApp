@@ -3,11 +3,11 @@ import RxCocoa
 
 extension Reactive where Base: BaseViewController {
     var showEmbeddedIndicator: Binder<Bool> {
-        return Binder(base) { baseViewController, show in
+        return Binder(base) { base, show in
             if show {
-                baseViewController.showEmbeddedIndicator()
+                base.showEmbeddedIndicator()
             } else {
-                baseViewController.hideEmbeddedIndicator()
+                base.hideEmbeddedIndicator()
             }
         }
     }

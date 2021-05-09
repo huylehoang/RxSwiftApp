@@ -47,6 +47,10 @@ final class LoginScene: BaseViewController {
         self.viewModel = viewModel
         super.init()
     }
+    
+    deinit {
+        dump("Deinit LoginScene")
+    }
 
     override func loadView() {
         super.loadView()

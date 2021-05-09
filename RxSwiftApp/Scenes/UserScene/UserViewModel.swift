@@ -36,7 +36,6 @@ struct UserViewModel: ViewModelType {
         let onReAuthenticate = input.reAuthenticateTrigger
             .map { (indicator, errorTracker) }
             .flatMapLatest(reAuthenticate)
-            .do()
 
         let onDelete = input.deleteTrigger
             .map { (indicator, errorTracker) }
