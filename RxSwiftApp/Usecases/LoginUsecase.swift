@@ -30,8 +30,7 @@ struct DefaultLoginUsecase: LoginUsecase {
 
 private extension DefaultLoginUsecase {
     func updateUserName(_ credential: (name: String, user: User)) -> Observable<Void> {
-        return service
-            .updateUserName(credential.name, for: credential.user)
+        return service.updateUserName(credential.name, for: credential.user)
             .catchError(service.deleteUser)
     }
 
