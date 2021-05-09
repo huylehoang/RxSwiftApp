@@ -21,7 +21,7 @@ extension UserDefaults {
         }
     }
 
-    static func removeAllValue() -> Observable<Void> {
+    static func removeAllValues() -> Observable<Void> {
         return .deferred {
             Key.allCases.forEach { standard.removeObject(forKey: $0.rawValue) }
             standard.synchronize()

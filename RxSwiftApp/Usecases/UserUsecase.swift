@@ -24,11 +24,11 @@ struct DefaultUserUsecase: UserUsecase {
     }
 
     func deleteUser() -> Observable<Void> {
-        return service.deleteUser().flatMap(UserDefaults.removeAllValue)
+        return service.deleteUser().flatMap(UserDefaults.removeAllValues)
     }
 
     func signOut() -> Observable<Void> {
-        return service.signOut().flatMap(UserDefaults.removeAllValue)
+        return service.signOut().flatMap(UserDefaults.removeAllValues)
     }
 }
 
