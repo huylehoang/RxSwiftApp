@@ -31,9 +31,7 @@ struct LoginViewModel: ViewModelType {
         let emailError: Driver<String>
         let passwordError: Driver<String>
         let enableLogin: Driver<Bool>
-        let onLogin: Driver<Void>
-        let onSegmentChanged: Driver<Void>
-        let resetSegment: Driver<Void>
+        let onAction: Driver<Void>
         let selectedSegmentIndex: Driver<Int>
         let hideNameField: Driver<Bool>
         let animateHideNameField: Driver<Bool>
@@ -106,6 +104,8 @@ struct LoginViewModel: ViewModelType {
             .do(onNext: kind.accept)
             .mapToVoid()
 
+        let onAction = Driver.merge(onLogin, onSegmentChanged, resetSegment)
+
         let selectedSegmentIndex = kind.map { $0.rawValue }.asDriverOnErrorJustComplete()
 
         let isSignIn = kind.compactMap { $0 == .signIn }.asDriverOnErrorJustComplete()
@@ -127,9 +127,7 @@ struct LoginViewModel: ViewModelType {
             emailError: emailError,
             passwordError: passwordError,
             enableLogin: enableLogin,
-            onLogin: onLogin,
-            onSegmentChanged: onSegmentChanged,
-            resetSegment: resetSegment,
+            onAction: onAction,
             selectedSegmentIndex: selectedSegmentIndex,
             hideNameField: hideNameField,
             animateHideNameField: animateHideNameField,

@@ -111,18 +111,47 @@ private extension UserScene {
             }
         }
 
+        let notiReAuthenticated = BehaviorRelay<Void?>(value: nil)
+        notiReAuthenticated
+            .skipWhile { $0 == nil }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.showNotify(title: "User Re-Authenticated")
+            })
+            .disposed(by: disposeBag)
+
+        let notiDeleted = BehaviorRelay<Void?>(value: nil)
+        let confirmDeleted = notiDeleted
+            .skipWhile { $0 == nil }
+            .flatMap { [weak self] _ in
+                return Observable<Void>.create { observer -> Disposable in
+                    guard let self = self else {
+                        observer.onCompleted()
+                        return Disposables.create()
+                    }
+                    let alert = self.showNotify(title: "User Deleted") {
+                        observer.onNext(())
+                        observer.onCompleted()
+                    }
+                    return Disposables.create {
+                        alert.dismiss(animated: true)
+                    }
+                }
+            }
+
         let input = UserViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
             reAuthenticateTrigger: reAuthenticateButton.rx.tap.asDriver(),
             deleteTrigger: deleteTrigger.asDriverOnErrorJustComplete(),
-            signOutTrigger: signOutButton.rx.tap.asDriver())
+            signOutTrigger: signOutButton.rx.tap.asDriver(),
+            confirmDelete: confirmDeleted.asDriverOnErrorJustComplete())
 
         let output = viewModel.transform(input: input)
 
         [
-            output.onReAuthenticate.drive(),
-            output.onDelete.drive(),
-            output.onSignOut.drive(),
+            output.notiReAuthenticated.drive(notiReAuthenticated),
+            output.notiDeleted.drive(notiDeleted),
+            output.onAction.drive(),
             output.uid.drive(uidLabel.rx.text),
             output.displayName.drive(displayNameLabel.rx.text),
             output.email.drive(emailLabel.rx.text),
@@ -148,5 +177,18 @@ private extension UserScene {
         view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
+    }
+}
+
+private extension UserScene {
+    @discardableResult
+    func showNotify(title: String, okAction: (() -> Void)? = nil) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .destructive) { _ in
+            okAction?()
+        }
+        alert.addAction(okAction)
+        present(alert, animated: true)
+        return alert
     }
 }

@@ -8,12 +8,13 @@ struct UserViewModel: ViewModelType {
         let reAuthenticateTrigger: Driver<Void>
         let deleteTrigger: Driver<Void>
         let signOutTrigger: Driver<Void>
+        let confirmDelete: Driver<Void>
     }
 
     struct Output {
-        let onReAuthenticate: Driver<Void>
-        let onDelete: Driver<Void>
-        let onSignOut: Driver<Void>
+        let notiReAuthenticated: Driver<Void>
+        let notiDeleted: Driver<Void>
+        let onAction: Driver<Void>
         let uid: Driver<String>
         let displayName: Driver<String>
         let email: Driver<String>
@@ -33,21 +34,24 @@ struct UserViewModel: ViewModelType {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
 
-        let onReAuthenticate = input.reAuthenticateTrigger
+        let notiReAuthenticated = input.reAuthenticateTrigger
             .map { (indicator, errorTracker) }
             .flatMapLatest(reAuthenticate)
 
-        let onDelete = input.deleteTrigger
+        let notiDeleted = input.deleteTrigger
             .map { (indicator, errorTracker) }
             .flatMapLatest(deleteUser)
-            .do(onNext: navigator.toLogin)
 
         let onSignOut = input.signOutTrigger
             .map { errorTracker }
             .flatMapLatest(signOut)
             .do(onNext: navigator.toLogin)
 
-        let user = Driver.merge(input.viewDidLoad, onReAuthenticate)
+        let onConfirmDeleted = input.confirmDelete.do(onNext: navigator.toLogin)
+
+        let onAction = Driver.merge(onSignOut, onConfirmDeleted)
+
+        let user = Driver.merge(input.viewDidLoad, notiReAuthenticated)
             .withLatestFrom(usecase.getUser().asDriverOnErrorJustComplete())
 
         let uid = user.withLatestFrom(user).map { "UID: \($0.uid)" }
@@ -61,9 +65,9 @@ struct UserViewModel: ViewModelType {
         let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
         return Output(
-            onReAuthenticate: onReAuthenticate,
-            onDelete: onDelete,
-            onSignOut: onSignOut,
+            notiReAuthenticated: notiReAuthenticated,
+            notiDeleted: notiDeleted,
+            onAction: onAction,
             uid: uid,
             displayName: displayName,
             email: email,
