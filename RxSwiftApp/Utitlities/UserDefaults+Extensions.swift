@@ -5,28 +5,19 @@ extension UserDefaults {
         case userPassword
     }
 
-    static func setValue(_ value: Any, forKey key: Key) -> Observable<Void> {
-        return .deferred {
-            standard.setValue(value, forKey: key.rawValue)
-            standard.synchronize()
-            return .just(())
-        }
+    static func setValue(_ value: Any, forKey key: Key) {
+        standard.setValue(value, forKey: key.rawValue)
+        standard.synchronize()
     }
 
-    static func removeValue(forKey key: Key) -> Observable<Void> {
-        return .deferred {
-            standard.removeObject(forKey: key.rawValue)
-            standard.synchronize()
-            return .just(())
-        }
+    static func removeValue(forKey key: Key) {
+        standard.removeObject(forKey: key.rawValue)
+        standard.synchronize()
     }
 
-    static func removeAllValues() -> Observable<Void> {
-        return .deferred {
-            Key.allCases.forEach { standard.removeObject(forKey: $0.rawValue) }
-            standard.synchronize()
-            return .just(())
-        }
+    static func removeAllValues() {
+        Key.allCases.forEach(removeValue)
+        standard.synchronize()
     }
 
     static func getStringValue(forKey key: Key) -> Observable<String> {

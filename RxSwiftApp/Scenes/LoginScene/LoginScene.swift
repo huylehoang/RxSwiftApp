@@ -84,8 +84,10 @@ private extension LoginScene {
     }
 
     func setupBinding() {
-        loginButton.rx.tap
-            .bind { [weak self] _ in
+        Driver.merge(
+            segmentControl.rx.selectedSegmentIndex.mapToVoid().asDriverOnErrorJustComplete(),
+            loginButton.rx.tap.asDriver())
+            .drive { [weak self] _ in
                 self?.view.endEditing(true)
             }
             .disposed(by: disposeBag)

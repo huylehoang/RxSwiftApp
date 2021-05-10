@@ -16,7 +16,8 @@ struct DefaultLoginUsecase: LoginUsecase {
     func signIn(withEmail email: String, password: String) -> Observable<Void> {
         return service.signIn(withEmail: email, password: password)
             .map { password }
-            .flatMap(savePassword)
+            .do(onNext: savePassword)
+            .mapToVoid()
     }
 
     func signUp(withName name: String, email: String, password: String) -> Observable<Void> {
@@ -24,7 +25,8 @@ struct DefaultLoginUsecase: LoginUsecase {
             .map { (name, $0) }
             .flatMap(updateUserName)
             .map { password }
-            .flatMap(savePassword)
+            .do(onNext: savePassword)
+            .mapToVoid()
     }
 }
 
@@ -34,7 +36,7 @@ private extension DefaultLoginUsecase {
             .catchError(service.deleteUser)
     }
 
-    func savePassword(_ password: String) -> Observable<Void> {
-        return UserDefaults.setValue(password, forKey: .userPassword)
+    func savePassword(_ password: String) {
+        UserDefaults.setValue(password, forKey: .userPassword)
     }
 }
