@@ -54,7 +54,7 @@ struct UserViewModel: ViewModelType {
         let user = Driver.merge(input.viewDidLoad, notiReAuthenticated)
             .withLatestFrom(usecase.getUser().asDriverOnErrorJustComplete())
 
-        let uid = user.withLatestFrom(user).map { "UID: \($0.uid)" }
+        let uid = user.map { "UID: \($0.uid)" }
 
         let displayName = user.compactMap { $0.displayName }.map { "Name: \($0)" }
 
