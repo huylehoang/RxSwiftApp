@@ -1,8 +1,8 @@
 import UIKit
 
 struct LoginSceneBuilder: SceneBuilderType {
-    private(set) var usecase: LoginUsecase
-    private(set) var navigator: LoginNavigator
+    var usecase: LoginUsecase
+    var navigator: LoginNavigator
 
     init(usecase: LoginUsecase = DefaultLoginUsecase(), navigator: LoginNavigator) {
         self.usecase = usecase
@@ -12,16 +12,6 @@ struct LoginSceneBuilder: SceneBuilderType {
     init(navigationController: UINavigationController) {
         usecase = DefaultLoginUsecase()
         navigator = DefaultLoginNavigator(navigationController: navigationController)
-    }
-
-    mutating func withUsecase(_ usecase: LoginUsecase) -> LoginSceneBuilder {
-        self.usecase = usecase
-        return self
-    }
-
-    mutating func withNavigator(_ navigator: LoginNavigator) -> LoginSceneBuilder {
-        self.navigator = navigator
-        return self
     }
 
     func build() -> UIViewController {
