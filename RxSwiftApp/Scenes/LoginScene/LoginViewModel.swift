@@ -77,7 +77,7 @@ struct LoginViewModel: ViewModelType {
                 }
             }
 
-        let loginAvailable = Driver.combineLatest(nameError, emailError, passwordError)
+        let noneError = Driver.combineLatest(nameError, emailError, passwordError)
             .map { combined -> Bool in
                 switch kind.value {
                 case .signIn:
@@ -87,21 +87,12 @@ struct LoginViewModel: ViewModelType {
                 }
             }
 
-        let loginCredential = Driver.combineLatest(fields, loginAvailable)
-
         let onLogin = input.loginTrigger
-            .withLatestFrom(loginCredential)
-            .filter { combined in return combined.1 }
-            .map { combined in return combined.0 }
-            .map { name, email, password in
-                return LoginCredential(
-                    kind: kind.value,
-                    name: name,
-                    email: email,
-                    password: password,
-                    indicator: indicator,
-                    errorTracker: errorTracker)
-            }
+            .withLatestFrom(noneError)
+            .filter { $0 }
+            .withLatestFrom(fields)
+            .map { (kind.value, $0, $1, $2, indicator, errorTracker) }
+            .map(LoginCredential.init)
             .flatMapLatest(login)
             .do(onNext: navigator.toUser)
 
