@@ -74,6 +74,7 @@ struct LoginViewModel: ViewModelType {
                     return !combined.0.isEmpty && !combined.1.isEmpty && !combined.2.isEmpty
                 }
             }
+            .distinctUntilChanged()
 
         let noneError = Driver.combineLatest(nameError, emailError, passwordError)
             .map { combined -> Bool in
@@ -84,6 +85,7 @@ struct LoginViewModel: ViewModelType {
                     return combined.0.isEmpty && combined.1.isEmpty && combined.2.isEmpty
                 }
             }
+            .distinctUntilChanged()
 
         let onLogin = input.loginTrigger
             .withLatestFrom(noneError)

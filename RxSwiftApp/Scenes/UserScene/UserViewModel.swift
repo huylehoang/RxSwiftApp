@@ -54,11 +54,16 @@ struct UserViewModel: ViewModelType {
         let user = Driver.merge(input.viewDidLoad, notiReAuthenticated)
             .withLatestFrom(usecase.getUser().asDriverOnErrorJustComplete())
 
-        let uid = user.map { "UID: \($0.uid)" }
+        let uid = user.map { "UID: \($0.uid)" }.distinctUntilChanged()
 
-        let displayName = user.compactMap { $0.displayName }.map { "Name: \($0)" }
+        let displayName = user
+            .compactMap { $0.displayName }
+            .map { "Name: \($0)" }
+            .distinctUntilChanged()
 
-        let email = user.compactMap { $0.email }.map { "Email: \($0)" }
+        let email = user
+            .compactMap { $0.email }
+            .map { "Email: \($0)" }
 
         let embeddedLoading = indicator.asDriver()
 

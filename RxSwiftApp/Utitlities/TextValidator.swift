@@ -12,7 +12,7 @@ struct TextValidator {
     }
 
     func validate() -> Driver<String> {
-        return input.map(onValidate)
+        return input.map(onValidate).distinctUntilChanged()
     }
 
     private func onValidate(_ text: String) -> String {
