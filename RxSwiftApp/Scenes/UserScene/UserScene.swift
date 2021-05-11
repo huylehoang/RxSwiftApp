@@ -180,7 +180,10 @@ private extension UserScene {
 
 private extension UserScene {
     @discardableResult
-    func showNotify(title: String, okAction: ((UIAlertAction) -> Void)? = nil) -> UIAlertController {
+    func showNotify(
+        title: String,
+        okAction: ((UIAlertAction) -> Void)? = nil
+    ) -> UIAlertController {
         return showAlert(
             title: title,
             actions: [UIAlertAction(title: "OK", style: .default, handler: okAction)])
