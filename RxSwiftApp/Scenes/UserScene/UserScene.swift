@@ -186,7 +186,6 @@ private extension UserScene {
             actions: [UIAlertAction(title: "OK", style: .default, handler: okAction)])
     }
 
-    @discardableResult
     func showAlert(
         title: String, message: String? = nil, actions: [UIAlertAction]
     ) -> UIAlertController {
