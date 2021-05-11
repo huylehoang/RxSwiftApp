@@ -19,7 +19,7 @@ extension SceneBuilderType {
     }
 
     func withNavigator(_ navigator: Navigator) -> Self {
-        return updated { $0.navigator = navigator } 
+        return updated { $0.navigator = navigator }
     }
 
     func updated(by changed: (inout Self) -> Void) -> Self {
