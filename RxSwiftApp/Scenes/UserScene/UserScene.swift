@@ -93,18 +93,16 @@ private extension UserScene {
                     observer.onCompleted()
                     return Disposables.create()
                 }
-                let alert = UIAlertController(
+                let alert = self.showAlert(
                     title: "Delete User",
-                    message: "Are you sure you want delete this user?",
-                    preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .default)
-                let confirmAction = UIAlertAction(title: "Confirm", style: .destructive) { _ in
-                    observer.onNext(())
-                    observer.onCompleted()
-                }
-                alert.addAction(cancelAction)
-                alert.addAction(confirmAction)
-                self.present(alert, animated: true)
+                    message: "Are you sure you want to delete this user?",
+                    actions:[
+                        UIAlertAction(title: "Cancel", style: .default),
+                        UIAlertAction(title: "Confirm", style: .destructive) { _ in
+                            observer.onNext(())
+                            observer.onCompleted()
+                        }
+                    ])
                 return Disposables.create {
                     alert.dismiss(animated: true)
                 }
@@ -129,7 +127,7 @@ private extension UserScene {
                         observer.onCompleted()
                         return Disposables.create()
                     }
-                    let alert = self.showNotify(title: "User Deleted") {
+                    let alert = self.showNotify(title: "User Deleted") { _ in
                         observer.onNext(())
                         observer.onCompleted()
                     }
@@ -182,12 +180,18 @@ private extension UserScene {
 
 private extension UserScene {
     @discardableResult
-    func showNotify(title: String, okAction: (() -> Void)? = nil) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .destructive) { _ in
-            okAction?()
-        }
-        alert.addAction(okAction)
+    func showNotify(title: String, okAction: ((UIAlertAction) -> Void)? = nil) -> UIAlertController {
+        return showAlert(
+            title: title,
+            actions: [UIAlertAction(title: "OK", style: .default, handler: okAction)])
+    }
+
+    @discardableResult
+    func showAlert(
+        title: String, message: String? = nil, actions: [UIAlertAction]
+    ) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        actions.forEach(alert.addAction)
         present(alert, animated: true)
         return alert
     }
