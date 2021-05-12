@@ -111,9 +111,9 @@ private extension LoginScene {
             output.hideNameField.drive(nameField.rx.isHidden),
             output.animateHideNameField.drive(nameField.rx.animatedHiddden),
             output.loginButtonTitle.drive(loginButton.rx.title()),
-            output.emptyField.drive(nameField.rx.forceEmpty),
-            output.emptyField.drive(emailField.rx.forceEmpty),
-            output.emptyField.drive(passwordField.rx.forceEmpty),
+            output.emptyField.drive(nameField.rx.text),
+            output.emptyField.drive(emailField.rx.text),
+            output.emptyField.drive(passwordField.rx.text),
             output.embeddedLoading.drive(rx.showEmbeddedIndicator),
             output.errorMessage.drive(rx.showErrorMessage),
         ]

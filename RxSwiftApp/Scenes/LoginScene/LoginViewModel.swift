@@ -60,32 +60,30 @@ struct LoginViewModel: ViewModelType {
         let emailValidator = TextValidator(.email, source: emailField.asDriver())
         let passwordValidator = TextValidator(.password, source: passwordField.asDriver())
 
-        let fields = Driver.combineLatest(
-            nameField.asDriver(),
-            emailField.asDriver(),
-            passwordField.asDriver())
+        let onSegmentChanged = Driver.merge(
+            input.segmentChanged.compactMap(Kind.init),
+            input.viewDidDisappear.map { Kind.signIn })
+            .do(onNext: kind.accept)
+            .mapToVoid()
 
-        let nameError = input.loginTrigger
+        let onNameField = input.name.do(onNext: nameField.accept).mapToVoid()
+
+        let onEmailField = input.email.do(onNext: emailField.accept).mapToVoid()
+
+        let onPasswordField = input.password.do(onNext: passwordField.accept).mapToVoid()
+
+        let validateTrigger = Driver.merge(input.loginTrigger, onSegmentChanged)
+
+        let nameError = validateTrigger
             .withLatestFrom(nameValidator.validate())
             .distinctUntilChanged()
 
-        let emailError = input.loginTrigger
+        let emailError = validateTrigger
             .withLatestFrom(emailValidator.validate())
             .distinctUntilChanged()
 
-        let passwordError = input.loginTrigger
+        let passwordError = validateTrigger
             .withLatestFrom(passwordValidator.validate())
-            .distinctUntilChanged()
-
-        let enableLogin = fields
-            .map { combined -> Bool in
-                switch kind.value {
-                case .signIn:
-                    return !combined.1.isEmpty && !combined.2.isEmpty
-                case .signUp:
-                    return !combined.0.isEmpty && !combined.1.isEmpty && !combined.2.isEmpty
-                }
-            }
             .distinctUntilChanged()
 
         let noneError = Driver.combineLatest(nameError, emailError, passwordError)
@@ -99,6 +97,22 @@ struct LoginViewModel: ViewModelType {
             }
             .distinctUntilChanged()
 
+        let fields = Driver.combineLatest(
+            nameField.asDriver(),
+            emailField.asDriver(),
+            passwordField.asDriver())
+
+        let enableLogin = fields
+            .map { combined -> Bool in
+                switch kind.value {
+                case .signIn:
+                    return !combined.1.isEmpty && !combined.2.isEmpty
+                case .signUp:
+                    return !combined.0.isEmpty && !combined.1.isEmpty && !combined.2.isEmpty
+                }
+            }
+            .distinctUntilChanged()
+
         let onLogin = input.loginTrigger
             .withLatestFrom(noneError)
             .filter { $0 }
@@ -107,18 +121,6 @@ struct LoginViewModel: ViewModelType {
             .map(LoginCredential.init)
             .flatMapLatest(login)
             .do(onNext: navigator.toUser)
-
-        let onSegmentChanged = Driver.merge(
-            input.segmentChanged.compactMap(Kind.init),
-            input.viewDidDisappear.map { Kind.signIn })
-            .do(onNext: kind.accept)
-            .mapToVoid()
-
-        let onNameField = input.name.do(onNext: nameField.accept).mapToVoid()
-
-        let onEmailField = input.email.do(onNext: emailField.accept).mapToVoid()
-
-        let onPasswordField = input.password.do(onNext: passwordField.accept).mapToVoid()
 
         let onAction = Driver.merge(
             onLogin,

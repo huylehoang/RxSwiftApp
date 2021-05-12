@@ -81,13 +81,6 @@ extension Reactive where Base: ValidationTextfield {
             }
         }
     }
-
-    var forceEmpty: Binder<String> {
-        return Binder(base) { view, empty in
-            text.onNext(empty)
-            error.onNext(empty)
-        }
-    }
 }
 
 private extension ValidationTextfield {
