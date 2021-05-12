@@ -15,11 +15,13 @@ protocol AuthService {
 struct DefaultAuthService: AuthService {
     func signIn(withEmail email: String, password: String) -> Single<Void> {
         return .create { single in
-            Auth.auth().signIn(withEmail: email, password: password) { _, error in
-                if let error = error {
+            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+                if let _ = authResult?.user {
+                    single(.success(()))
+                } else if let error = error {
                     single(.error(error))
                 } else {
-                    single(.success(()))
+                    single(.error(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
