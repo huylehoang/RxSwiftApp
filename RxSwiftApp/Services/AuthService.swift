@@ -34,7 +34,7 @@ struct DefaultAuthService: AuthService {
                 } else if let error = error {
                     single(.error(error))
                 } else {
-                    single(.error(Error.userNotFound))
+                    single(.error(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
