@@ -52,12 +52,18 @@ struct LoginViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
-        let nameValidator = TextValidator(.name, source: input.name)
-        let emailValidator = TextValidator(.email, source: input.email)
-        let passwordValidator = TextValidator(.password, source: input.password)
         let kind = BehaviorRelay(value: Kind.signIn)
+        let nameField = BehaviorRelay(value: "")
+        let emailField = BehaviorRelay(value: "")
+        let passwordField = BehaviorRelay(value: "")
+        let nameValidator = TextValidator(.name, source: nameField.asDriver())
+        let emailValidator = TextValidator(.email, source: emailField.asDriver())
+        let passwordValidator = TextValidator(.password, source: passwordField.asDriver())
 
-        let fields = Driver.combineLatest(input.name, input.email, input.password)
+        let fields = Driver.combineLatest(
+            nameField.asDriver(),
+            emailField.asDriver(),
+            passwordField.asDriver())
 
         let nameError = input.loginTrigger
             .withLatestFrom(nameValidator.validate())
@@ -102,17 +108,24 @@ struct LoginViewModel: ViewModelType {
             .flatMapLatest(login)
             .do(onNext: navigator.toUser)
 
-        let onSegmentChanged = input.segmentChanged
-            .compactMap(Kind.init)
+        let onSegmentChanged = Driver.merge(
+            input.segmentChanged.compactMap(Kind.init),
+            input.viewDidDisappear.map { Kind.signIn })
             .do(onNext: kind.accept)
             .mapToVoid()
 
-        let onResetSegment = input.viewDidDisappear
-            .compactMap { Kind.signIn }
-            .do(onNext: kind.accept)
-            .mapToVoid()
+        let onNameField = input.name.do(onNext: nameField.accept).mapToVoid()
 
-        let onAction = Driver.merge(onLogin, onSegmentChanged, onResetSegment)
+        let onEmailField = input.email.do(onNext: emailField.accept).mapToVoid()
+
+        let onPasswordField = input.password.do(onNext: passwordField.accept).mapToVoid()
+
+        let onAction = Driver.merge(
+            onLogin,
+            onSegmentChanged,
+            onNameField,
+            onEmailField,
+            onPasswordField)
 
         let selectedSegmentIndex = kind.map { $0.rawValue }.asDriverOnErrorJustComplete()
 
@@ -124,7 +137,13 @@ struct LoginViewModel: ViewModelType {
 
         let loginButtonTitle = kind.map { $0.title }.asDriverOnErrorJustComplete()
 
-        let emptyField = kind.map { _ in return "" }.asDriverOnErrorJustComplete()
+        let emptyField = kind.map { _ in return "" }
+            .do(onNext: {
+                nameField.accept($0)
+                emailField.accept($0)
+                passwordField.accept($0)
+            })
+            .asDriverOnErrorJustComplete()
 
         let embeddedLoading = indicator.asDriver()
 
