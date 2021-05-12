@@ -101,12 +101,12 @@ struct LoginViewModel: ViewModelType {
             .do(onNext: kind.accept)
             .mapToVoid()
 
-        let resetSegment = input.viewDidDisappear
+        let onResetSegment = input.viewDidDisappear
             .compactMap { Kind.signIn }
             .do(onNext: kind.accept)
             .mapToVoid()
 
-        let onAction = Driver.merge(onLogin, onSegmentChanged, resetSegment)
+        let onAction = Driver.merge(onLogin, onSegmentChanged, onResetSegment)
 
         let selectedSegmentIndex = kind.map { $0.rawValue }.asDriverOnErrorJustComplete()
 
