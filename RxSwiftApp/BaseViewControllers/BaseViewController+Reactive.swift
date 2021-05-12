@@ -23,3 +23,11 @@ extension Reactive where Base: BaseViewController {
         }
     }
 }
+
+extension Reactive where Base: BaseViewController {
+    var forceEndEditing: Binder<Void> {
+        return Binder(base) { base, _ in
+            base.view.endEditing(true)
+        }
+    }
+}

@@ -64,6 +64,7 @@ struct UserViewModel: ViewModelType {
         let email = user
             .compactMap { $0.email }
             .map { "Email: \($0)" }
+            .distinctUntilChanged()
 
         let embeddedLoading = indicator.asDriver()
 
