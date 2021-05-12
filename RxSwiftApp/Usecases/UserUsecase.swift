@@ -2,10 +2,10 @@ import RxSwift
 import FirebaseAuth
 
 protocol UserUsecase: UsecaseType {
-    func getUser() -> Observable<User>
-    func reAuthenticate() -> Observable<Void>
-    func deleteUser() -> Observable<Void>
-    func signOut() -> Observable<Void>
+    func getUser() -> Single<User>
+    func reAuthenticate() -> Single<User>
+    func deleteUser() -> Single<Void>
+    func signOut() -> Single<Void>
 }
 
 struct DefaultUserUsecase: UserUsecase {
@@ -15,33 +15,33 @@ struct DefaultUserUsecase: UserUsecase {
         self.service = service
     }
 
-    func getUser() -> Observable<User> {
+    func getUser() -> Single<User> {
         return service.getUser()
     }
 
-    func reAuthenticate() -> Observable<Void> {
-        return Observable.combineLatest(email, password).flatMap(reAuthenticate)
+    func reAuthenticate() -> Single<User> {
+        return Observable.combineLatest(email, password).asSingle().flatMap(reAuthenticate)
     }
 
-    func deleteUser() -> Observable<Void> {
-        return service.deleteUser().do(onNext: UserDefaults.removeAllValues)
+    func deleteUser() -> Single<Void> {
+        return service.deleteUser().do(onSuccess: UserDefaults.removeAllValues)
     }
 
-    func signOut() -> Observable<Void> {
-        return service.signOut().do(onNext: UserDefaults.removeAllValues)
+    func signOut() -> Single<Void> {
+        return service.signOut().do(onSuccess: UserDefaults.removeAllValues)
     }
 }
 
 private extension DefaultUserUsecase {
     var email: Observable<String> {
-        return getUser().compactMap { $0.email }
+        return getUser().asObservable().compactMap { $0.email }
     }
 
     var password: Observable<String> {
         return UserDefaults.getStringValue(forKey: .userPassword)
     }
 
-    func reAuthenticate(_ credential: (email: String, password: String)) -> Observable<Void> {
+    func reAuthenticate(_ credential: (email: String, password: String)) -> Single<User> {
         return service.reAuthenticate(withEmail: credential.email, password: credential.password)
     }
 }

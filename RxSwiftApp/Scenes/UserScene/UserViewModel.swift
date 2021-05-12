@@ -1,6 +1,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import FirebaseAuth
 
 struct UserViewModel: ViewModelType {
     struct Input {
@@ -34,9 +35,15 @@ struct UserViewModel: ViewModelType {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
 
-        let notiReAuthenticated = input.reAuthenticateTrigger
+        let onGetUser = input.viewDidLoad
+            .map { errorTracker }
+            .flatMapLatest(getUser)
+
+        let onReAuthenticated = input.reAuthenticateTrigger
             .map { (indicator, errorTracker) }
             .flatMapLatest(reAuthenticate)
+
+        let notiReAuthenticated = onReAuthenticated.mapToVoid()
 
         let notiDeleted = input.deleteTrigger
             .map { (indicator, errorTracker) }
@@ -51,8 +58,7 @@ struct UserViewModel: ViewModelType {
 
         let onAction = Driver.merge(onSignOut, onConfirmDeleted)
 
-        let user = Driver.merge(input.viewDidLoad, notiReAuthenticated)
-            .withLatestFrom(usecase.getUser().asDriverOnErrorJustComplete())
+        let user = Driver.merge(onGetUser, onReAuthenticated)
 
         let uid = user.map { "UID: \($0.uid)" }.distinctUntilChanged()
 
@@ -83,9 +89,15 @@ struct UserViewModel: ViewModelType {
 }
 
 private extension UserViewModel {
+    func getUser(_ errorTracker: ErrorTracker) -> Driver<User> {
+        return usecase.getUser()
+            .trackError(errorTracker)
+            .asDriverOnErrorJustComplete()
+    }
+
     func reAuthenticate(
         _ credential: (indicator: ActivityIndicator, errorTracker: ErrorTracker)
-    ) -> Driver<Void> {
+    ) -> Driver<User> {
         return usecase.reAuthenticate()
             .trackActivity(credential.indicator)
             .trackError(credential.errorTracker)

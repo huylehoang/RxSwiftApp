@@ -2,132 +2,152 @@ import FirebaseAuth
 import RxSwift
 
 protocol AuthService {
-    func signIn(withEmail email: String, password: String) -> Observable<Void>
-    func createUser(withEmail email: String, password: String) -> Observable<User>
-    func updateUserName(_ name: String, for user: User) -> Observable<Void>
-    func getUser() -> Observable<User>
-    func reAuthenticate(withEmail email: String, password: String) -> Observable<Void>
-    func deleteUser() -> Observable<Void>
-    func deleteUser(by error: Error) -> Observable<Void>
-    func signOut() -> Observable<Void>
+    func signIn(withEmail email: String, password: String) -> Single<Void>
+    func createUser(withEmail email: String, password: String) -> Single<User>
+    func updateUserName(_ name: String, for user: User) -> Single<Void>
+    func getUser() -> Single<User>
+    func reAuthenticate(withEmail email: String, password: String) -> Single<User>
+    func deleteUser() -> Single<Void>
+    func deleteUser(by error: Error) -> Single<Void>
+    func signOut() -> Single<Void>
 }
 
 struct DefaultAuthService: AuthService {
-    func signIn(withEmail email: String, password: String) -> Observable<Void> {
-        return .create { observer in
+    func signIn(withEmail email: String, password: String) -> Single<Void> {
+        return .create { single in
             Auth.auth().signIn(withEmail: email, password: password) { _, error in
                 if let error = error {
-                    observer.onError(error)
+                    single(.error(Error.others(error)))
                 } else {
-                    observer.onNext(())
-                    observer.onCompleted()
+                    single(.success(()))
                 }
-                observer.onCompleted()
             }
             return Disposables.create()
         }
     }
 
-    func createUser(withEmail email: String, password: String) -> Observable<User> {
-        return .create { observer in
+    func createUser(withEmail email: String, password: String) -> Single<User> {
+        return .create { single in
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let user = authResult?.user {
-                    observer.onNext(user)
-                    observer.onCompleted()
+                    single(.success(user))
                 } else if let error = error {
-                    observer.onError(error)
+                    single(.error(Error.others(error)))
                 } else {
-                    observer.onError(NSError(domain: "Something wrong!!!", code: 0, userInfo: nil))
+                    single(.error(Error.userNotFound))
                 }
             }
             return Disposables.create()
         }
     }
 
-    func updateUserName(_ name: String, for user: User) -> Observable<Void> {
-        return .create { observer in
+    func updateUserName(_ name: String, for user: User) -> Single<Void> {
+        return .create { single in
             let changeRequest = user.createProfileChangeRequest()
             changeRequest.displayName = name
             changeRequest.commitChanges { error in
                 if let error = error {
-                    observer.onError(error)
+                    single(.error(Error.others(error)))
                 } else {
-                    observer.onNext(())
-                    observer.onCompleted()
+                    single(.success(()))
                 }
             }
             return Disposables.create()
         }
     }
 
-    func getUser() -> Observable<User> {
-        return Observable.just(Auth.auth().currentUser).compactMap { $0 }
+    func getUser() -> Single<User> {
+        return .create { single in
+            guard let user = Auth.auth().currentUser else {
+                single(.error(Error.userNotFound))
+                return Disposables.create()
+            }
+            single(.success(user))
+            return Disposables.create()
+        }
     }
 
-    func reAuthenticate(withEmail email: String, password: String) -> Observable<Void> {
-        return .create { observer in
+    func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
+        return .create { single in
             guard let user = Auth.auth().currentUser else {
-                observer.onCompleted()
+                single(.error(Error.userNotFound))
                 return Disposables.create()
             }
             let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-            user.reauthenticate(with: credential) { _, error in
-                if let error = error {
-                    observer.onError(error)
+            user.reauthenticate(with: credential) { authResult, error in
+                if let user = authResult?.user {
+                    single(.success(user))
+                } else if let error = error {
+                    single(.error(Error.others(error)))
                 } else {
-                    observer.onNext(())
-                    observer.onCompleted()
+                    single(.error(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
         }
     }
 
-    func deleteUser() -> Observable<Void> {
-        return .create { observer in
+    func deleteUser() -> Single<Void> {
+        return .create { single in
             guard let user = Auth.auth().currentUser else {
-                observer.onCompleted()
+                single(.error(Error.userNotFound))
                 return Disposables.create()
             }
             user.delete { error in
                 if let error = error {
-                    observer.onError(error)
+                    single(.error(error))
                 } else {
-                    observer.onNext(())
-                    observer.onCompleted()
+                    single(.success(()))
                 }
             }
             return Disposables.create()
         }
     }
 
-    func deleteUser(by error: Error) -> Observable<Void> {
-        return .create { observer in
+    func deleteUser(by error: Swift.Error) -> Single<Void> {
+        return .create { single in
             guard let user = Auth.auth().currentUser else {
-                observer.onCompleted()
+                single(.error(Error.userNotFound))
                 return Disposables.create()
             }
             user.delete { deletingError in
                 if let deletingError = deletingError {
-                    observer.onError(deletingError)
+                    single(.error(Error.others(deletingError)))
                 } else {
-                    observer.onError(error)
+                    single(.error(Error.others(error)))
                 }
             }
             return Disposables.create()
         }
     }
 
-    func signOut() -> Observable<Void> {
-        return .create { observer in
+    func signOut() -> Single<Void> {
+        return .create { single in
             do {
                 try Auth.auth().signOut()
-                observer.onNext(())
-                observer.onCompleted()
+                single(.success(()))
             } catch {
-                observer.onError(error)
+                single(.error(error))
             }
             return Disposables.create()
+        }
+    }
+}
+
+extension DefaultAuthService {
+    enum Error: Swift.Error {
+        case somethingWentWrong
+        case userNotFound
+        case others(Swift.Error)
+    }
+}
+
+extension DefaultAuthService.Error: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .somethingWentWrong: return "Something went wrong"
+        case .userNotFound: return "User not found"
+        case .others(let error): return error.localizedDescription
         }
     }
 }

@@ -2,8 +2,8 @@ import RxSwift
 import FirebaseAuth
 
 protocol LoginUsecase: UsecaseType {
-    func signIn(withEmail email: String, password: String) -> Observable<Void>
-    func signUp(withName name: String, email: String, password: String) -> Observable<Void>
+    func signIn(withEmail email: String, password: String) -> Single<Void>
+    func signUp(withName name: String, email: String, password: String) -> Single<Void>
 }
 
 struct DefaultLoginUsecase: LoginUsecase {
@@ -13,25 +13,25 @@ struct DefaultLoginUsecase: LoginUsecase {
         self.service = service
     }
 
-    func signIn(withEmail email: String, password: String) -> Observable<Void> {
+    func signIn(withEmail email: String, password: String) -> Single<Void> {
         return service.signIn(withEmail: email, password: password)
             .map { password }
-            .do(onNext: savePassword)
+            .do(onSuccess: savePassword)
             .mapToVoid()
     }
 
-    func signUp(withName name: String, email: String, password: String) -> Observable<Void> {
+    func signUp(withName name: String, email: String, password: String) -> Single<Void> {
         return service.createUser(withEmail: email, password: password)
             .map { (name, $0) }
             .flatMap(updateUserName)
             .map { password }
-            .do(onNext: savePassword)
+            .do(onSuccess: savePassword)
             .mapToVoid()
     }
 }
 
 private extension DefaultLoginUsecase {
-    func updateUserName(_ credential: (name: String, user: User)) -> Observable<Void> {
+    func updateUserName(_ credential: (name: String, user: User)) -> Single<Void> {
         return service.updateUserName(credential.name, for: credential.user)
             .catchError(service.deleteUser)
     }

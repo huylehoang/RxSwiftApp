@@ -151,7 +151,7 @@ private extension LoginViewModel {
     }
 
     func login(_ credential: LoginCredential) -> Driver<Void> {
-        let request: Observable<Void> = {
+        let request: Single<Void> = {
             switch credential.kind {
             case .signIn:
                 return usecase.signIn(withEmail: credential.email, password: credential.password)

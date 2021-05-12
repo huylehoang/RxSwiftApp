@@ -15,6 +15,18 @@ extension SharedSequenceConvertibleType {
     }
 }
 
+extension PrimitiveSequenceType where Trait == SingleTrait {
+    func mapToVoid() -> Single<Void> {
+        return map { _ in } 
+    }
+
+    func asDriver() -> Driver<Element> {
+        return asMaybe().asDriver { error in
+            return Driver.empty()
+        }
+    }
+}
+
 extension ObservableType {
     func catchErrorJustComplete() -> Observable<Element> {
         return catchError { _ in
