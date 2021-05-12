@@ -52,18 +52,24 @@ struct LoginViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
-        let nameValidator = TextValidator(.name, input: input.name)
-        let emailValidator = TextValidator(.email, input: input.email)
-        let passwordValidator = TextValidator(.password, input: input.password)
+        let nameValidator = TextValidator(.name, source: input.name)
+        let emailValidator = TextValidator(.email, source: input.email)
+        let passwordValidator = TextValidator(.password, source: input.password)
         let kind = BehaviorRelay(value: Kind.signIn)
 
         let fields = Driver.combineLatest(input.name, input.email, input.password)
 
-        let nameError = input.loginTrigger.withLatestFrom(nameValidator.validate())
+        let nameError = input.loginTrigger
+            .withLatestFrom(nameValidator.validate())
+            .distinctUntilChanged()
 
-        let emailError = input.loginTrigger.withLatestFrom(emailValidator.validate())
+        let emailError = input.loginTrigger
+            .withLatestFrom(emailValidator.validate())
+            .distinctUntilChanged()
 
-        let passwordError = input.loginTrigger.withLatestFrom(passwordValidator.validate())
+        let passwordError = input.loginTrigger
+            .withLatestFrom(passwordValidator.validate())
+            .distinctUntilChanged()
 
         let enableLogin = fields
             .map { combined -> Bool in

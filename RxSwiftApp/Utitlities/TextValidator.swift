@@ -4,15 +4,15 @@ import RxCocoa
 
 struct TextValidator {
     private let kind: Kind
-    private let input: Driver<String>
+    private let source: Driver<String>
 
-    init(_ kind: Kind, input: Driver<String>) {
+    init(_ kind: Kind, source: Driver<String>) {
         self.kind = kind
-        self.input = input
+        self.source = source
     }
 
     func validate() -> Driver<String> {
-        return input.map(onValidate).distinctUntilChanged()
+        return source.map(onValidate).distinctUntilChanged()
     }
 
     private func onValidate(_ text: String) -> String {
