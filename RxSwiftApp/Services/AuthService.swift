@@ -17,7 +17,7 @@ struct DefaultAuthService: AuthService {
         return .create { single in
             Auth.auth().signIn(withEmail: email, password: password) { _, error in
                 if let error = error {
-                    single(.error(Error.others(error)))
+                    single(.error(error))
                 } else {
                     single(.success(()))
                 }
@@ -32,7 +32,7 @@ struct DefaultAuthService: AuthService {
                 if let user = authResult?.user {
                     single(.success(user))
                 } else if let error = error {
-                    single(.error(Error.others(error)))
+                    single(.error(error))
                 } else {
                     single(.error(Error.userNotFound))
                 }
@@ -47,7 +47,7 @@ struct DefaultAuthService: AuthService {
             changeRequest.displayName = name
             changeRequest.commitChanges { error in
                 if let error = error {
-                    single(.error(Error.others(error)))
+                    single(.error(error))
                 } else {
                     single(.success(()))
                 }
@@ -78,7 +78,7 @@ struct DefaultAuthService: AuthService {
                 if let user = authResult?.user {
                     single(.success(user))
                 } else if let error = error {
-                    single(.error(Error.others(error)))
+                    single(.error(error))
                 } else {
                     single(.error(Error.somethingWentWrong))
                 }
@@ -112,9 +112,9 @@ struct DefaultAuthService: AuthService {
             }
             user.delete { deletingError in
                 if let deletingError = deletingError {
-                    single(.error(Error.others(deletingError)))
+                    single(.error(deletingError))
                 } else {
-                    single(.error(Error.others(error)))
+                    single(.error(error))
                 }
             }
             return Disposables.create()
@@ -138,7 +138,6 @@ extension DefaultAuthService {
     enum Error: Swift.Error {
         case somethingWentWrong
         case userNotFound
-        case others(Swift.Error)
     }
 }
 
@@ -147,7 +146,6 @@ extension DefaultAuthService.Error: LocalizedError {
         switch self {
         case .somethingWentWrong: return "Something went wrong"
         case .userNotFound: return "User not found"
-        case .others(let error): return error.localizedDescription
         }
     }
 }
