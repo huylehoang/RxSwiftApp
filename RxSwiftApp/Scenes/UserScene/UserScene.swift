@@ -1,4 +1,3 @@
-import Foundation
 import RxSwift
 import RxCocoa
 
@@ -87,7 +86,7 @@ private extension UserScene {
     }
 
     func setupBinding() {
-        let deleteTrigger = deleteButton.rx.tap.flatMap { [weak self] _ in
+        let deleteTrigger = deleteButton.rx.tap.flatMap { [weak self] in
             return Observable<Void>.create { observer in
                 guard let self = self else {
                     observer.onCompleted()
@@ -109,20 +108,20 @@ private extension UserScene {
             }
         }
 
-        let notiReAuthenticated = BehaviorRelay<Void?>(value: nil)
+        let notiReAuthenticated = BehaviorRelay<Void>(value: ())
         notiReAuthenticated
-            .skipWhile { $0 == nil }
-            .subscribe(onNext: { [weak self] _ in
+            .skip(1)
+            .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.showNotify(title: "User Re-Authenticated")
             })
             .disposed(by: disposeBag)
 
-        let notiDeleted = BehaviorRelay<Void?>(value: nil)
+        let notiDeleted = BehaviorRelay<Void>(value: ())
         let confirmDeleted = notiDeleted
-            .skipWhile { $0 == nil }
-            .flatMap { [weak self] _ in
-                return Observable<Void>.create { observer -> Disposable in
+            .skip(1)
+            .flatMap { [weak self] in
+                return Observable<Void>.create { observer in
                     guard let self = self else {
                         observer.onCompleted()
                         return Disposables.create()

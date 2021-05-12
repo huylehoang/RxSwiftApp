@@ -1,7 +1,6 @@
-import Foundation
-import FirebaseAuth
 import RxSwift
 import RxCocoa
+import FirebaseAuth
 
 struct LoginViewModel: ViewModelType {
     enum Kind: Int, CaseIterable {
@@ -139,7 +138,7 @@ struct LoginViewModel: ViewModelType {
 
         let loginButtonTitle = kind.map { $0.title }.asDriverOnErrorJustComplete()
 
-        let emptyField = kind.map { _ in return "" }
+        let emptyField = kind.map { _ in "" }
             .do(onNext: {
                 nameField.accept($0)
                 emailField.accept($0)
