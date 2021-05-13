@@ -15,9 +15,7 @@ struct DefaultLoginUsecase: LoginUsecase {
 
     func signIn(withEmail email: String, password: String) -> Single<Void> {
         let signedIn = service.signIn(withEmail: email, password: password)
-        let savePassword = {
-            UserDefaults.setValue(password, forKey: .userPassword)
-        }
+        let savePassword = { UserDefaults.setValue(password, forKey: .userPassword) }
         return signedIn.do(onSuccess: savePassword)
     }
 
@@ -25,9 +23,7 @@ struct DefaultLoginUsecase: LoginUsecase {
         let signedUp = service.createUser(withEmail: email, password: password)
             .map { (name, $0) }
             .flatMap(updateUserName)
-        let savePassword = {
-            UserDefaults.setValue(password, forKey: .userPassword)
-        }
+        let savePassword = { UserDefaults.setValue(password, forKey: .userPassword) }
         return signedUp.do(onSuccess: savePassword)
     }
 }
