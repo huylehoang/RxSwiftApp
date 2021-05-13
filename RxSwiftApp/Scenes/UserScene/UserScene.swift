@@ -86,55 +86,32 @@ private extension UserScene {
     }
 
     func setupBinding() {
-        let deleteTrigger = deleteButton.rx.tap.flatMap { [weak self] in
-            return Observable<Void>.create { observer in
-                guard let self = self else {
-                    observer.onCompleted()
-                    return Disposables.create()
-                }
-                let alert = self.showAlert(
-                    title: "Delete User",
-                    message: "Are you sure you want to delete this user?",
-                    actions:[
-                        UIAlertAction(title: "Cancel", style: .default),
-                        UIAlertAction(title: "Confirm", style: .destructive) { _ in
-                            observer.onNext(())
-                            observer.onCompleted()
-                        }
-                    ])
-                return Disposables.create {
-                    alert.dismiss(animated: true)
-                }
+        let deleteTrigger = deleteButton.rx.tap
+            .map { AlertBuilder(
+                title: "Delete User",
+                message: "Are your sure you want to delete this user?",
+                actions: [
+                    .init(title: "Cancel", style: .destructive, tag: 0),
+                    .init(title: "Confirm", style: .default, tag: 1),
+                ])
             }
-        }
+            .flatMap(weak: self) { $0.showAlert(with: $1) }
+            .filter { $0 == 1 }
+            .mapToVoid()
 
         let notiReAuthenticated = BehaviorRelay<Void>(value: ())
         notiReAuthenticated
             .skip(1)
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.showNotify(title: "User Re-Authenticated")
-            })
+            .map { "USER RE-AUTHENTICATED" }
+            .flatMap(weak: self) { $0.showNotify(with: $1) }
+            .subscribe()
             .disposed(by: disposeBag)
 
         let notiDeleted = BehaviorRelay<Void>(value: ())
         let confirmDeleted = notiDeleted
             .skip(1)
-            .flatMap { [weak self] in
-                return Observable<Void>.create { observer in
-                    guard let self = self else {
-                        observer.onCompleted()
-                        return Disposables.create()
-                    }
-                    let alert = self.showNotify(title: "User Deleted") { _ in
-                        observer.onNext(())
-                        observer.onCompleted()
-                    }
-                    return Disposables.create {
-                        alert.dismiss(animated: true)
-                    }
-                }
-            }
+            .map { "USER DELETED" }
+            .flatMap(weak: self) { $0.showNotify(with: $1) }
 
         let input = UserViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
@@ -174,26 +151,5 @@ private extension UserScene {
         view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
-    }
-}
-
-private extension UserScene {
-    @discardableResult
-    func showNotify(
-        title: String,
-        okAction: ((UIAlertAction) -> Void)? = nil
-    ) -> UIAlertController {
-        return showAlert(
-            title: title,
-            actions: [UIAlertAction(title: "OK", style: .default, handler: okAction)])
-    }
-
-    func showAlert(
-        title: String, message: String? = nil, actions: [UIAlertAction]
-    ) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        actions.forEach(alert.addAction)
-        present(alert, animated: true)
-        return alert
     }
 }
