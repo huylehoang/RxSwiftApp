@@ -1,17 +1,17 @@
 import RxSwift
 
 extension UserDefaults {
-    enum Key: String, CaseIterable {
+    enum Key: Error, CaseIterable {
         case userPassword
     }
 
     static func setValue(_ value: Any, forKey key: Key) {
-        standard.setValue(value, forKey: key.rawValue)
+        standard.setValue(value, forKey: key.description)
         standard.synchronize()
     }
 
     static func removeValue(forKey key: Key) {
-        standard.removeObject(forKey: key.rawValue)
+        standard.removeObject(forKey: key.description)
         standard.synchronize()
     }
 
@@ -20,7 +20,26 @@ extension UserDefaults {
         standard.synchronize()
     }
 
-    static func getStringValue(forKey key: Key) -> Observable<String> {
-        return Observable.just(standard.string(forKey: key.rawValue)).compactMap { $0 }
+    static func getStringValue(forKey key: Key) -> Single<String> {
+        return .create { single in
+            guard let value = standard.string(forKey: key.description) else {
+                single(.error(key))
+                return Disposables.create()
+            }
+            single(.success(value))
+            return Disposables.create()
+        }
+    }
+}
+
+extension UserDefaults.Key: LocalizedError, CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .userPassword: return "userPassword"
+        }
+    }
+
+    var errorDescription: String? {
+        return "Error while getting value of \(description)"
     }
 }

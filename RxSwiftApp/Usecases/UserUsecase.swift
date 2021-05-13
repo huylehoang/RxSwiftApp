@@ -38,7 +38,7 @@ private extension DefaultUserUsecase {
     }
 
     var password: Observable<String> {
-        return UserDefaults.getStringValue(forKey: .userPassword)
+        return UserDefaults.getStringValue(forKey: .userPassword).asObservable()
     }
 
     func reAuthenticate(_ credential: (email: String, password: String)) -> Single<User> {
