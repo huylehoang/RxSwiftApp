@@ -26,7 +26,14 @@ extension BaseViewController {
         }
     }
 
-    // Use Observable+Extension: flatMap(weak:) for preseting UIAlertController reactive way
+    /* Usage:
+     let observable: Observalbe<Void>
+     observable
+        .map(AlertBuilder.init)
+        .withUnretained(self) (self is viewController that inherit from BaseViewController)
+        .flatMap { scene, builder in return scene.showAlert(with: builder) }
+        ...
+    */
     func showAlert(with builder: AlertBuilder) -> Observable<Int> {
         return .create {  observer in
             let alert = UIAlertController(
@@ -48,6 +55,14 @@ extension BaseViewController {
         }
     }
 
+    /* Usage:
+     let observable: Observalbe<Void>
+     observable
+        .map { "Notify Title" }
+        .withUnretained(self) (self is viewController that inherit from BaseViewController)
+        .flatMap { scene, title in return scene.showNotify(with: title) }
+        ...
+    */
     func showNotify(with title: String, confirmButtonTitle: String = "OK") -> Observable<Void> {
         let buidler = AlertBuilder(
             title: title,

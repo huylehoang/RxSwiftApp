@@ -94,21 +94,17 @@ private extension UserViewModel {
             .asDriverOnErrorJustComplete()
     }
 
-    func reAuthenticate(
-        _ credential: (indicator: ActivityIndicator, errorTracker: ErrorTracker)
-    ) -> Driver<User> {
+    func reAuthenticate(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<User> {
         return usecase.reAuthenticate()
-            .trackActivity(credential.indicator)
-            .trackError(credential.errorTracker)
+            .trackActivity(indicator)
+            .trackError(errorTracker)
             .asDriverOnErrorJustComplete()
     }
 
-    func deleteUser(
-        _ credential: (indicator: ActivityIndicator, errorTracker: ErrorTracker)
-    ) -> Driver<Void> {
+    func deleteUser(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<Void> {
         return usecase.deleteUser()
-            .trackActivity(credential.indicator)
-            .trackError(credential.errorTracker)
+            .trackActivity(indicator)
+            .trackError(errorTracker)
             .asDriverOnErrorJustComplete()
     }
 

@@ -29,8 +29,7 @@ struct DefaultLoginUsecase: LoginUsecase {
 }
 
 private extension DefaultLoginUsecase {
-    func updateUserName(_ credential: (name: String, user: User)) -> Single<Void> {
-        return service.updateUserName(credential.name, for: credential.user)
-            .catchError(service.deleteUser)
+    func updateUserName(name: String, user: User) -> Single<Void> {
+        return service.updateUserName(name, for: user).catch(service.deleteUser)
     }
 }

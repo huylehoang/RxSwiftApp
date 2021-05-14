@@ -95,7 +95,8 @@ private extension UserScene {
                     .init(title: "Confirm", style: .default, tag: 1),
                 ])
             }
-            .flatMap(weak: self) { $0.showAlert(with: $1) }
+            .withUnretained(self)
+            .flatMap { $0.showAlert(with: $1) }
             .filter { $0 == 1 }
             .mapToVoid()
 
@@ -103,7 +104,8 @@ private extension UserScene {
         notiReAuthenticated
             .skip(1)
             .map { "USER RE-AUTHENTICATED" }
-            .flatMap(weak: self) { $0.showNotify(with: $1) }
+            .withUnretained(self)
+            .flatMap { $0.showNotify(with: $1) }
             .subscribe()
             .disposed(by: disposeBag)
 
@@ -111,7 +113,8 @@ private extension UserScene {
         let confirmDeleted = notiDeleted
             .skip(1)
             .map { "USER DELETED" }
-            .flatMap(weak: self) { $0.showNotify(with: $1) }
+            .withUnretained(self)
+            .flatMap { $0.showNotify(with: $1) }
 
         let input = UserViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),

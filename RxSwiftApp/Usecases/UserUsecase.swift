@@ -20,7 +20,7 @@ struct DefaultUserUsecase: UserUsecase {
     }
 
     func reAuthenticate() -> Single<User> {
-        return Observable.combineLatest(email, password).asSingle().flatMap(reAuthenticate)
+        return Observable.combineLatest(email, password).asSingle().flatMap(service.reAuthenticate)
     }
 
     func deleteUser() -> Single<Void> {
@@ -39,9 +39,5 @@ private extension DefaultUserUsecase {
 
     var password: Observable<String> {
         return UserDefaults.getStringValue(forKey: .userPassword).asObservable()
-    }
-
-    func reAuthenticate(_ credential: (email: String, password: String)) -> Single<User> {
-        return service.reAuthenticate(withEmail: credential.email, password: credential.password)
     }
 }
