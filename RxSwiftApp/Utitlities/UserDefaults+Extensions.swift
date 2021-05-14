@@ -23,7 +23,7 @@ extension UserDefaults {
     static func getStringValue(forKey key: Key) -> Single<String> {
         return .create { single in
             guard let value = standard.string(forKey: key.description) else {
-                single(.error(key))
+                single(.failure(key))
                 return Disposables.create()
             }
             single(.success(value))

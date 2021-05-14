@@ -19,9 +19,9 @@ struct DefaultAuthService: AuthService {
                 if let _ = authResult?.user {
                     single(.success(()))
                 } else if let error = error {
-                    single(.error(error))
+                    single(.failure(error))
                 } else {
-                    single(.error(Error.somethingWentWrong))
+                    single(.failure(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -34,9 +34,9 @@ struct DefaultAuthService: AuthService {
                 if let user = authResult?.user {
                     single(.success(user))
                 } else if let error = error {
-                    single(.error(error))
+                    single(.failure(error))
                 } else {
-                    single(.error(Error.somethingWentWrong))
+                    single(.failure(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -49,7 +49,7 @@ struct DefaultAuthService: AuthService {
             changeRequest.displayName = name
             changeRequest.commitChanges { error in
                 if let error = error {
-                    single(.error(error))
+                    single(.failure(error))
                 } else {
                     single(.success(()))
                 }
@@ -61,7 +61,7 @@ struct DefaultAuthService: AuthService {
     func getUser() -> Single<User> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.error(Error.userNotFound))
+                single(.failure(Error.userNotFound))
                 return Disposables.create()
             }
             single(.success(user))
@@ -72,7 +72,7 @@ struct DefaultAuthService: AuthService {
     func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.error(Error.userNotFound))
+                single(.failure(Error.userNotFound))
                 return Disposables.create()
             }
             let credential = EmailAuthProvider.credential(withEmail: email, password: password)
@@ -80,9 +80,9 @@ struct DefaultAuthService: AuthService {
                 if let user = authResult?.user {
                     single(.success(user))
                 } else if let error = error {
-                    single(.error(error))
+                    single(.failure(error))
                 } else {
-                    single(.error(Error.somethingWentWrong))
+                    single(.failure(Error.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -92,12 +92,12 @@ struct DefaultAuthService: AuthService {
     func deleteUser() -> Single<Void> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.error(Error.userNotFound))
+                single(.failure(Error.userNotFound))
                 return Disposables.create()
             }
             user.delete { error in
                 if let error = error {
-                    single(.error(error))
+                    single(.failure(error))
                 } else {
                     single(.success(()))
                 }
@@ -109,14 +109,14 @@ struct DefaultAuthService: AuthService {
     func deleteUser(by error: Swift.Error) -> Single<Void> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.error(Error.userNotFound))
+                single(.failure(Error.userNotFound))
                 return Disposables.create()
             }
             user.delete { deletingError in
                 if let deletingError = deletingError {
-                    single(.error(deletingError))
+                    single(.failure(deletingError))
                 } else {
-                    single(.error(error))
+                    single(.failure(error))
                 }
             }
             return Disposables.create()
@@ -129,7 +129,7 @@ struct DefaultAuthService: AuthService {
                 try Auth.auth().signOut()
                 single(.success(()))
             } catch {
-                single(.error(error))
+                single(.failure(error))
             }
             return Disposables.create()
         }
