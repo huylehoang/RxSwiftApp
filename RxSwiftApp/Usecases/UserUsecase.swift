@@ -9,26 +9,39 @@ protocol UserUsecase: UsecaseType {
 }
 
 struct DefaultUserUsecase: UserUsecase {
-    private let service: AuthService
+    private let authService: AuthService
+    private let meService: MeService
+    private let noteService: NoteService
 
-    init(service: AuthService = DefaultAuthService()) {
-        self.service = service
+    init(
+        authService: AuthService = DefaultAuthService(),
+        meService: MeService = DefaultMeService(),
+        noteService: NoteService = DefaultNoteService()
+    ) {
+        self.authService = authService
+        self.meService = meService
+        self.noteService = noteService
     }
 
     func getUser() -> Single<User> {
-        return service.getUser()
+        return authService.getUser()
     }
 
     func reAuthenticate() -> Single<User> {
-        return Observable.combineLatest(email, password).asSingle().flatMap(service.reAuthenticate)
+        return Observable.combineLatest(email, password)
+            .asSingle()
+            .flatMap(authService.reAuthenticate)
     }
 
     func deleteUser() -> Single<Void> {
-        return service.deleteUser().do(onSuccess: UserDefaults.removeAllValues)
+        return noteService.deleteNotes()
+            .flatMap(meService.delete)
+            .flatMap(authService.deleteUser)
+            .do(onSuccess: UserDefaults.removeAllValues)
     }
 
     func signOut() -> Single<Void> {
-        return service.signOut().do(onSuccess: UserDefaults.removeAllValues)
+        return authService.signOut().do(onSuccess: UserDefaults.removeAllValues)
     }
 }
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10049A9B2653052B00139C99 /* MeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10049A9A2653052B00139C99 /* MeService.swift */; };
+		10049AA0265305B000139C99 /* Me.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10049A9F265305B000139C99 /* Me.swift */; };
 		101F5BC62650DEC5000A2A5B /* SideMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101F5BC52650DEC5000A2A5B /* SideMenuScene.swift */; };
 		1022F739263FA8C9007AE3F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1022F738263FA8C9007AE3F2 /* GoogleService-Info.plist */; };
 		1022F74F263FAE8D007AE3F2 /* ValidationTextfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F74E263FAE8D007AE3F2 /* ValidationTextfield.swift */; };
@@ -69,6 +71,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		10049A9A2653052B00139C99 /* MeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeService.swift; sourceTree = "<group>"; };
+		10049A9F265305B000139C99 /* Me.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Me.swift; sourceTree = "<group>"; };
 		101F5BC52650DEC5000A2A5B /* SideMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuScene.swift; sourceTree = "<group>"; };
 		1022F738263FA8C9007AE3F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1022F74E263FAE8D007AE3F2 /* ValidationTextfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationTextfield.swift; sourceTree = "<group>"; };
@@ -220,6 +224,7 @@
 			children = (
 				845FD5C1264E7BAA00308FB4 /* ServiceType.swift */,
 				104C9BBD2643221A00D4FB8B /* AuthService.swift */,
+				10049A9A2653052B00139C99 /* MeService.swift */,
 				845FD5BE264E772800308FB4 /* NoteService.swift */,
 			);
 			path = Services;
@@ -380,6 +385,7 @@
 		845FD5C8264E7E0800308FB4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				10049A9F265305B000139C99 /* Me.swift */,
 				845FD5C9264E7E2800308FB4 /* Note.swift */,
 			);
 			path = Models;
@@ -573,6 +579,7 @@
 				845FD5B8264E751E00308FB4 /* HomeSceneBuilder.swift in Sources */,
 				845947EA2652462B003A5E0C /* UpdateNoteViewModel.swift in Sources */,
 				8476D0AB26424814002C8CB9 /* BaseViewController.swift in Sources */,
+				10049A9B2653052B00139C99 /* MeService.swift in Sources */,
 				845FD5C6264E7C4700308FB4 /* ServiceError.swift in Sources */,
 				8476D0AE264248F7002C8CB9 /* BaseViewController+Extensions.swift in Sources */,
 				8442B34F2643C86E006A6312 /* UserDefaults+Extensions.swift in Sources */,
@@ -600,6 +607,7 @@
 				845947E026521D1A003A5E0C /* Toast.swift in Sources */,
 				8476D0C1264279E3002C8CB9 /* UserScene.swift in Sources */,
 				845947FD26526DCE003A5E0C /* PlaceHolderTextView.swift in Sources */,
+				10049AA0265305B000139C99 /* Me.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

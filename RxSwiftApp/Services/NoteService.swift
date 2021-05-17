@@ -4,6 +4,7 @@ import RxSwift
 protocol NoteService: ServiceType {
     func fetchNotes() -> Single<[Note]>
     func listenNotes() -> Observable<[Note]>
+    func deleteNotes() -> Single<Void>
     func addNote(_ note: Note) -> Single<Void>
     func updateNote(_ note: Note) -> Single<Void>
     func deleteNote(_ note: Note) -> Single<Void>
@@ -17,6 +18,7 @@ struct DefaultNoteService: NoteService {
     }
 
     private var userNotes: Single<CollectionReference> {
+
         return Observable.combineLatest(firestore, userId)
             .map { $0.collection("USERS").document($1).collection("NOTES") }
             .asSingle()
@@ -32,6 +34,10 @@ struct DefaultNoteService: NoteService {
 
     func listenNotes() -> Observable<[Note]> {
         return userNotesQuery.asObservable().flatMap(listenNotes)
+    }
+
+    func deleteNotes() -> Single<Void> {
+        return userNotes.flatMap(deleteNotes)
     }
 
     func addNote(_ note: Note) -> Single<Void> {
@@ -76,6 +82,22 @@ private extension DefaultNoteService {
             return Disposables.create {
                 listener.remove()
             }
+        }
+    }
+
+    func deleteNotes(of userNotes: CollectionReference) -> Single<Void> {
+        return .create { single in
+            userNotes.getDocuments { querySnapshot, error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    querySnapshot?.documents.forEach {
+                        userNotes.document($0.documentID).delete()
+                    }
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
         }
     }
 

@@ -7,22 +7,28 @@ protocol LoginUsecase: UsecaseType {
 }
 
 struct DefaultLoginUsecase: LoginUsecase {
-    private let service: AuthService
+    private let authService: AuthService
+    private let meService: MeService
 
-    init(service: AuthService = DefaultAuthService()) {
-        self.service = service
+    init(
+        authService: AuthService = DefaultAuthService(),
+        meService: MeService = DefaultMeService()
+    ) {
+        self.authService = authService
+        self.meService = meService
     }
 
     func signIn(withEmail email: String, password: String) -> Single<Void> {
-        let signedIn = service.signIn(withEmail: email, password: password)
+        let signedIn = authService.signIn(withEmail: email, password: password)
         let savePassword = { UserDefaults.setValue(password, forKey: .userPassword) }
         return signedIn.do(onSuccess: savePassword)
     }
 
     func signUp(withName name: String, email: String, password: String) -> Single<Void> {
-        let signedUp = service.createUser(withEmail: email, password: password)
+        let signedUp = authService.createUser(withEmail: email, password: password)
             .map { (name, $0) }
             .flatMap(updateUserName)
+            .flatMap(createMe)
         let savePassword = { UserDefaults.setValue(password, forKey: .userPassword) }
         return signedUp.do(onSuccess: savePassword)
     }
@@ -30,6 +36,10 @@ struct DefaultLoginUsecase: LoginUsecase {
 
 private extension DefaultLoginUsecase {
     func updateUserName(name: String, user: User) -> Single<Void> {
-        return service.updateUserName(name, for: user).catch(service.deleteUser)
+        return authService.updateUserName(name, for: user).catch(authService.deleteUser)
+    }
+
+    func createMe() -> Single<Void> {
+        return meService.create().catch(authService.deleteUser)
     }
 }
