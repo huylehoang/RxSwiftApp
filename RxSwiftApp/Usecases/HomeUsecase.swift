@@ -1,8 +1,7 @@
 import RxSwift
 
 protocol HomeUsecase: UsecaseType {
-    func getAllNoteTitles() -> Single<[Note]>
-    func listenNoteTitlesUpdate() -> Observable<[Note]>
+    func fetchNotes() -> Observable<[Note]>
 }
 
 struct DefaultHomeUsecase: HomeUsecase {
@@ -12,12 +11,8 @@ struct DefaultHomeUsecase: HomeUsecase {
         self.service = service
     }
 
-    func getAllNoteTitles() -> Single<[Note]> {
-        return service.getAllNotes()
-    }
-
-    func listenNoteTitlesUpdate() -> Observable<[Note]> {
-        return service.listenNotesUpdate()
+    func fetchNotes() -> Observable<[Note]> {
+        return service.fetchNotes().asObservable().concat(service.listenNotes())
     }
 }
 

@@ -24,7 +24,8 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
             }, onCompleted: {
                 self.decrement()
             },
-            onSubscribe: increment)
+            onSubscribe: increment,
+            onDispose: decrement)
     }
 
     private func increment() {

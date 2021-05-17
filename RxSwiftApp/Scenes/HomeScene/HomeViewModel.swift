@@ -4,6 +4,7 @@ import RxCocoa
 struct HomeViewModel: ViewModelType {
     struct Input {
         let viewDidLoad: Driver<Void>
+        let refreshTrigger: Driver<Void>
         let toAddNoteTrigger: Driver<Void>
         let toUserTrigger: Driver<Void>
         let itemSelected: Driver<IndexPath>
@@ -16,7 +17,6 @@ struct HomeViewModel: ViewModelType {
         let emptyMessage: Driver<String>
         let embeddedIndicator: Driver<Bool>
         let errorMessage: Driver<String>
-        let listenerErrorMessage: Driver<String>
     }
 
     private let usecase: HomeUsecase
@@ -30,21 +30,11 @@ struct HomeViewModel: ViewModelType {
     func transform(input: Input) -> Output {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
-        let listenerErrorTracker = ErrorTracker()
         let notes = BehaviorRelay(value: [Note]())
 
-        let fetchedNotes = input.viewDidLoad
+        let fetchedNotes = Driver.merge(input.viewDidLoad, input.refreshTrigger)
             .map { (indicator, errorTracker) }
-            .flatMapLatest(getAllNoteTitles)
-
-        let updatedNotes = fetchedNotes
-            .mapToVoid()
-            .asObservable()
-            .map { listenerErrorTracker }
-            .flatMapLatest(listenNoteTitlesUpdate)
-            .asDriverOnErrorJustComplete()
-
-        let onFetchNoteTitles = Driver.merge(fetchedNotes, updatedNotes)
+            .flatMapLatest(fetchNotes)
             .do(onNext: notes.accept)
             .mapToVoid()
 
@@ -59,11 +49,13 @@ struct HomeViewModel: ViewModelType {
             .do(onNext: navigator.toEditNote)
             .mapToVoid()
 
-        let onAction = Driver.merge(onFetchNoteTitles, toUser, toAddNote, toEditNote)
+        let onAction = Driver.merge(toUser, toAddNote, toEditNote)
 
         let title = Driver.just("Notes")
 
-        let outputNoteTitles = notes.asDriver().map { $0.titles() }.skip(1).distinctUntilChanged()
+        let outputNoteTitles = Driver.merge(fetchedNotes, errorTracker.mapToVoid())
+            .withLatestFrom(notes.asDriver())
+            .map { $0.titles() }
 
         let emptyMessage = outputNoteTitles.map { $0.isEmpty ? "Empty Notes" : "" }
 
@@ -71,35 +63,26 @@ struct HomeViewModel: ViewModelType {
 
         let errorMessage = errorTracker.map { $0.localizedDescription }.asDriver()
 
-        let listenerErrorMessage = listenerErrorTracker
-            .map { $0.localizedDescription }
-            .asDriver()
-
         return Output(
             title: title,
             noteTitles: outputNoteTitles,
             onAction: onAction,
             emptyMessage: emptyMessage,
             embeddedIndicator: embeddedIndicator,
-            errorMessage: errorMessage,
-            listenerErrorMessage: listenerErrorMessage)
+            errorMessage: errorMessage)
     }
 }
 
 private extension HomeViewModel {
-    func getAllNoteTitles(
+    func fetchNotes(
         indicator: ActivityIndicator,
         errorTracker: ErrorTracker
     ) -> Driver<[Note]> {
-        return usecase.getAllNoteTitles()
+        return usecase.fetchNotes()
             .trackActivity(indicator)
             .trackError(errorTracker)
+            .retry(3)
             .asDriverOnErrorJustComplete()
-    }
-
-    func listenNoteTitlesUpdate(errorTracker: ErrorTracker) -> Observable<[Note]> {
-        // Retry unlimited in case listener return error
-        return usecase.listenNoteTitlesUpdate().trackError(errorTracker).retry()
     }
 
     func getNote(at index: Int, from notes: [Note]) -> Note? {

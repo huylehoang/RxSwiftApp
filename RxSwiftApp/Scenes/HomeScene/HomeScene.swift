@@ -60,7 +60,7 @@ final class HomeScene: BaseViewController {
 private extension HomeScene {
     func setupView() {
         contentView.backgroundColor = .white
-        view.addSubview(tableView)
+        contentView.addSubview(tableView)
         Constraint.activate(
             tableView.leading.equalTo(contentView.leading),
             tableView.trailing.equalTo(contentView.trailing),
@@ -77,6 +77,7 @@ private extension HomeScene {
 
         let input = HomeViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
+            refreshTrigger: rx.emptyViewAction.asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
             toUserTrigger: organizeButton.rx.tap.asDriver(),
             itemSelected: tableView.rx.itemSelected.asDriver())
@@ -88,13 +89,13 @@ private extension HomeScene {
             output.noteTitles.drive(tableView.rx.items) { _, _, title in
                 let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
                 cell.textLabel?.text = title
+                cell.textLabel?.numberOfLines = 0
                 return cell
             },
             output.onAction.drive(),
-            output.emptyMessage.drive(rx.showEmbeddedEmptyView),
+            output.emptyMessage.drive(rx.showEmbeddedEmptyView(actionTitle: "Refresh")),
             output.embeddedIndicator.drive(rx.showEmbeddedIndicator),
-            output.errorMessage.drive(rx.showErrorMessage),
-            output.listenerErrorMessage.drive(rx.showToast),
+            output.errorMessage.drive(rx.showToast),
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }

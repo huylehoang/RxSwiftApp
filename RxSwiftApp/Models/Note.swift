@@ -22,6 +22,7 @@ struct Note: MutableType {
         return [
             "title": title,
             "details": details,
+            "timestamp": Date().timeIntervalSince1970,
         ]
     }
 }

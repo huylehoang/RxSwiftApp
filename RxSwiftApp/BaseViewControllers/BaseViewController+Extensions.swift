@@ -57,6 +57,7 @@ extension BaseViewController {
 
     func showEmbeddedIndicator() {
         contentView.addSubview(embeddedIndicator)
+        contentView.bringSubviewToFront(embeddedIndicator)
         embeddedIndicator.translatesAutoresizingMaskIntoConstraints = false
         Constraint.activate(
             embeddedIndicator.centerX.equalTo(contentView.centerX),
@@ -72,7 +73,7 @@ extension BaseViewController {
 
 extension BaseViewController {
     private static var embeddedEmptyViewContext = 0
-    private var embeddedEmptyView: EmptyView {
+    var embeddedEmptyView: EmptyView {
         guard let emptyView = objc_getAssociatedObject(
                 self,
                 &Self.embeddedEmptyViewContext) as? EmptyView
@@ -88,8 +89,9 @@ extension BaseViewController {
         return emptyView
     }
 
-    func showEmbeddedEmptyView(message: String) {
+    func showEmbeddedEmptyView(message: String, actionTitle: String) {
         contentView.addSubview(embeddedEmptyView)
+        contentView.bringSubviewToFront(embeddedEmptyView)
         embeddedEmptyView.translatesAutoresizingMaskIntoConstraints = false
         Constraint.activate(
             embeddedEmptyView.top.equalTo(contentView.top),
@@ -97,10 +99,12 @@ extension BaseViewController {
             embeddedEmptyView.trailing.equalTo(contentView.trailing),
             embeddedEmptyView.bottom.equalTo(contentView.bottom))
         embeddedEmptyView.rx.message.onNext(message)
+        embeddedEmptyView.rx.actionTitle.onNext(actionTitle)
     }
 
     func hideEmbeddedEmptyView() {
         embeddedEmptyView.rx.message.onNext("")
+        embeddedEmptyView.rx.actionTitle.onNext("")
         embeddedEmptyView.removeFromSuperview()
     }
 }

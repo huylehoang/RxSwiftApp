@@ -26,15 +26,19 @@ extension Reactive where Base: BaseViewController {
 }
 
 extension Reactive where Base: BaseViewController {
-    var showEmbeddedEmptyView: Binder<String> {
+    func showEmbeddedEmptyView(actionTitle: String = "") -> Binder<String> {
         return Binder(base) { base, message in
             if !message.isEmpty {
-                base.showEmbeddedEmptyView(message: message)
+                base.showEmbeddedEmptyView(message: message, actionTitle: actionTitle)
             } else {
                 base.hideEmbeddedEmptyView()
             }
             
         }
+    }
+
+    var emptyViewAction: ControlEvent<Void> {
+        return base.embeddedEmptyView.rx.action
     }
 }
 
@@ -65,29 +69,10 @@ extension Reactive where Base: BaseViewController {
         }
     }
 
-    var showToastWithAction: Binder<(message: String, action: Toast.Action)> {
-        return Binder(base) { _, parameters in
-            guard !parameters.message.isEmpty else { return }
-            Toast.show(message: parameters.message, action: parameters.action)
-        }
-    }
-
-    var showToatWithDuration: Binder<(message: String, duration: TimeInterval)> {
-        return Binder(base) { _, parameters in
-            guard !parameters.message.isEmpty else { return }
-            Toast.show(message: parameters.message, duration: parameters.duration)
-        }
-    }
-
-    var showToatWithConfig:
-        Binder<(message: String, action: Toast.Action, duration: TimeInterval)>
-    {
-        return Binder(base) { _, parameters in
-            guard !parameters.message.isEmpty else { return }
-            Toast.show(
-                message: parameters.message,
-                action: parameters.action,
-                duration: parameters.duration)
+    func showToat(with duration: TimeInterval, _ action: Toast.Action? = nil) -> Binder<String> {
+        return Binder(base) { _, message in
+            guard !message.isEmpty else { return }
+            Toast.show(message: message, action: action, duration: duration)
         }
     }
 }

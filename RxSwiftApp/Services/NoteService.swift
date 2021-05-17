@@ -2,8 +2,8 @@ import FirebaseFirestore
 import RxSwift
 
 protocol NoteService: ServiceType {
-    func getAllNotes() -> Single<[Note]>
-    func listenNotesUpdate() -> Observable<[Note]>
+    func fetchNotes() -> Single<[Note]>
+    func listenNotes() -> Observable<[Note]>
     func addNote(_ note: Note) -> Single<Void>
     func updateNote(_ note: Note) -> Single<Void>
     func deleteNote(_ note: Note) -> Single<Void>
@@ -22,12 +22,16 @@ struct DefaultNoteService: NoteService {
             .asSingle()
     }
 
-    func getAllNotes() -> Single<[Note]> {
-        return userNotes.flatMap(getAllNotes)
+    private var userNotesQuery: Single<Query> {
+        return userNotes.map { $0.order(by: "timestamp", descending: true) }
     }
 
-    func listenNotesUpdate() -> Observable<[Note]> {
-        return userNotes.asObservable().flatMap(listenNotesUpdate)
+    func fetchNotes() -> Single<[Note]> {
+        return userNotesQuery.flatMap(fetchNotes)
+    }
+
+    func listenNotes() -> Observable<[Note]> {
+        return userNotesQuery.asObservable().flatMap(listenNotes)
     }
 
     func addNote(_ note: Note) -> Single<Void> {
@@ -44,9 +48,9 @@ struct DefaultNoteService: NoteService {
 }
 
 private extension DefaultNoteService {
-    func getAllNotes(of userNotes: CollectionReference) -> Single<[Note]> {
+    func fetchNotes(of userNotesQuery: Query) -> Single<[Note]> {
         return .create { single in
-            userNotes.getDocuments { querySnapshot, error in
+            userNotesQuery.getDocuments { querySnapshot, error in
                 if let snapshots = querySnapshot?.documents {
                     single(.success(snapshots.map(Note.init)))
                 } else if let error = error {
@@ -59,15 +63,14 @@ private extension DefaultNoteService {
         }
     }
 
-    func listenNotesUpdate(of userNotes: CollectionReference) -> Observable<[Note]> {
+    func listenNotes(of userNotesQuery: Query) -> Observable<[Note]> {
         return .create { observer in
-            let listener = userNotes.addSnapshotListener { querySnapshot, error in
-                if let snapshots = querySnapshot?.documents {
+            let listener = userNotesQuery.addSnapshotListener { querySnapshot, error in
+                if let querySnapshot = querySnapshot, !querySnapshot.documentChanges.isEmpty {
+                    let snapshots = querySnapshot.documents
                     observer.onNext(snapshots.map(Note.init))
                 } else if let error = error {
                     observer.onError(error)
-                } else {
-                    observer.onError(ServiceError.somethingWentWrong)
                 }
             }
             return Disposables.create {
