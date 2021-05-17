@@ -6,13 +6,6 @@ struct LoginViewModel: ViewModelType {
     enum Kind: Int, CaseIterable {
         case signIn = 0
         case signUp = 1
-
-        var title: String {
-            switch self {
-            case .signIn: return "SIGN IN"
-            case .signUp: return "SIGN UP"
-            }
-        }
     }
 
     struct Input {
@@ -119,7 +112,7 @@ struct LoginViewModel: ViewModelType {
             .map { (kind.value, $0, $1, $2, indicator, errorTracker) }
             .map(LoginCredential.init)
             .flatMapLatest(login)
-            .do(onNext: navigator.toUser)
+            .do(onNext: navigator.toHome)
 
         let onAction = Driver.merge(
             onLogin,
@@ -163,6 +156,15 @@ struct LoginViewModel: ViewModelType {
             emptyField: emptyField,
             embeddedLoading: embeddedLoading,
             errorMessage: errorMessage)
+    }
+}
+
+extension LoginViewModel.Kind {
+    var title: String {
+        switch self {
+        case .signIn: return "SIGN IN"
+        case .signUp: return "SIGN UP"
+        }
     }
 }
 

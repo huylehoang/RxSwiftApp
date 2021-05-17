@@ -1,11 +1,10 @@
 import FirebaseAuth
 import RxSwift
 
-protocol AuthService {
+protocol AuthService: ServiceType {
     func signIn(withEmail email: String, password: String) -> Single<Void>
     func createUser(withEmail email: String, password: String) -> Single<User>
     func updateUserName(_ name: String, for user: User) -> Single<Void>
-    func getUser() -> Single<User>
     func reAuthenticate(withEmail email: String, password: String) -> Single<User>
     func deleteUser() -> Single<Void>
     func deleteUser(by error: Error) -> Single<Void>
@@ -21,7 +20,7 @@ struct DefaultAuthService: AuthService {
                 } else if let error = error {
                     single(.failure(error))
                 } else {
-                    single(.failure(Error.somethingWentWrong))
+                    single(.failure(ServiceError.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -36,7 +35,7 @@ struct DefaultAuthService: AuthService {
                 } else if let error = error {
                     single(.failure(error))
                 } else {
-                    single(.failure(Error.somethingWentWrong))
+                    single(.failure(ServiceError.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -58,21 +57,10 @@ struct DefaultAuthService: AuthService {
         }
     }
 
-    func getUser() -> Single<User> {
-        return .create { single in
-            guard let user = Auth.auth().currentUser else {
-                single(.failure(Error.userNotFound))
-                return Disposables.create()
-            }
-            single(.success(user))
-            return Disposables.create()
-        }
-    }
-
     func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.failure(Error.userNotFound))
+                single(.failure(ServiceError.userNotFound))
                 return Disposables.create()
             }
             let credential = EmailAuthProvider.credential(withEmail: email, password: password)
@@ -82,7 +70,7 @@ struct DefaultAuthService: AuthService {
                 } else if let error = error {
                     single(.failure(error))
                 } else {
-                    single(.failure(Error.somethingWentWrong))
+                    single(.failure(ServiceError.somethingWentWrong))
                 }
             }
             return Disposables.create()
@@ -92,7 +80,7 @@ struct DefaultAuthService: AuthService {
     func deleteUser() -> Single<Void> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.failure(Error.userNotFound))
+                single(.failure(ServiceError.userNotFound))
                 return Disposables.create()
             }
             user.delete { error in
@@ -109,7 +97,7 @@ struct DefaultAuthService: AuthService {
     func deleteUser(by error: Swift.Error) -> Single<Void> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {
-                single(.failure(Error.userNotFound))
+                single(.failure(ServiceError.userNotFound))
                 return Disposables.create()
             }
             user.delete { deletingError in
@@ -132,22 +120,6 @@ struct DefaultAuthService: AuthService {
                 single(.failure(error))
             }
             return Disposables.create()
-        }
-    }
-}
-
-extension DefaultAuthService {
-    enum Error: Swift.Error {
-        case somethingWentWrong
-        case userNotFound
-    }
-}
-
-extension DefaultAuthService.Error: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .somethingWentWrong: return "Something went wrong"
-        case .userNotFound: return "User not found"
         }
     }
 }

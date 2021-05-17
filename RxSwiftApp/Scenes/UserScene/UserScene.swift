@@ -2,10 +2,6 @@ import RxSwift
 import RxCocoa
 
 final class UserScene: BaseViewController {
-    private lazy var uidLabel: UILabel = {
-        return makeLabel()
-    }()
-
     private lazy var displayNameLabel: UILabel = {
         return makeLabel()
     }()
@@ -67,22 +63,17 @@ private extension UserScene {
         stackView.alignment = .leading
         stackView.spacing = 16
         contentView.addSubview(stackView)
-        stackView.addArrangedSubview(uidLabel)
         stackView.addArrangedSubview(displayNameLabel)
         stackView.addArrangedSubview(emailLabel)
         stackView.addArrangedSubview(reAuthenticateButton)
         stackView.addArrangedSubview(deleteButton)
         contentView.addSubview(signOutButton)
-        let constraints = [
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            signOutButton.topAnchor.constraint(
-                equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
-            signOutButton.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor, constant: -24),
-        ]
-        NSLayoutConstraint.activate(constraints)
+        Constraint.activate(
+            stackView.centerY.equalTo(view.centerY),
+            stackView.leading.equalTo(contentView.leading).constant(24),
+            stackView.trailing.equalTo(contentView.trailing).constant(-24),
+            signOutButton.top.equalTo(contentView.safeAreaLayoutGuide.top).constant(24),
+            signOutButton.trailing.equalTo(contentView.trailing).constant(-24))
     }
 
     func setupBinding() {
@@ -100,39 +91,20 @@ private extension UserScene {
             .filter { $0 == 1 }
             .mapToVoid()
 
-        let notiReAuthenticated = BehaviorRelay<Void>(value: ())
-        notiReAuthenticated
-            .skip(1)
-            .map { "USER RE-AUTHENTICATED" }
-            .withUnretained(self)
-            .flatMap { $0.showNotify(with: $1) }
-            .subscribe()
-            .disposed(by: disposeBag)
-
-        let notiDeleted = BehaviorRelay<Void>(value: ())
-        let confirmDeleted = notiDeleted
-            .skip(1)
-            .map { "USER DELETED" }
-            .withUnretained(self)
-            .flatMap { $0.showNotify(with: $1) }
-
         let input = UserViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
             reAuthenticateTrigger: reAuthenticateButton.rx.tap.asDriver(),
             deleteTrigger: deleteTrigger.asDriverOnErrorJustComplete(),
-            signOutTrigger: signOutButton.rx.tap.asDriver(),
-            confirmDelete: confirmDeleted.asDriverOnErrorJustComplete())
+            signOutTrigger: signOutButton.rx.tap.asDriver())
 
         let output = viewModel.transform(input: input)
 
         [
-            output.notiReAuthenticated.drive(notiReAuthenticated),
-            output.notiDeleted.drive(notiDeleted),
             output.onAction.drive(),
-            output.uid.drive(uidLabel.rx.text),
+            output.showToast.drive(rx.showToast),
             output.displayName.drive(displayNameLabel.rx.text),
             output.email.drive(emailLabel.rx.text),
-            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
+            output.embeddedLoading.drive(rx.showEmbeddedIndicatorView),
             output.errorMessage.drive(rx.showErrorMessage),
         ]
         .forEach { $0.disposed(by: disposeBag) }

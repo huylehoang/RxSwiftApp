@@ -1,7 +1,7 @@
 import UIKit
 
 protocol LoginNavigator: NavigatorType {
-    func toUser()
+    func toHome()
 }
 
 struct DefaultLoginNavigator: LoginNavigator {
@@ -11,9 +11,9 @@ struct DefaultLoginNavigator: LoginNavigator {
         self.navigationController = navigationController
     }
 
-    func toUser() {
+    func toHome() {
         guard let navigationController = navigationController else { return }
-        let userScene = UserSceneBuilder(navigationController: navigationController).build()
-        navigationController.pushViewController(userScene, animated: true)
+        let homeScene = Scene.home.build(in: navigationController)
+        navigationController.pushViewController(homeScene, animated: true)
     }
 }

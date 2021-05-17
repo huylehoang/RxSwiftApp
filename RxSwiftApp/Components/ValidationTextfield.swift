@@ -92,9 +92,6 @@ private extension ValidationTextfield {
         addArrangedSubview(separator)
         addArrangedSubview(errorLabel)
         setCustomSpacing(16, after: separator)
-        let constraints = [
-            separator.heightAnchor.constraint(equalToConstant: 1)
-        ]
-        NSLayoutConstraint.activate(constraints)
+        Constraint.activate(separator.height.equalTo(1))
     }
 }

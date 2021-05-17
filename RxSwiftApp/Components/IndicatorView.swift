@@ -30,10 +30,8 @@ private extension IndicatorView {
     func setupView() {
         backgroundColor = UIColor(red: 33/255, green: 43/255, blue: 54/255, alpha: 0.76)
         addSubview(activityIndicatorView)
-        let constraints = [
-            activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ]
-        NSLayoutConstraint.activate(constraints)
+        Constraint.activate(
+            activityIndicatorView.centerX.equalTo(centerX),
+            activityIndicatorView.centerY.equalTo(centerY))
     }
 }

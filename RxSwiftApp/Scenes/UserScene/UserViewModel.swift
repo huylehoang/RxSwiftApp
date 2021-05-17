@@ -8,14 +8,11 @@ struct UserViewModel: ViewModelType {
         let reAuthenticateTrigger: Driver<Void>
         let deleteTrigger: Driver<Void>
         let signOutTrigger: Driver<Void>
-        let confirmDelete: Driver<Void>
     }
 
     struct Output {
-        let notiReAuthenticated: Driver<Void>
-        let notiDeleted: Driver<Void>
         let onAction: Driver<Void>
-        let uid: Driver<String>
+        let showToast: Driver<String>
         let displayName: Driver<String>
         let email: Driver<String>
         let embeddedLoading: Driver<Bool>
@@ -42,24 +39,25 @@ struct UserViewModel: ViewModelType {
             .map { (indicator, errorTracker) }
             .flatMapLatest(reAuthenticate)
 
-        let notiReAuthenticated = onReAuthenticated.mapToVoid()
-
-        let notiDeleted = input.deleteTrigger
+        let onDeleted = input.deleteTrigger
             .map { (indicator, errorTracker) }
             .flatMapLatest(deleteUser)
+            .mapToVoid()
 
         let onSignOut = input.signOutTrigger
             .map { errorTracker }
             .flatMapLatest(signOut)
-            .do(onNext: navigator.toLogin)
 
-        let onConfirmDeleted = input.confirmDelete.do(onNext: navigator.toLogin)
+        let toLogin = Driver.merge(onDeleted, onSignOut).do(onNext: navigator.toLogin)
 
-        let onAction = Driver.merge(onSignOut, onConfirmDeleted)
+        let onAction = Driver.merge(onReAuthenticated.mapToVoid(), toLogin)
+
+        let showToast = Driver.merge(
+            onReAuthenticated.map { _ in "Re-Authenticated" },
+            onDeleted.map { "Deleted User" },
+            onSignOut.map { "Signed Out" })
 
         let user = Driver.merge(onGetUser, onReAuthenticated)
-
-        let uid = user.map { "UID: \($0.uid)" }.distinctUntilChanged()
 
         let displayName = user
             .compactMap { $0.displayName }
@@ -76,10 +74,8 @@ struct UserViewModel: ViewModelType {
         let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
         return Output(
-            notiReAuthenticated: notiReAuthenticated,
-            notiDeleted: notiDeleted,
             onAction: onAction,
-            uid: uid,
+            showToast: showToast,
             displayName: displayName,
             email: email,
             embeddedLoading: embeddedLoading,

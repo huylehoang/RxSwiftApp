@@ -4,12 +4,12 @@ import FirebaseAuth
 enum Application {
     static func confirgureMainInterface(in window: UIWindow) {
         let navigationController = UINavigationController()
-        let loginScene = LoginSceneBuilder(navigationController: navigationController).build()
+        let loginScene = Scene.login.build(in: navigationController)
         var scenes: [UIViewController] = [loginScene]
 
         if Auth.auth().currentUser != nil {
-            let userScene = UserSceneBuilder(navigationController: navigationController).build()
-            scenes.append(userScene)
+            let homeScene = Scene.home.build(in: navigationController)
+            scenes.append(homeScene)
         }
 
         navigationController.setViewControllers(scenes, animated: false)

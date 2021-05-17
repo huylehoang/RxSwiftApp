@@ -1,18 +1,18 @@
 import UIKit
 
-protocol UserNavigator: NavigatorType {
-    func toLogin()
+protocol UpdateNoteNavigator {
+    func toHome()
 }
 
-struct DefaultUserNavigator: UserNavigator {
+struct DefaultUpdateNoteNavigator: UpdateNoteNavigator {
     private weak var navigationController: UINavigationController?
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 
-    func toLogin() {
+    func toHome() {
         guard let navigationController = navigationController else { return }
-        navigationController.popViewController(animated: true)
+        navigationController.popViewController(animated: false)
     }
 }

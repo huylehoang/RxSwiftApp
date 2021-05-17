@@ -3,6 +3,22 @@ import UIKit
 class BaseViewController: UIViewController {
     let contentView: UIView
 
+    var hideNavigationBar: Bool {
+        return true
+    }
+
+    var hidesBackButton: Bool {
+        return true
+    }
+
+    var leftBarButtonItems: [UIBarButtonItem] {
+        return []
+    }
+
+    var rightBarButtonItems: [UIBarButtonItem] {
+        return []
+    }
+
     init() {
         contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -17,21 +33,24 @@ class BaseViewController: UIViewController {
     override func loadView() {
         view = UIView()
         view.addSubview(contentView)
-        let trailing = contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        trailing.priority = UILayoutPriority(rawValue: 999)
-        let constraints = [
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            trailing,
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ]
-        NSLayoutConstraint.activate(constraints)
-        hideNavigationBar(true)
+        Constraint.activate(
+            contentView.leading.equalTo(view.leading),
+            contentView.trailing.equalTo(view.trailing).priority(.level(999)),
+            contentView.top.equalTo(view.top),
+            contentView.bottom.equalTo(view.bottom))
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavigationBar()
     }
 }
 
-extension BaseViewController {
-    func hideNavigationBar(_ hide: Bool, animated: Bool = false) {
-        navigationController?.setNavigationBarHidden(hide, animated: animated)
+private extension BaseViewController {
+    func setupNavigationBar() {
+        navigationController?.setNavigationBarHidden(hideNavigationBar, animated: false)
+        navigationItem.setHidesBackButton(hidesBackButton, animated: false)
+        navigationItem.rightBarButtonItems = rightBarButtonItems
+        navigationItem.leftBarButtonItems = leftBarButtonItems
     }
 }

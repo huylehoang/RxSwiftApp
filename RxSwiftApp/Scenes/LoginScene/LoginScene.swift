@@ -73,13 +73,11 @@ private extension LoginScene {
         stackView.addArrangedSubview(emailField)
         stackView.addArrangedSubview(passwordField)
         stackView.addArrangedSubview(loginButton)
-        let constraints = [
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            loginButton.heightAnchor.constraint(equalToConstant: 40),
-        ]
-        NSLayoutConstraint.activate(constraints)
+        Constraint.activate(
+            stackView.centerY.equalTo(view.centerY),
+            stackView.leading.equalTo(contentView.leading).constant(24),
+            stackView.trailing.equalTo(contentView.trailing).constant(-24),
+            loginButton.height.equalTo(40))
     }
 
     func setupBinding() {
@@ -113,7 +111,7 @@ private extension LoginScene {
             output.emptyField.drive(nameField.rx.text),
             output.emptyField.drive(emailField.rx.text),
             output.emptyField.drive(passwordField.rx.text),
-            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
+            output.embeddedLoading.drive(rx.showEmbeddedIndicatorView),
             output.errorMessage.drive(rx.showErrorMessage),
         ]
         .forEach { $0.disposed(by: disposeBag) }
