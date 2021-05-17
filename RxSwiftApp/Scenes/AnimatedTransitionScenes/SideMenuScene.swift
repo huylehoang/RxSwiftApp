@@ -4,11 +4,7 @@ final class SideMenuScene: BaseViewController {
     struct Confirguration {
         let animateDuration: TimeInterval = 0.2
         let rightOffset: CGFloat = 50
-        let backgroundColor: UIColor = UIColor(
-            red: 33/255,
-            green: 43/255,
-            blue: 54/255,
-            alpha: 0.76)
+        let dimmingColor: UIColor = UIColor(red: 33/255, green: 43/255, blue: 54/255, alpha: 0.76)
     }
 
     static var configuration = Confirguration()
@@ -146,7 +142,7 @@ private final class PresentationController: UIPresentationController {
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = SideMenuScene.configuration.backgroundColor
+        view.backgroundColor = SideMenuScene.configuration.dimmingColor
         view.alpha = 0.0
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         view.isUserInteractionEnabled = true
