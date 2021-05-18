@@ -10,6 +10,7 @@ final class SideMenuScene: BaseViewController {
     static var configuration = Confirguration()
 
     private weak var embeddedScene: UIViewController?
+    private var interactionController: InteractionController?
 
     init(embeddedScene: UIViewController) {
         super.init()
@@ -17,6 +18,11 @@ final class SideMenuScene: BaseViewController {
         setupEmbeddedView()
         transitioningDelegate = self
         modalPresentationStyle = .custom
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupInteractionController()
     }
 }
 
@@ -33,10 +39,14 @@ private extension SideMenuScene {
             embeddedScene.view.top.equalTo(contentView.top),
             embeddedScene.view.bottom.equalTo(contentView.bottom))
     }
+
+    func setupInteractionController() {
+        interactionController = InteractionController(interactiveController: self)
+    }
 }
 
 extension SideMenuScene: UIViewControllerTransitioningDelegate {
-    public func presentationController(
+    func presentationController(
         forPresented presented: UIViewController,
         presenting: UIViewController?,
         source: UIViewController
@@ -48,7 +58,7 @@ extension SideMenuScene: UIViewControllerTransitioningDelegate {
         return presentationController
     }
 
-    public func animationController(
+    func animationController(
         forPresented presented: UIViewController,
         presenting: UIViewController,
         source: UIViewController
@@ -56,10 +66,16 @@ extension SideMenuScene: UIViewControllerTransitioningDelegate {
         return PresentingAnimation()
     }
 
-    public func animationController(
+    func animationController(
         forDismissed dismissed: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
         return DimissingAnimation()
+    }
+
+    func interactionControllerForDismissal(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning? {
+        return interactionController?.percentController
     }
 }
 
@@ -100,14 +116,15 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
         containerView.layoutIfNeeded()
         to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 1)
         UIView.animate(
-            withDuration: SideMenuScene.configuration.animateDuration,
+            withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
             animations: {
                 to.view.transform = .identity
             },
             completion: { _ in
-                transitionContext.completeTransition(true)
+                let success = !transitionContext.transitionWasCancelled
+                transitionContext.completeTransition(success)
             })
     }
 }
@@ -122,7 +139,7 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let from = transitionContext.viewController(forKey: .from) else { return }
         UIView.animate(
-            withDuration: SideMenuScene.configuration.animateDuration,
+            withDuration: transitionDuration(using: transitionContext),
             delay: 0.0,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 1,
@@ -133,7 +150,8 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
                     y: 1)
             },
             completion: { _ in
-                transitionContext.completeTransition(true)
+                let success = !transitionContext.transitionWasCancelled
+                transitionContext.completeTransition(success)
             })
     }
 }
@@ -151,7 +169,7 @@ private final class PresentationController: UIPresentationController {
     }()
 
     override func presentationTransitionWillBegin() {
-        if let containerView = containerView {
+        if let containerView = containerView, !dimmingView.isDescendant(of: containerView) {
             containerView.insertSubview(dimmingView, at: 0)
             Constraint.activate(
                 dimmingView.top.equalTo(containerView.top),
@@ -177,10 +195,51 @@ private final class PresentationController: UIPresentationController {
             self?.dimmingView.alpha = 0.0
         }
     }
-}
 
-private extension PresentationController {
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         presentedViewController.dismiss(animated: true)
+    }
+}
+
+private final class InteractionController {
+    private weak var interactiveController: BaseViewController?
+
+    private(set) var percentController: UIPercentDrivenInteractiveTransition?
+
+    init(interactiveController: BaseViewController) {
+        self.interactiveController = interactiveController
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        interactiveController.contentView.addGestureRecognizer(panGesture)
+    }
+
+    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
+        guard let interactiveView = sender.view else { return }
+
+        let interactiveViewWidth = interactiveView.frame.size.width
+        let fullWidth = interactiveViewWidth + SideMenuScene.configuration.rightOffset
+        let ratio = interactiveViewWidth / fullWidth
+        let translationX = sender.translation(in: interactiveView).x * ratio
+
+        guard translationX < 0 else { return }
+        let percent = abs(translationX) / interactiveViewWidth
+
+        switch sender.state {
+        case .began:
+            percentController = UIPercentDrivenInteractiveTransition()
+            interactiveController?.dismiss(animated: true)
+            percentController?.update(percent)
+        case .changed:
+            percentController?.update(percent)
+        case .ended, .cancelled:
+            percentController?.completionSpeed = 0.5
+            if percent > 0.5 * 1/2 {
+                percentController?.finish()
+            } else {
+                percentController?.cancel()
+            }
+            percentController = nil
+        default:
+            break
+        }
     }
 }
