@@ -1,6 +1,7 @@
 import RxSwift
 
 protocol HomeUsecase: UsecaseType {
+    func reloadUser() -> Single<Void>
     func fetchNotes() -> Observable<[Note]>
 }
 
@@ -9,6 +10,10 @@ struct DefaultHomeUsecase: HomeUsecase {
 
     init(service: NoteService = DefaultNoteService()) {
         self.service = service
+    }
+
+    func reloadUser() -> Single<Void> {
+        return service.reloadUser()
     }
 
     func fetchNotes() -> Observable<[Note]> {

@@ -29,14 +29,21 @@ struct HomeViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let indicator = ActivityIndicator()
+        let reloadErrorTracker = ErrorTracker()
         let errorTracker = ErrorTracker()
         let notes = BehaviorRelay(value: [Note]())
 
-        let fetchedNotes = Driver.merge(input.viewDidLoad, input.refreshTrigger)
+        let reloadedUser = input.viewDidLoad
+            .map { (indicator, reloadErrorTracker) }
+            .flatMapLatest(reloadUser)
+
+        let fetchedNotes = Driver.merge(reloadedUser, input.refreshTrigger)
             .map { (indicator, errorTracker) }
             .flatMapLatest(fetchNotes)
             .do(onNext: notes.accept)
             .mapToVoid()
+
+        let toLogin = reloadErrorTracker.mapToVoid().do(onNext: navigator.toLogin)
 
         let toUser = input.toUserTrigger.do(onNext: navigator.toUser)
 
@@ -49,7 +56,7 @@ struct HomeViewModel: ViewModelType {
             .do(onNext: navigator.toEditNote)
             .mapToVoid()
 
-        let onAction = Driver.merge(toUser, toAddNote, toEditNote)
+        let onAction = Driver.merge(toLogin, toUser, toAddNote, toEditNote)
 
         let title = Driver.just("Notes")
 
@@ -61,7 +68,8 @@ struct HomeViewModel: ViewModelType {
 
         let embeddedIndicator = indicator.asDriver()
 
-        let errorMessage = errorTracker.map { $0.localizedDescription }.asDriver()
+        let errorMessage = Driver.merge(reloadErrorTracker.asDriver(), errorTracker.asDriver())
+            .map { $0.localizedDescription }
 
         return Output(
             title: title,
@@ -74,10 +82,14 @@ struct HomeViewModel: ViewModelType {
 }
 
 private extension HomeViewModel {
-    func fetchNotes(
-        indicator: ActivityIndicator,
-        errorTracker: ErrorTracker
-    ) -> Driver<[Note]> {
+    func reloadUser(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<Void> {
+        return usecase.reloadUser()
+            .trackActivity(indicator)
+            .trackError(errorTracker)
+            .asDriverOnErrorJustComplete()
+    }
+
+    func fetchNotes(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<[Note]> {
         return usecase.fetchNotes()
             .trackActivity(indicator)
             .trackError(errorTracker)

@@ -18,7 +18,6 @@ struct DefaultNoteService: NoteService {
     }
 
     private var userNotes: Single<CollectionReference> {
-
         return Observable.combineLatest(firestore, userId)
             .map { $0.collection("USERS").document($1).collection("NOTES") }
             .asSingle()

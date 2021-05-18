@@ -1,6 +1,7 @@
 import UIKit
 
 protocol HomeNavigator: NavigatorType {
+    func toLogin()
     func toUser()
     func toAddNote()
     func toEditNote(_ note: Note)
@@ -11,6 +12,11 @@ struct DefaultHomeNavigator: HomeNavigator {
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+    }
+
+    func toLogin() {
+        guard let navigationController = navigationController else { return }
+        navigationController.popToRootViewController(animated: false)
     }
 
     func toUser() {

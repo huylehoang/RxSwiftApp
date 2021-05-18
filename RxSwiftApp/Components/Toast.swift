@@ -114,9 +114,10 @@ private extension ToastView {
         button.titleLabel?.minimumScaleFactor = minimumFontScale
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.titleLabel?.textAlignment = .center
         button.contentHorizontalAlignment = .center
         button.contentVerticalAlignment = .center
-        button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        button.contentEdgeInsets = UIEdgeInsets(top: 24, left: 12, bottom: 24, right: 12)
         button.addTarget(self, action: #selector(actionDidTap(_:)), for: .touchUpInside)
         addSubview(button)
         container.addSubview(self)
