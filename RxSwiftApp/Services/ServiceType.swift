@@ -13,8 +13,8 @@ extension ServiceType {
                 return Disposables.create()
             }
             user.reload { error in
-                if let error = error {
-                    single(.failure(error))
+                if let _ = error {
+                    single(.failure(ServiceError.userNotFound))
                 } else {
                     single(.success(()))
                 }
