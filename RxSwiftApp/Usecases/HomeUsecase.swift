@@ -19,7 +19,7 @@ struct DefaultHomeUsecase: HomeUsecase {
 
 private extension DefaultHomeUsecase {
     func fetch() -> Observable<[Note]> {
-        // Call fetch note then start notes listener
+        // Call fetch notes then start notes listener
         // Retry 3 times for listener in case return error
         return service.fetchNotes().asObservable().concat(service.listenNotes().retry(3))
     }
