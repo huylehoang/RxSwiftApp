@@ -9,7 +9,7 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
     private let _behavior = BehaviorRelay(value: false)
     private let _loading: SharedSequence<SharingStrategy, Bool>
 
-    public init() {
+    init() {
         _loading = _behavior.asDriver().distinctUntilChanged()
     }
 
