@@ -205,8 +205,8 @@
 		1022F76D26404926007AE3F2 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				10CA3569265032B200D49F39 /* Error */,
-				10CA3568265032A800D49F39 /* Type */,
+				10CA3569265032B200D49F39 /* Errors */,
+				10CA3568265032A800D49F39 /* Types */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -320,7 +320,7 @@
 			path = EmptyScene;
 			sourceTree = "<group>";
 		};
-		10CA3568265032A800D49F39 /* Type */ = {
+		10CA3568265032A800D49F39 /* Types */ = {
 			isa = PBXGroup;
 			children = (
 				845FD5CC264E7F5C00308FB4 /* MutableType.swift */,
@@ -329,16 +329,16 @@
 				84171C08264516A200DD0074 /* NavigatorType.swift */,
 				84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */,
 			);
-			path = Type;
+			path = Types;
 			sourceTree = "<group>";
 		};
-		10CA3569265032B200D49F39 /* Error */ = {
+		10CA3569265032B200D49F39 /* Errors */ = {
 			isa = PBXGroup;
 			children = (
 				845FD5C5264E7C4700308FB4 /* ServiceError.swift */,
 				10CA356A265032D500D49F39 /* SceneBuidlerError.swift */,
 			);
-			path = Error;
+			path = Errors;
 			sourceTree = "<group>";
 		};
 		4BF461466D0854D18FEEABAB /* Pods */ = {
