@@ -6,11 +6,11 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
     typealias SharingStrategy = DriverSharingStrategy
 
     private let _lock = NSRecursiveLock()
-    private let _behavior = BehaviorRelay(value: 0)
+    private let _behavior = BehaviorRelay(value: false)
     private let _loading: SharedSequence<SharingStrategy, Bool>
 
     public init() {
-        _loading = _behavior.asDriver().map { $0 > 0 }.distinctUntilChanged()
+        _loading = _behavior.asDriver().distinctUntilChanged()
     }
 
     fileprivate func trackActivityOfObservable<O: ObservableConvertibleType>(
@@ -18,25 +18,24 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
     ) -> Observable<O.Element> {
         return source.asObservable()
             .do(onNext: { _ in
-                self.decrement()
+                self.sendStopLoading()
             }, onError: { _ in
-                self.decrement()
+                self.sendStopLoading()
             }, onCompleted: {
-                self.decrement()
+                self.sendStopLoading()
             },
-            onSubscribe: increment,
-            onDispose: decrement)
+            onSubscribe: subscribed)
     }
 
-    private func increment() {
+    private func subscribed() {
         _lock.lock()
-        _behavior.accept(_behavior.value + 1)
+        _behavior.accept(true)
         _lock.unlock()
     }
 
-    private func decrement() {
+    private func sendStopLoading() {
         _lock.lock()
-        _behavior.accept(max(0, _behavior.value - 1))
+        _behavior.accept(false)
         _lock.unlock()
     }
 
