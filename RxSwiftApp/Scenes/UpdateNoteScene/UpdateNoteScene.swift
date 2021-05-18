@@ -59,8 +59,6 @@ final class UpdateNoteScene: BaseViewController {
 
     private let viewModel: UpdateNoteViewModel
 
-    private let disposeBag = DisposeBag()
-
     init(viewModel: UpdateNoteViewModel) {
         self.viewModel = viewModel
         super.init()

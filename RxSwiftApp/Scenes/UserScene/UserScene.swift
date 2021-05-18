@@ -35,8 +35,6 @@ final class UserScene: BaseViewController {
 
     private let viewModel: UserViewModel
 
-    private let disposeBag = DisposeBag()
-
     init(viewModel: UserViewModel) {
         self.viewModel = viewModel
         super.init()

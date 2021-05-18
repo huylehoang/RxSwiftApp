@@ -40,8 +40,6 @@ final class LoginScene: BaseViewController {
 
     private let viewModel: LoginViewModel
 
-    private let disposeBag = DisposeBag()
-
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
         super.init()

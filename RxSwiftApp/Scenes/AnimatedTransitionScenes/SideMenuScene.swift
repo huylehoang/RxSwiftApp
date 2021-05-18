@@ -2,8 +2,9 @@ import UIKit
 
 final class SideMenuScene: BaseViewController {
     struct Confirguration {
-        let animateDuration: TimeInterval = 0.2
-        let rightOffset: CGFloat = 50
+        let presentDuration: TimeInterval = 0.25
+        let dismissDuration: TimeInterval = 0.35
+        let rightOffset: CGFloat = UIScreen.main.bounds.width * 1/5
         let dimmingColor: UIColor = UIColor(red: 33/255, green: 43/255, blue: 54/255, alpha: 0.76)
     }
 
@@ -99,7 +100,7 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
     func transitionDuration(
         using transitionContext: UIViewControllerContextTransitioning?
     ) -> TimeInterval {
-        return SideMenuScene.configuration.animateDuration
+        return SideMenuScene.configuration.presentDuration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -133,7 +134,7 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
     func transitionDuration(
         using transitionContext: UIViewControllerContextTransitioning?
     ) -> TimeInterval {
-        return SideMenuScene.configuration.animateDuration
+        return SideMenuScene.configuration.dismissDuration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -162,7 +163,7 @@ private final class PresentationController: UIPresentationController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = SideMenuScene.configuration.dimmingColor
         view.alpha = 0.0
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(tapGesture)
         return view
@@ -218,7 +219,11 @@ private final class InteractionController {
         let fullWidth = interactiveViewWidth + SideMenuScene.configuration.rightOffset
         let ratio = interactiveViewWidth / fullWidth
         let translationX = sender.translation(in: interactiveView).x * ratio
-        guard translationX < 0 else { return }
+        guard translationX <= 0 else {
+            percentController?.cancel()
+            percentController = nil
+            return
+        }
         let percent = abs(translationX) / interactiveViewWidth
         switch sender.state {
         case .began:
@@ -227,16 +232,14 @@ private final class InteractionController {
             percentController?.update(percent)
         case .changed:
             percentController?.update(percent)
-        case .ended, .cancelled:
-            percentController?.completionSpeed = 0.5
+        default:
+            percentController?.completionSpeed = 0.7
             if percent > 0.5 * 1/2 {
                 percentController?.finish()
             } else {
                 percentController?.cancel()
             }
             percentController = nil
-        default:
-            break
         }
     }
 }

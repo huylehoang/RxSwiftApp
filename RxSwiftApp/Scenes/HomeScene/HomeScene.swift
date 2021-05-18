@@ -39,8 +39,6 @@ final class HomeScene: BaseViewController {
 
     private let viewModel: HomeViewModel
 
-    private let disposeBag = DisposeBag()
-
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init()

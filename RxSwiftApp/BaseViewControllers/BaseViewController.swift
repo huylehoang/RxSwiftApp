@@ -1,4 +1,4 @@
-import UIKit
+import RxSwift
 
 class BaseViewController: UIViewController {
     let contentView: UIView
@@ -18,6 +18,8 @@ class BaseViewController: UIViewController {
     var rightBarButtonItems: [UIBarButtonItem] {
         return []
     }
+
+    private(set) lazy var disposeBag = DisposeBag()
 
     init() {
         contentView = UIView()
@@ -44,6 +46,11 @@ class BaseViewController: UIViewController {
         super.viewWillAppear(animated)
         setupNavigationBar()
     }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
 }
 
 private extension BaseViewController {
@@ -52,5 +59,13 @@ private extension BaseViewController {
         navigationItem.setHidesBackButton(hidesBackButton, animated: false)
         navigationItem.rightBarButtonItems = rightBarButtonItems
         navigationItem.leftBarButtonItems = leftBarButtonItems
+
+        rightBarButtonItems.forEach {
+            $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
+        }
+
+        leftBarButtonItems.forEach {
+            $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
+        }
     }
 }
