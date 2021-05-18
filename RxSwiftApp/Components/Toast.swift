@@ -67,7 +67,7 @@ private class ToastView: UIView {
     private var hideAnimator: UIViewPropertyAnimator?
 
     private let minimumFontScale: CGFloat = 0.5
-    private let animationDuration: TimeInterval = 0.2
+    private let animationDuration: TimeInterval = 0.3
 
     var hideCompleted: (() -> Void)?
 
