@@ -214,15 +214,12 @@ private final class InteractionController {
 
     @objc func handlePan(_ sender: UIPanGestureRecognizer) {
         guard let interactiveView = sender.view else { return }
-
         let interactiveViewWidth = interactiveView.frame.size.width
         let fullWidth = interactiveViewWidth + SideMenuScene.configuration.rightOffset
         let ratio = interactiveViewWidth / fullWidth
         let translationX = sender.translation(in: interactiveView).x * ratio
-
         guard translationX < 0 else { return }
         let percent = abs(translationX) / interactiveViewWidth
-
         switch sender.state {
         case .began:
             percentController = UIPercentDrivenInteractiveTransition()
