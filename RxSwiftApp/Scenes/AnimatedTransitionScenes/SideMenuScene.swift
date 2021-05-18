@@ -212,7 +212,7 @@ private final class InteractionController {
         interactiveController.contentView.addGestureRecognizer(panGesture)
     }
 
-    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
+    @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
         guard let interactiveView = sender.view else { return }
         let interactiveViewWidth = interactiveView.frame.size.width
         let fullWidth = interactiveViewWidth + SideMenuScene.configuration.rightOffset
