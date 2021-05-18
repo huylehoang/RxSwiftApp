@@ -33,17 +33,16 @@ struct HomeViewModel: ViewModelType {
         let errorTracker = ErrorTracker()
         let notes = BehaviorRelay(value: [Note]())
 
-        let reloadedUser = input.viewDidLoad
-            .map { (indicator, reloadErrorTracker) }
-            .flatMapLatest(reloadUser)
-
-        let fetchedNotes = Driver.merge(reloadedUser, input.refreshTrigger)
+        let fetchedNotes = Driver.merge(input.viewDidLoad, input.refreshTrigger)
             .map { (indicator, errorTracker) }
             .flatMapLatest(fetchNotes)
             .do(onNext: notes.accept)
             .mapToVoid()
 
-        let toLogin = reloadErrorTracker.mapToVoid().do(onNext: navigator.toLogin)
+        let toLogin = errorTracker
+            .filter { $0.userNotFound }
+            .mapToVoid()
+            .do(onNext: navigator.toLogin)
 
         let toUser = input.toUserTrigger.do(onNext: navigator.toUser)
 
@@ -82,18 +81,10 @@ struct HomeViewModel: ViewModelType {
 }
 
 private extension HomeViewModel {
-    func reloadUser(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<Void> {
-        return usecase.reloadUser()
-            .trackActivity(indicator)
-            .trackError(errorTracker)
-            .asDriverOnErrorJustComplete()
-    }
-
     func fetchNotes(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<[Note]> {
         return usecase.fetchNotes()
             .trackActivity(indicator)
             .trackError(errorTracker)
-            .retry(3)
             .asDriverOnErrorJustComplete()
     }
 

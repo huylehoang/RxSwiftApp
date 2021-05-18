@@ -1,7 +1,6 @@
 import RxSwift
 
 protocol HomeUsecase: UsecaseType {
-    func reloadUser() -> Single<Void>
     func fetchNotes() -> Observable<[Note]>
 }
 
@@ -12,13 +11,16 @@ struct DefaultHomeUsecase: HomeUsecase {
         self.service = service
     }
 
-    func reloadUser() -> Single<Void> {
-        return service.reloadUser()
-    }
-
     func fetchNotes() -> Observable<[Note]> {
-        return service.fetchNotes().asObservable().concat(service.listenNotes())
+        // Reload user before fetch notes
+        return service.reloadUser().asObservable().flatMap(fetch)
     }
 }
 
-
+private extension DefaultHomeUsecase {
+    func fetch() -> Observable<[Note]> {
+        // Call fetch note then start notes listener
+        // Retry 3 times for listener in case return error
+        return service.fetchNotes().asObservable().concat(service.listenNotes().retry(3))
+    }
+}

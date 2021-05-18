@@ -2,7 +2,7 @@ import RxSwift
 
 final class HomeScene: BaseViewController {
     private lazy var tableView: UITableView = {
-        let view = UITableView()
+        let view = RxTableView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         view.allowsMultipleSelection = false
