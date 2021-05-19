@@ -139,7 +139,6 @@ private extension UpdateNoteScene {
             output.onAction.drive(),
             output.embeddedIndicator.drive(rx.showEmbeddedIndicatorView),
             output.errorMessage.drive(rx.showErrorMessage),
-
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }
