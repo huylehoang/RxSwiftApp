@@ -40,6 +40,8 @@ extension UserDefaults.Key: LocalizedError, CustomStringConvertible {
     }
 
     var errorDescription: String? {
-        return "Error while getting value of \(description)"
+        switch self {
+        case .userPassword: return "Missing sensitive data.\nPlease try to sign in again."
+        }
     }
 }

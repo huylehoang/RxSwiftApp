@@ -10,19 +10,23 @@ struct DefaultMeService: MeService {
     private let firestore = Observable.just(Firestore.firestore())
 
     private var me: Observable<Me> {
-        return getUser().map { Me(id: $0.uid) }.asObservable()
+        return getUser().map(Me.init).asObservable()
     }
 
     private var usersCollection: Observable<CollectionReference> {
         return firestore.map { $0.collection("USERS") }
     }
 
+    private var credentail: Single<(Me, CollectionReference)> {
+        return Observable.combineLatest(me, usersCollection).asSingle()
+    }
+
     func create() -> Single<Void> {
-        return Observable.combineLatest(me, usersCollection).flatMap(create).asSingle()
+        return credentail.flatMap(create)
     }
 
     func delete() -> Single<Void> {
-        return Observable.combineLatest(me, usersCollection).flatMap(delete).asSingle()
+        return credentail.flatMap(delete)
     }
 }
 
