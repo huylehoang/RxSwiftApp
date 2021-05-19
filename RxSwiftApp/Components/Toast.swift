@@ -116,11 +116,8 @@ private extension ToastView {
         container.addSubview(self)
         backgroundColor = configuration.backgroundColor
         let horizontalPadding = configuration.horizontalPadding
+        Constraint.activateGroup(button.equalToEdges(of: self))
         Constraint.activate(
-            button.leading.equalTo(leading),
-            button.trailing.equalTo(trailing),
-            button.top.equalTo(top),
-            button.bottom.equalTo(bottom),
             leading.equalTo(container.leading).constant(horizontalPadding),
             trailing.equalTo(container.trailing).constant(-horizontalPadding),
             bottom.equalTo(container.bottom).constant(-bottomSpace))

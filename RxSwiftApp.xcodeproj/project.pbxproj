@@ -32,6 +32,9 @@
 		10CA356B265032D500D49F39 /* SceneBuidlerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CA356A265032D500D49F39 /* SceneBuidlerError.swift */; };
 		84018AA8265376FC00E2C8D5 /* RxTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84018AA7265376FC00E2C8D5 /* RxTableView.swift */; };
 		84124AA52654BD390063098F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AA42654BD390063098F /* String+Extensions.swift */; };
+		84124AAA2654FDD60063098F /* NavigationTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AA92654FDD60063098F /* NavigationTransition.swift */; };
+		84124AB626550E4F0063098F /* FadeZoomAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AB526550E4F0063098F /* FadeZoomAnimators.swift */; };
+		84124ABA265526D10063098F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AB9265526D10063098F /* UIView+Extension.swift */; };
 		84171C002644FF6100DD0074 /* SceneBuilderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */; };
 		84171C052645166E00DD0074 /* UsecaseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C042645166E00DD0074 /* UsecaseType.swift */; };
 		84171C09264516A200DD0074 /* NavigatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171C08264516A200DD0074 /* NavigatorType.swift */; };
@@ -102,6 +105,9 @@
 		4F4E19F399083403F740F4B7 /* Pods-RxSwiftApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwiftApp.release.xcconfig"; path = "Target Support Files/Pods-RxSwiftApp/Pods-RxSwiftApp.release.xcconfig"; sourceTree = "<group>"; };
 		84018AA7265376FC00E2C8D5 /* RxTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTableView.swift; sourceTree = "<group>"; };
 		84124AA42654BD390063098F /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		84124AA92654FDD60063098F /* NavigationTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTransition.swift; sourceTree = "<group>"; };
+		84124AB526550E4F0063098F /* FadeZoomAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeZoomAnimators.swift; sourceTree = "<group>"; };
+		84124AB9265526D10063098F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilderType.swift; sourceTree = "<group>"; };
 		84171C042645166E00DD0074 /* UsecaseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsecaseType.swift; sourceTree = "<group>"; };
 		84171C08264516A200DD0074 /* NavigatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorType.swift; sourceTree = "<group>"; };
@@ -187,6 +193,7 @@
 				84687ABE264299660071ADA7 /* Reactive+Extensions.swift */,
 				8442B34E2643C86E006A6312 /* UserDefaults+Extensions.swift */,
 				84124AA42654BD390063098F /* String+Extensions.swift */,
+				84124AB9265526D10063098F /* UIView+Extension.swift */,
 				10AB139F264F9089007EA523 /* Constraint.swift */,
 			);
 			path = Utitlities;
@@ -353,6 +360,23 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		84124AB226550D200063098F /* NavigationTransition */ = {
+			isa = PBXGroup;
+			children = (
+				84124AA92654FDD60063098F /* NavigationTransition.swift */,
+				84124AB426550DE00063098F /* FadeZoom */,
+			);
+			path = NavigationTransition;
+			sourceTree = "<group>";
+		};
+		84124AB426550DE00063098F /* FadeZoom */ = {
+			isa = PBXGroup;
+			children = (
+				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
+			);
+			path = FadeZoom;
+			sourceTree = "<group>";
+		};
 		845947E226521D98003A5E0C /* AnimatedTransitionScenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -404,6 +428,7 @@
 				8476D0AD264248F7002C8CB9 /* BaseViewController+Extensions.swift */,
 				8476D0B026424F20002C8CB9 /* BaseViewController+Reactive.swift */,
 				84F91F79264D11450064077F /* BaseViewController+UIAlertController.swift */,
+				84124AB226550D200063098F /* NavigationTransition */,
 			);
 			path = BaseViewControllers;
 			sourceTree = "<group>";
@@ -565,6 +590,7 @@
 				84171C0F26451C2100DD0074 /* UserSceneBuilder.swift in Sources */,
 				1022F77626414127007AE3F2 /* LoginUsecase.swift in Sources */,
 				84018AA8265376FC00E2C8D5 /* RxTableView.swift in Sources */,
+				84124AAA2654FDD60063098F /* NavigationTransition.swift in Sources */,
 				1022F75B26400F47007AE3F2 /* Observable+Extension.swift in Sources */,
 				84171C0C2645189F00DD0074 /* LoginSceneBuilder.swift in Sources */,
 				8476D0CE26428B00002C8CB9 /* Application.swift in Sources */,
@@ -582,6 +608,7 @@
 				84124AA52654BD390063098F /* String+Extensions.swift in Sources */,
 				8476D0B8264259F2002C8CB9 /* IndicatorView.swift in Sources */,
 				845FD5C2264E7BAA00308FB4 /* ServiceType.swift in Sources */,
+				84124ABA265526D10063098F /* UIView+Extension.swift in Sources */,
 				10AB13A326502FC2007EA523 /* EmptyScene.swift in Sources */,
 				8476D0CA26427E8A002C8CB9 /* UserNavigator.swift in Sources */,
 				845FD5B8264E751E00308FB4 /* HomeSceneBuilder.swift in Sources */,
@@ -591,6 +618,7 @@
 				845FD5C6264E7C4700308FB4 /* ServiceError.swift in Sources */,
 				8476D0AE264248F7002C8CB9 /* BaseViewController+Extensions.swift in Sources */,
 				8442B34F2643C86E006A6312 /* UserDefaults+Extensions.swift in Sources */,
+				84124AB626550E4F0063098F /* FadeZoomAnimators.swift in Sources */,
 				845FD5B5264E751200308FB4 /* HomeNavigator.swift in Sources */,
 				84F91F7A264D11450064077F /* BaseViewController+UIAlertController.swift in Sources */,
 				108E9270263FA62600C70AD8 /* AppDelegate.swift in Sources */,

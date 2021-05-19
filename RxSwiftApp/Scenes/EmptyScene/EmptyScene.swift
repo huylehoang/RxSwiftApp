@@ -20,11 +20,7 @@ private extension EmptyScene {
         let emptyView = EmptyView()
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(emptyView)
-        Constraint.activate(
-            emptyView.leading.equalTo(contentView.leading),
-            emptyView.trailing.equalTo(contentView.trailing),
-            emptyView.top.equalTo(contentView.top),
-            emptyView.bottom.equalTo(contentView.bottom))
+        Constraint.activateGroup(emptyView.equalToEdges(of: contentView))
         emptyView.rx.message.onNext(message)
     }
 }

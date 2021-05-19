@@ -34,11 +34,7 @@ private extension SideMenuScene {
         contentView.addSubview(embeddedScene.view)
         embeddedScene.didMove(toParent: self)
         embeddedScene.view.translatesAutoresizingMaskIntoConstraints = false
-        Constraint.activate(
-            embeddedScene.view.leading.equalTo(contentView.leading),
-            embeddedScene.view.trailing.equalTo(contentView.trailing),
-            embeddedScene.view.top.equalTo(contentView.top),
-            embeddedScene.view.bottom.equalTo(contentView.bottom))
+        Constraint.activateGroup(embeddedScene.view.equalToEdges(of: contentView))
     }
 
     func setupInteractionController() {
@@ -104,24 +100,24 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let to = transitionContext.viewController(forKey: .to) else { return }
+        guard let toView = transitionContext.view(forKey: .to) else { return }
         let containerView = transitionContext.containerView
-        to.view.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(to.view)
+        toView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(toView)
         let rightOffset = SideMenuScene.configuration.rightOffset
         Constraint.activate(
-            to.view.leading.equalTo(containerView.leading),
-            to.view.top.equalTo(containerView.top),
-            to.view.bottom.equalTo(containerView.bottom),
-            to.view.trailing.equalTo(containerView.trailing).constant(-rightOffset))
+            toView.leading.equalTo(containerView.leading),
+            toView.top.equalTo(containerView.top),
+            toView.bottom.equalTo(containerView.bottom),
+            toView.trailing.equalTo(containerView.trailing).constant(-rightOffset))
         containerView.layoutIfNeeded()
-        to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 1)
+        toView.transform = CGAffineTransform(translationX: -toView.frame.size.width, y: 1)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
             animations: {
-                to.view.transform = .identity
+                toView.transform = .identity
             },
             completion: { _ in
                 let success = !transitionContext.transitionWasCancelled
@@ -138,7 +134,7 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let from = transitionContext.viewController(forKey: .from) else { return }
+        guard let fromView = transitionContext.view(forKey: .from) else { return }
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0.0,
@@ -146,8 +142,8 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
             initialSpringVelocity: 1,
             options: .curveEaseIn,
             animations: {
-                from.view.transform = CGAffineTransform(
-                    translationX: -from.view.frame.size.width,
+                fromView.transform = CGAffineTransform(
+                    translationX: -fromView.frame.size.width,
                     y: 1)
             },
             completion: { _ in
@@ -172,11 +168,7 @@ private final class PresentationController: UIPresentationController {
     override func presentationTransitionWillBegin() {
         if let containerView = containerView, !dimmingView.isDescendant(of: containerView) {
             containerView.insertSubview(dimmingView, at: 0)
-            Constraint.activate(
-                dimmingView.top.equalTo(containerView.top),
-                dimmingView.leading.equalTo(containerView.leading),
-                dimmingView.trailing.equalTo(containerView.trailing),
-                dimmingView.bottom.equalTo(containerView.bottom))
+            Constraint.activateGroup(dimmingView.equalToEdges(of: containerView))
         }
         guard let coordinator = presentedViewController.transitionCoordinator else {
             dimmingView.alpha = 1.0

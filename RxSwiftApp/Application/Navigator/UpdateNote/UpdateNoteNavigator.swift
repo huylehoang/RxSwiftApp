@@ -13,6 +13,6 @@ struct DefaultUpdateNoteNavigator: UpdateNoteNavigator {
 
     func toHome() {
         guard let navigationController = navigationController else { return }
-        navigationController.popViewController(animated: false)
+        navigationController.popViewController(animated: true)
     }
 }

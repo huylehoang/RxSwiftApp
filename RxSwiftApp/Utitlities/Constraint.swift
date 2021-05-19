@@ -7,6 +7,10 @@ extension Constraint {
         activate(constraints)
     }
 
+    static func activateGroup(_ constraints: [NSLayoutConstraint]...) {
+        activate(constraints.flatMap { $0 })
+    }
+
     func constant(_ constant: CGFloat) -> NSLayoutConstraint {
         return updated { $0.constant = constant }
     }
@@ -100,6 +104,15 @@ enum LayoutPriority {
 }
 
 extension UIView {
+    func equalToEdges(of view: UIView) -> [NSLayoutConstraint] {
+        return [
+            top.equalTo(view.top),
+            leading.equalTo(view.leading),
+            trailing.equalTo(view.trailing),
+            bottom.equalTo(view.bottom),
+        ]
+    }
+
     var leading: NSLayoutXAxisAnchor {
         return leadingAnchor
     }

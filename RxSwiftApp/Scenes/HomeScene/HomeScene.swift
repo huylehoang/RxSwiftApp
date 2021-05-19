@@ -59,11 +59,7 @@ private extension HomeScene {
     func setupView() {
         contentView.backgroundColor = .white
         contentView.addSubview(tableView)
-        Constraint.activate(
-            tableView.leading.equalTo(contentView.leading),
-            tableView.trailing.equalTo(contentView.trailing),
-            tableView.top.equalTo(contentView.top),
-            tableView.bottom.equalTo(contentView.bottom))
+        Constraint.activateGroup(tableView.equalToEdges(of: contentView))
     }
 
     func setupBinding() {

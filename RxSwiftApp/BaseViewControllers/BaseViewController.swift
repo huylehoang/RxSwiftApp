@@ -19,6 +19,16 @@ class BaseViewController: UIViewController {
         return []
     }
 
+    var transitionKind: NavigationTransition.Kind? {
+        return nil
+    }
+
+    var interactiveDismissAnimator: InteractiveAnimator? {
+        return nil
+    }
+
+    private let navigationTransition = NavigationTransition()
+
     private(set) lazy var disposeBag = DisposeBag()
 
     init() {
@@ -67,5 +77,7 @@ private extension BaseViewController {
         leftBarButtonItems.forEach {
             $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
         }
+
+        navigationController?.delegate = navigationTransition
     }
 }

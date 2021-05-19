@@ -23,11 +23,7 @@ extension BaseViewController {
         window?.addSubview(embeddedIndicatorView)
         guard let superView = embeddedIndicatorView.superview else { return }
         embeddedIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        Constraint.activate(
-            embeddedIndicatorView.leading.equalTo(superView.leading),
-            embeddedIndicatorView.trailing.equalTo(superView.trailing),
-            embeddedIndicatorView.top.equalTo(superView.top),
-            embeddedIndicatorView.bottom.equalTo(superView.bottom))
+        Constraint.activateGroup(embeddedIndicatorView.equalToEdges(of: superView))
         embeddedIndicatorView.startAnimating()
     }
 
@@ -93,11 +89,7 @@ extension BaseViewController {
         contentView.addSubview(embeddedEmptyView)
         contentView.bringSubviewToFront(embeddedEmptyView)
         embeddedEmptyView.translatesAutoresizingMaskIntoConstraints = false
-        Constraint.activate(
-            embeddedEmptyView.top.equalTo(contentView.top),
-            embeddedEmptyView.leading.equalTo(contentView.leading),
-            embeddedEmptyView.trailing.equalTo(contentView.trailing),
-            embeddedEmptyView.bottom.equalTo(contentView.bottom))
+        Constraint.activateGroup(embeddedEmptyView.equalToEdges(of: contentView))
         embeddedEmptyView.rx.message.onNext(message)
         embeddedEmptyView.rx.actionTitle.onNext(actionTitle)
     }

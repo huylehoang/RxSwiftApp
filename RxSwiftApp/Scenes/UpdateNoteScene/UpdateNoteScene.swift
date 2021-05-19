@@ -57,7 +57,20 @@ final class UpdateNoteScene: BaseViewController {
         return [updateButton]
     }
 
+    override var transitionKind: NavigationTransition.Kind? {
+        switch viewModel.kind {
+        case .add: return .fadeZoom
+        case .edit: return nil
+        }
+    }
+
+    override var interactiveDismissAnimator: InteractiveAnimator? {
+        return interactionController?.percentDriven
+    }
+
     private let viewModel: UpdateNoteViewModel
+
+    private var interactionController: FadeZoomInteractionController?
 
     init(viewModel: UpdateNoteViewModel) {
         self.viewModel = viewModel
@@ -72,6 +85,7 @@ final class UpdateNoteScene: BaseViewController {
         super.loadView()
         setupView()
         setupBinding()
+        setupInteractionController()
     }
 }
 
@@ -141,6 +155,10 @@ private extension UpdateNoteScene {
             output.errorMessage.drive(rx.showErrorMessage),
         ]
         .forEach { $0.disposed(by: disposeBag) }
+    }
+
+    func setupInteractionController() {
+        interactionController = FadeZoomInteractionController(interactiveController: self)
     }
 }
 

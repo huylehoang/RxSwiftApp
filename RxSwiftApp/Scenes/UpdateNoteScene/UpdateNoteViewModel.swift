@@ -30,7 +30,7 @@ struct UpdateNoteViewModel: ViewModelType {
         let errorMessage: Driver<String>
     }
 
-    private let kind: Kind
+    let kind: Kind
     private let usecase: UpdateNoteUsecase
     private let navigator: UpdateNoteNavigator
 
