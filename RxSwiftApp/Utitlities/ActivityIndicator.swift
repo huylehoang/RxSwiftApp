@@ -39,7 +39,7 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
         _lock.unlock()
     }
 
-    public func asSharedSequence() -> SharedSequence<SharingStrategy, Element> {
+    func asSharedSequence() -> SharedSequence<SharingStrategy, Element> {
         return _loading
     }
 }

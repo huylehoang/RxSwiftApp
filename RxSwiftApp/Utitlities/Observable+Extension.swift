@@ -4,7 +4,7 @@ import RxCocoa
 
 extension ObservableType where Element == Bool {
     /// Boolean not operator
-    public func not() -> Observable<Bool> {
+    func not() -> Observable<Bool> {
         return self.map(!)
     }
 }

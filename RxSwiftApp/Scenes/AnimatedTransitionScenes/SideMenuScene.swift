@@ -81,14 +81,14 @@ extension SideMenuScene: UIViewControllerTransitioningDelegate {
 }
 
 extension SideMenuScene: UIAdaptivePresentationControllerDelegate {
-    public func adaptivePresentationStyle(
+    func adaptivePresentationStyle(
         for controller: UIPresentationController,
         traitCollection: UITraitCollection
     ) -> UIModalPresentationStyle {
         return .none
     }
 
-    public func presentationController(
+    func presentationController(
         _ controller: UIPresentationController,
         viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle
     ) -> UIViewController? {
