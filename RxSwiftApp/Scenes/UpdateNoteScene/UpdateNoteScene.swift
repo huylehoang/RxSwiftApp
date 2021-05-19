@@ -113,10 +113,15 @@ private extension UpdateNoteScene {
             .filter { $0 == 1 }
             .mapToVoid()
 
+        let endEditing = Driver.merge(
+            titleTextField.rx.controlEvent(.editingDidEnd).asDriver(),
+            detailsTextView.rx.didEndEditing.asDriver())
+
         let input = UpdateNoteViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
             noteTitle: titleTextField.rx.text.orEmpty.asDriver(),
             noteDetails: detailsTextView.rx.text.orEmpty.asDriver(),
+            endEditing: endEditing,
             updateTrigger: updateButton.rx.tap.asDriver(),
             deleteTrigger: deleteTrigger.asDriverOnErrorJustComplete())
 

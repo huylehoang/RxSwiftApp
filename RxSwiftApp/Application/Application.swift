@@ -1,5 +1,5 @@
 import UIKit
-import FirebaseAuth
+import Firebase
 
 enum Application {
     static func confirgureMainInterface(in window: UIWindow) {
@@ -15,5 +15,9 @@ enum Application {
         navigationController.setViewControllers(scenes, animated: false)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
+    }
+
+    static func setupLibs() {
+        FirebaseApp.configure()
     }
 }

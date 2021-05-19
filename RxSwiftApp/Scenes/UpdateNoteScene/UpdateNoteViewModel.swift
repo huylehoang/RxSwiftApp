@@ -11,6 +11,7 @@ struct UpdateNoteViewModel: ViewModelType {
         let viewDidLoad: Driver<Void>
         let noteTitle: Driver<String>
         let noteDetails: Driver<String>
+        let endEditing: Driver<Void>
         let updateTrigger: Driver<Void>
         let deleteTrigger: Driver<Void>
     }
@@ -47,7 +48,14 @@ struct UpdateNoteViewModel: ViewModelType {
 
         let title = kind.asDriver().map { $0.title }
 
-        let noteTrigger = input.viewDidLoad.withLatestFrom(note.asDriver())
+        let trimming = Driver.merge(input.endEditing, input.updateTrigger)
+            .withLatestFrom(note.asDriver())
+            .map(trimmingFields)
+            .do(onNext: note.accept)
+
+        let viewDidLoad = input.viewDidLoad.withLatestFrom(note.asDriver())
+
+        let noteTrigger = Driver.merge(viewDidLoad, trimming)
 
         let noteTitle = noteTrigger.map { $0.title }
 
@@ -63,7 +71,7 @@ struct UpdateNoteViewModel: ViewModelType {
 
         let noteDetailsIsEmpty = checkFieldsIsEmpty.map { $0.details.isEmpty }
 
-        let validForRequest = Driver.combineLatest(noteTitleIsEmpty, noteDetailsIsEmpty)
+        let fieldsNotEmpty = Driver.combineLatest(noteTitleIsEmpty, noteDetailsIsEmpty)
             .map { !$0 && !$1 }
 
         let updatedNoteTitle = input.noteTitle
@@ -79,7 +87,7 @@ struct UpdateNoteViewModel: ViewModelType {
             .mapToVoid()
 
         let updatedNote = input.updateTrigger
-            .withLatestFrom(validForRequest)
+            .withLatestFrom(fieldsNotEmpty)
             .filter { $0 }
             .withLatestFrom(note.asDriver())
             .map { ($0, kind.value, indicator, errorTracker) }
@@ -100,14 +108,10 @@ struct UpdateNoteViewModel: ViewModelType {
             .map { ($0, indicator, errorTracker) }
             .flatMapLatest(deleteNote)
 
-        let emptyFieldsMessage = validForRequest
-            .filter { !$0 }
-            .map { _ in "Title and details fields can not be empty" }
-
         let showToast = Driver.merge(
             addedNote.map { "Added Note" },
             deletedNote.map { "Deleted Note" },
-            emptyFieldsMessage,
+            fieldsNotEmpty.filter { !$0 }.map { _ in "Title and details fields can not be empty" },
             editedNote.map { "Edited Note" })
 
         let toHome = Driver.merge(addedNote, deletedNote).do(onNext: navigator.toHome)
@@ -199,5 +203,12 @@ private extension UpdateNoteViewModel {
 
     func updateNoteDetails(_ details: String, for note: Note) -> Note {
         return note.updated { $0.details = details }
+    }
+
+    func trimmingFields(for note: Note) -> Note {
+        return note.updated {
+            $0.title = $0.title.trimmingWhitespacesAndNewlines()
+            $0.details = $0.details.trimmingWhitespacesAndNewlines()
+        }
     }
 }

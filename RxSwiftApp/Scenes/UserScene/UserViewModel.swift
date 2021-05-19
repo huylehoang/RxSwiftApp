@@ -31,9 +31,7 @@ struct UserViewModel: ViewModelType {
         let indicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
 
-        let onGetUser = input.viewDidLoad
-            .map { errorTracker }
-            .flatMapLatest(getUser)
+        let onGetUser = input.viewDidLoad.map { errorTracker }.flatMapLatest(getUser)
 
         let onReAuthenticated = input.reAuthenticateTrigger
             .map { (indicator, errorTracker) }
@@ -44,9 +42,7 @@ struct UserViewModel: ViewModelType {
             .flatMapLatest(deleteUser)
             .mapToVoid()
 
-        let onSignOut = input.signOutTrigger
-            .map { errorTracker }
-            .flatMapLatest(signOut)
+        let onSignOut = input.signOutTrigger.map { errorTracker }.flatMapLatest(signOut)
 
         let toLogin = Driver.merge(onDeleted, onSignOut).do(onNext: navigator.toLogin)
 
@@ -85,9 +81,7 @@ struct UserViewModel: ViewModelType {
 
 private extension UserViewModel {
     func getUser(_ errorTracker: ErrorTracker) -> Driver<User> {
-        return usecase.getUser()
-            .trackError(errorTracker)
-            .asDriverOnErrorJustComplete()
+        return usecase.getUser().trackError(errorTracker).asDriverOnErrorJustComplete()
     }
 
     func reAuthenticate(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<User> {
@@ -105,8 +99,6 @@ private extension UserViewModel {
     }
 
     func signOut(_ errorTracker: ErrorTracker) -> Driver<Void> {
-        return usecase.signOut()
-            .trackError(errorTracker)
-            .asDriverOnErrorJustComplete()
+        return usecase.signOut().trackError(errorTracker).asDriverOnErrorJustComplete()
     }
 }
