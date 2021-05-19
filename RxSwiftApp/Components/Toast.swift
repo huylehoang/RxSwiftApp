@@ -1,8 +1,6 @@
 import UIKit
 
 enum Toast {
-    typealias Action = () -> Void
-
     static var configuration = Configuration()
 
     private static var queues = [ToastView]()
@@ -14,7 +12,6 @@ enum Toast {
     /// - `duration`: duration in seconds
     static func show(
         message: String,
-        action: Action? = nil,
         in viewController: UIViewController? = nil,
         duration: TimeInterval? = nil
     ) {
@@ -25,7 +22,6 @@ enum Toast {
 
         let toastView = ToastView(
             message: message,
-            action: action,
             viewController: viewController,
             duration: duration ?? Self.configuration.duration)
 
@@ -60,7 +56,6 @@ private class ToastView: UIView {
     private let message: String
     private weak var viewController: UIViewController?
     private let duration: TimeInterval
-    private let action: Toast.Action?
 
     private var timer: Timer?
     private var showAnimator: UIViewPropertyAnimator?
@@ -73,12 +68,10 @@ private class ToastView: UIView {
 
     fileprivate init(
         message: String,
-        action: Toast.Action?,
         viewController: UIViewController?,
         duration: TimeInterval
     ) {
         self.message = message
-        self.action = action
         self.viewController = viewController
         self.duration = duration
         super.init(frame: .zero)
@@ -138,7 +131,6 @@ private extension ToastView {
 
     @objc func actionDidTap(_ sender: UIButton) {
         hide()
-        action?()
     }
 
     func scheduleShow() {

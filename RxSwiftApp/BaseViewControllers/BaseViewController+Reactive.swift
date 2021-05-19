@@ -69,10 +69,10 @@ extension Reactive where Base: BaseViewController {
         }
     }
 
-    func showToat(with duration: TimeInterval, _ action: Toast.Action? = nil) -> Binder<String> {
+    func showToat(with duration: TimeInterval) -> Binder<String> {
         return Binder(base) { _, message in
             guard !message.isEmpty else { return }
-            Toast.show(message: message, action: action, duration: duration)
+            Toast.show(message: message, duration: duration)
         }
     }
 }
