@@ -16,7 +16,7 @@ struct DefaultHomeNavigator: HomeNavigator {
 
     func toLogin() {
         guard let navigationController = navigationController else { return }
-        navigationController.popToRootViewController(animated: false)
+        navigationController.popToRootViewController(animated: true)
     }
 
     func toUser() {

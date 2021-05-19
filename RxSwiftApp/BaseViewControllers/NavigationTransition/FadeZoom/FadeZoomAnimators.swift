@@ -1,6 +1,8 @@
 import UIKit
 
 class FadeZoomAnimator: NSObject, Animator {
+    fileprivate static let scaleTransfrom = CGAffineTransform(scaleX: 0.3, y: 0.3)
+
     func transitionDuration(
         using transitionContext: UIViewControllerContextTransitioning?
     ) -> TimeInterval {
@@ -27,10 +29,12 @@ final class FadeZoomPushAnimator: FadeZoomAnimator {
         Constraint.activateGroup(
             toView.equalToEdges(of: container),
             fromView.equalToEdges(of: container))
-        toView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+        toView.transform = Self.scaleTransfrom
         toView.alpha = 0
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
+            delay: 0,
+            options: .curveEaseOut,
             animations: {
                 toView.transform = .identity
                 toView.alpha = 1
@@ -56,11 +60,12 @@ final class FadeZoomPopAnimator: FadeZoomAnimator {
         Constraint.activateGroup(
             toView.equalToEdges(of: container),
             fromView.equalToEdges(of: container))
-        let duration = transitionDuration(using: transitionContext)
         UIView.animate(
-            withDuration: duration,
+            withDuration: transitionDuration(using: transitionContext),
+            delay: 0,
+            options: .curveEaseIn,
             animations: {
-                fromView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+                fromView.transform = Self.scaleTransfrom
                 fromView.alpha = 0
             },
             completion: { _ in
@@ -85,8 +90,11 @@ final class FadeZoomInteractionController {
         guard let interactiveView = sender.view else { return }
         let interactiveViewWidth = interactiveView.frame.size.width
         let translationX = sender.translation(in: interactiveView).x
-        let percent = abs(translationX) / interactiveViewWidth
-        print(percent)
+        let percentX = abs(translationX) / interactiveViewWidth
+        let interactiveViewHeight = interactiveView.frame.size.height
+        let translationY = sender.translation(in: interactiveView).y
+        let percentY = abs(translationY) / interactiveViewHeight
+        let percent = max(percentX, percentY)
         switch sender.state {
         case .began:
             percentDriven = UIPercentDrivenInteractiveTransition()
@@ -95,7 +103,8 @@ final class FadeZoomInteractionController {
         case .changed:
             percentDriven?.update(percent)
         default:
-            if percent > 0.5 {
+            percentDriven?.completionSpeed = 0.5
+            if percent > 0.3 {
                 percentDriven?.finish()
             } else {
                 percentDriven?.cancel()

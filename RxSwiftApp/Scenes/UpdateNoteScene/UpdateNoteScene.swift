@@ -147,8 +147,8 @@ private extension UpdateNoteScene {
             output.noteDetails.drive(detailsTextView.rx.text),
             output.updateButtonTitle.drive(updateButton.rx.title),
             output.hideDeleteButton.drive(deleteButton.rx.isHidden),
-            output.noteTitleIsEmpty.drive(noteTitleIsEmpty),
-            output.noteDetailsIsEmpty.drive(noteDetailsIsEmpty),
+            output.noteTitleIsEmpty.drive(setFieldIsEmpty(field: titleTextField)),
+            output.noteDetailsIsEmpty.drive(setFieldIsEmpty(field: detailsTextView)),
             output.showToast.drive(rx.showToast),
             output.onAction.drive(),
             output.embeddedIndicator.drive(rx.showEmbeddedIndicatorView),
@@ -163,17 +163,10 @@ private extension UpdateNoteScene {
 }
 
 private extension UpdateNoteScene {
-    var noteTitleIsEmpty: Binder<Bool> {
-        return Binder(self) { base, isEmpty in
+    func setFieldIsEmpty(field: UIView) -> Binder<Bool> {
+        return Binder(self) { _, isEmpty in
             let borderColor: UIColor = isEmpty ? .systemRed : .lightGray
-            base.titleTextField.layer.borderColor = borderColor.cgColor
-        }
-    }
-
-    var noteDetailsIsEmpty: Binder<Bool> {
-        return Binder(self) { base, isEmpty in
-            let borderColor: UIColor = isEmpty ? .systemRed : .lightGray
-            base.detailsTextView.layer.borderColor = borderColor.cgColor
+            field.layer.borderColor = borderColor.cgColor
         }
     }
 }

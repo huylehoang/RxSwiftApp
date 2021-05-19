@@ -55,6 +55,7 @@ final class NavigationTransition: NSObject, UINavigationControllerDelegate {
 
 extension NavigationTransition {
     enum Kind {
+        case crossDissolve
         case fadeZoom
         case custom(push: Animator, pop: Animator)
     }
@@ -63,6 +64,7 @@ extension NavigationTransition {
 private extension NavigationTransition.Kind {
     var pushAnimator: Animator? {
         switch self {
+        case .crossDissolve: return CrossDissolveAnimator(operation: .push)
         case .fadeZoom: return FadeZoomPushAnimator()
         case .custom(let push, _): return push
         }
@@ -70,6 +72,7 @@ private extension NavigationTransition.Kind {
 
     var popAnimator: Animator? {
         switch self {
+        case .crossDissolve: return CrossDissolveAnimator(operation: .pop)
         case .fadeZoom: return FadeZoomPopAnimator()
         case .custom(_, let pop): return pop
         }

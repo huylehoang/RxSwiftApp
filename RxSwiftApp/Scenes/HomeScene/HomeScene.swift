@@ -37,6 +37,10 @@ final class HomeScene: BaseViewController {
         return [addButton]
     }
 
+    override var transitionKind: NavigationTransition.Kind? {
+        return .crossDissolve
+    }
+
     private let viewModel: HomeViewModel
 
     init(viewModel: HomeViewModel) {

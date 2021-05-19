@@ -16,7 +16,7 @@ struct DefaultUserNavigator: UserNavigator {
             let navigationController = navigationController,
             let presentedScene = navigationController.presentedViewController
         else { return }
+        navigationController.popToRootViewController(animated: true)
         presentedScene.dismiss(animated: true)
-        navigationController.popToRootViewController(animated: false)
     }
 }

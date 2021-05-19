@@ -19,6 +19,7 @@
 		1022F76F26404930007AE3F2 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F76E26404930007AE3F2 /* ViewModelType.swift */; };
 		1022F77326404989007AE3F2 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F77226404989007AE3F2 /* LoginViewModel.swift */; };
 		1022F77626414127007AE3F2 /* LoginUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022F77526414127007AE3F2 /* LoginUsecase.swift */; };
+		1044544826557632007E6BEB /* CrossDissolveAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1044544726557632007E6BEB /* CrossDissolveAnimators.swift */; };
 		104C9BBE2643221A00D4FB8B /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BBD2643221A00D4FB8B /* AuthService.swift */; };
 		108E9270263FA62600C70AD8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E926F263FA62600C70AD8 /* AppDelegate.swift */; };
 		108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9271263FA62600C70AD8 /* SceneDelegate.swift */; };
@@ -88,6 +89,7 @@
 		1022F76E26404930007AE3F2 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		1022F77226404989007AE3F2 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		1022F77526414127007AE3F2 /* LoginUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUsecase.swift; sourceTree = "<group>"; };
+		1044544726557632007E6BEB /* CrossDissolveAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossDissolveAnimators.swift; sourceTree = "<group>"; };
 		104C9BBD2643221A00D4FB8B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		108E926C263FA62600C70AD8 /* RxSwiftApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxSwiftApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		108E926F263FA62600C70AD8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 		84124AB426550DE00063098F /* FadeZoom */ = {
 			isa = PBXGroup;
 			children = (
+				1044544726557632007E6BEB /* CrossDissolveAnimators.swift */,
 				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
 			);
 			path = FadeZoom;
@@ -626,6 +629,7 @@
 				1022F74F263FAE8D007AE3F2 /* ValidationTextfield.swift in Sources */,
 				108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */,
 				845947F6265254EA003A5E0C /* UpdateNoteSceneBuilder.swift in Sources */,
+				1044544826557632007E6BEB /* CrossDissolveAnimators.swift in Sources */,
 				8476D0C426427C80002C8CB9 /* UserViewModel.swift in Sources */,
 				10AB1398264F8DC0007EA523 /* Scene.swift in Sources */,
 				845947ED26524817003A5E0C /* UpdateNoteUsecase.swift in Sources */,
