@@ -1,15 +1,23 @@
 import Foundation
 import FirebaseAuth
+import FirebaseFirestore
 
-struct Me {
+struct Me: Equatable {
     let id: String
     let name: String?
     let email: String?
 
-    init(from user: User) {
+    init(user: User) {
         id = user.uid
         name = user.displayName
         email = user.email
+    }
+
+    init(snapshot: DocumentSnapshot) {
+        let data = snapshot.data()
+        id = data?["id"] as? String ?? ""
+        name = data?["name"] as? String ?? ""
+        email = data?["email"] as? String ?? ""
     }
 
     var data: [String: Any] {
@@ -24,5 +32,11 @@ struct Me {
             defaultData.updateValue(email, forKey: "email")
         }
         return defaultData
+    }
+}
+
+extension DocumentSnapshot {
+    func convertToMe() -> Me {
+        return Me(snapshot: self)
     }
 }

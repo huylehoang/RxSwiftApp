@@ -5,15 +5,21 @@ protocol HomeUsecase: UsecaseType {
 }
 
 struct DefaultHomeUsecase: HomeUsecase {
-    private let service: NoteService
+    private let noteService: NoteService
+    private let meService: MeService
 
-    init(service: NoteService = DefaultNoteService()) {
-        self.service = service
+    init(
+        noteService: NoteService = DefaultNoteService(),
+        meService: MeService = DefaultMeService()
+    ) {
+        self.noteService = noteService
+        self.meService = meService
     }
 
     func fetchNotes() -> Observable<[Note]> {
         // Reload user before fetch notes
-        return service.reloadUser().asObservable().flatMap(fetch)
+        // Then check User info is synced to USERS table
+        return noteService.reloadUser().flatMap(meService.load).asObservable().flatMap(fetch)
     }
 }
 
@@ -21,6 +27,6 @@ private extension DefaultHomeUsecase {
     func fetch() -> Observable<[Note]> {
         // Call fetch notes then start notes listener
         // Retry 3 times for listener in case return error
-        return service.fetchNotes().asObservable().concat(service.listenNotes().retry(3))
+        return noteService.fetchNotes().asObservable().concat(noteService.listenNotes().retry(3))
     }
 }

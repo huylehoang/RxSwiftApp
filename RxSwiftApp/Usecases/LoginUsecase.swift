@@ -20,6 +20,7 @@ struct DefaultLoginUsecase: LoginUsecase {
 
     func signIn(withEmail email: String, password: String) -> Single<Void> {
         let signedIn = authService.signIn(withEmail: email, password: password)
+            .flatMap(meService.create) // sync User to table USERS
         let savePassword = { UserDefaults.setValue(password, forKey: .userPassword) }
         return signedIn.do(onSuccess: savePassword)
     }
