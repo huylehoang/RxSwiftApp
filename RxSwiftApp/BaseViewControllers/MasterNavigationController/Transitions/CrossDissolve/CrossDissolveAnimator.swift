@@ -1,6 +1,6 @@
 import UIKit
 
-class CrossDissolveAnimator: NSObject, Animator {
+final class CrossDissolveAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     private let operation: UINavigationController.Operation
 
     init(operation: UINavigationController.Operation) {
@@ -15,20 +15,20 @@ class CrossDissolveAnimator: NSObject, Animator {
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let fromView = transitionContext.view(forKey: .from),
-            let toView = transitionContext.view(forKey: .to)
+            let from = transitionContext.viewController(forKey: .from),
+            let to = transitionContext.viewController(forKey: .to)
         else { return }
         let container = transitionContext.containerView
-        fromView.translatesAutoresizingMaskIntoConstraints = false
-        toView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(fromView)
-        container.addSubview(toView)
-        Constraint.activateGroup(
-            fromView.equalToEdges(of: container),
-            toView.equalToEdges(of: container))
+        to.view.translatesAutoresizingMaskIntoConstraints = false
+        if operation == .push {
+            container.insertSubview(to.view, aboveSubview: from.view)
+        } else {
+            container.insertSubview(to.view, belowSubview: from.view)
+        }
+        Constraint.activateGroup(to.view.equalToEdges(of: container))
         UIView.transition(
-            from: fromView,
-            to: toView,
+            from: from.view,
+            to: to.view,
             duration: transitionDuration(using: transitionContext),
             options: .transitionCrossDissolve,
             completion: { _ in

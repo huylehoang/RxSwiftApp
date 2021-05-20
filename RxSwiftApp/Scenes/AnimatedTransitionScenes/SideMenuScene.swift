@@ -100,24 +100,24 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let toView = transitionContext.view(forKey: .to) else { return }
+        guard let to = transitionContext.viewController(forKey: .to) else { return }
         let containerView = transitionContext.containerView
-        toView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(toView)
+        to.view.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(to.view)
         let rightOffset = SideMenuScene.configuration.rightOffset
         Constraint.activate(
-            toView.leading.equalTo(containerView.leading),
-            toView.top.equalTo(containerView.top),
-            toView.bottom.equalTo(containerView.bottom),
-            toView.trailing.equalTo(containerView.trailing).constant(-rightOffset))
+            to.view.leading.equalTo(containerView.leading),
+            to.view.top.equalTo(containerView.top),
+            to.view.bottom.equalTo(containerView.bottom),
+            to.view.trailing.equalTo(containerView.trailing).constant(-rightOffset))
         containerView.layoutIfNeeded()
-        toView.transform = CGAffineTransform(translationX: -toView.frame.size.width, y: 1)
+        to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 1)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
             animations: {
-                toView.transform = .identity
+                to.view.transform = .identity
             },
             completion: { _ in
                 let success = !transitionContext.transitionWasCancelled
@@ -134,7 +134,7 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromView = transitionContext.view(forKey: .from) else { return }
+        guard let from = transitionContext.viewController(forKey: .from) else { return }
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0.0,
@@ -142,8 +142,8 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
             initialSpringVelocity: 1,
             options: .curveEaseIn,
             animations: {
-                fromView.transform = CGAffineTransform(
-                    translationX: -fromView.frame.size.width,
+                from.view.transform = CGAffineTransform(
+                    translationX: -from.view.frame.size.width,
                     y: 1)
             },
             completion: { _ in

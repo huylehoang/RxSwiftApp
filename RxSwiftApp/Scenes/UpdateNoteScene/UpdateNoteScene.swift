@@ -1,7 +1,7 @@
 import RxSwift
 import RxCocoa
 
-final class UpdateNoteScene: BaseViewController {
+final class UpdateNoteScene: BaseViewController, PercentDrivenDimissal {
     private lazy var titleTextField: UITextField = {
         let view = PaddingTextField()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -57,20 +57,20 @@ final class UpdateNoteScene: BaseViewController {
         return [updateButton]
     }
 
-    override var transitionKind: NavigationTransition.Kind? {
+    override var transition: MasterNavigationController.Transition? {
         switch viewModel.kind {
         case .add: return .fadeZoom
-        case .edit: return nil
+        case .edit: return .normal
         }
     }
 
-    override var interactiveDismissAnimator: InteractiveAnimator? {
+    var percentDrivenDismissAnimator: PercentDrivenAnimator? {
         return interactionController?.percentDriven
     }
 
-    private let viewModel: UpdateNoteViewModel
-
     private var interactionController: FadeZoomInteractionController?
+
+    private let viewModel: UpdateNoteViewModel
 
     init(viewModel: UpdateNoteViewModel) {
         self.viewModel = viewModel

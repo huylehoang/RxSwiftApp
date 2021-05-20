@@ -1,43 +1,34 @@
 import UIKit
 
-class FadeZoomAnimator: NSObject, Animator {
-    fileprivate static let scaleTransfrom = CGAffineTransform(scaleX: 0.3, y: 0.3)
+private let duration = 0.25
+private let scaleTransfrom = CGAffineTransform(scaleX: 0.3, y: 0.3)
 
+final class FadeZoomPushAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(
         using transitionContext: UIViewControllerContextTransitioning?
     ) -> TimeInterval {
-        return 0.25
+        return duration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        // Override
-    }
-}
-
-final class FadeZoomPushAnimator: FadeZoomAnimator {
-    override func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let fromView = transitionContext.view(forKey: .from),
-            let toView = transitionContext.view(forKey: .to)
+            let from = transitionContext.viewController(forKey: .from),
+            let to = transitionContext.viewController(forKey: .to)
         else { return }
         let container = transitionContext.containerView
-        fromView.translatesAutoresizingMaskIntoConstraints = false
-        toView.translatesAutoresizingMaskIntoConstraints = false
-        toView.applyMediumShadow()
-        container.addSubview(fromView)
-        container.addSubview(toView)
-        Constraint.activateGroup(
-            toView.equalToEdges(of: container),
-            fromView.equalToEdges(of: container))
-        toView.transform = Self.scaleTransfrom
-        toView.alpha = 0
+        to.view.translatesAutoresizingMaskIntoConstraints = false
+        to.view.applyMediumShadow()
+        container.insertSubview(to.view, aboveSubview: from.view)
+        Constraint.activateGroup(to.view.equalToEdges(of: container))
+        to.view.transform = scaleTransfrom
+        to.view.alpha = 0
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
             animations: {
-                toView.transform = .identity
-                toView.alpha = 1
+                to.view.transform = .identity
+                to.view.alpha = 1
             },
             completion: { _ in
                 transitionContext.completeTransition(true)
@@ -45,28 +36,30 @@ final class FadeZoomPushAnimator: FadeZoomAnimator {
     }
 }
 
-final class FadeZoomPopAnimator: FadeZoomAnimator {
-    override func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+final class FadeZoomPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(
+        using transitionContext: UIViewControllerContextTransitioning?
+    ) -> TimeInterval {
+        return duration
+    }
+
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let fromView = transitionContext.view(forKey: .from),
-            let toView = transitionContext.view(forKey: .to)
+            let from = transitionContext.viewController(forKey: .from),
+            let to = transitionContext.viewController(forKey: .to)
         else { return }
         let container = transitionContext.containerView
-        fromView.translatesAutoresizingMaskIntoConstraints = false
-        fromView.applyMediumShadow()
-        toView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(toView)
-        container.addSubview(fromView)
-        Constraint.activateGroup(
-            toView.equalToEdges(of: container),
-            fromView.equalToEdges(of: container))
+        from.view.applyMediumShadow()
+        to.view.translatesAutoresizingMaskIntoConstraints = false
+        container.insertSubview(to.view, belowSubview: from.view)
+        Constraint.activateGroup(to.view.equalToEdges(of: container))
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseIn,
             animations: {
-                fromView.transform = Self.scaleTransfrom
-                fromView.alpha = 0
+                from.view.transform = scaleTransfrom
+                from.view.alpha = 0
             },
             completion: { _ in
                 let cancelled = transitionContext.transitionWasCancelled

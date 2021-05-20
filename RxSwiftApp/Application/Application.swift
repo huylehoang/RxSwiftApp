@@ -3,7 +3,7 @@ import Firebase
 
 enum Application {
     static func confirgureMainInterface(in window: UIWindow) {
-        let navigationController = UINavigationController()
+        let navigationController = MasterNavigationController()
         let loginScene = Scene.login.build(in: navigationController)
         var scenes: [UIViewController] = [loginScene]
 

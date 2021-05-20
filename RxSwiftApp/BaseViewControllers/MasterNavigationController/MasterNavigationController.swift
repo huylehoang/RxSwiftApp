@@ -4,9 +4,16 @@ typealias Animator = UIViewControllerAnimatedTransitioning
 typealias InteractiveAnimator = UIViewControllerInteractiveTransitioning
 typealias PercentDrivenAnimator = UIPercentDrivenInteractiveTransition
 
-final class NavigationTransition: NSObject, UINavigationControllerDelegate {
+final class MasterNavigationController: UINavigationController {
     private var interactiveDismissAnimator: InteractiveAnimator?
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        delegate = self
+    }
+}
+
+extension MasterNavigationController: UINavigationControllerDelegate {
     func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
@@ -15,22 +22,26 @@ final class NavigationTransition: NSObject, UINavigationControllerDelegate {
     ) -> UIViewControllerAnimatedTransitioning? {
         switch operation {
         case .push:
-            guard let base = toVC as? BaseViewController else {
-                return nil
-            }
-            return base.transitionKind?.pushAnimator
+            guard
+                let base = toVC as? BaseViewController,
+                let pushAnimator = base.transition?.pushAnimator
+            else { return nil }
+            return pushAnimator
         case .pop:
             guard let base = fromVC as? BaseViewController else {
                 return nil
             }
-            guard let interactiveAnimator = base.interactiveDismissAnimator else {
-                return base.transitionKind?.popAnimator
-            }
-            interactiveDismissAnimator = interactiveAnimator
-            if interactiveAnimator is PercentDrivenAnimator {
-                return base.transitionKind?.popAnimator
-            } else {
+            if let interactiveDimissal = base as? InteractiveDimissal {
+                interactiveDismissAnimator = interactiveDimissal.interactiveDismissAnimator
                 return nil
+            } else if
+                let percentDrivenDismissal = base as? PercentDrivenDimissal,
+                let popAnimator = base.transition?.popAnimator
+            {
+                interactiveDismissAnimator = percentDrivenDismissal.percentDrivenDismissAnimator
+                return popAnimator
+            } else {
+                return base.transition?.popAnimator
             }
         default:
             return nil
@@ -53,17 +64,19 @@ final class NavigationTransition: NSObject, UINavigationControllerDelegate {
     }
 }
 
-extension NavigationTransition {
-    enum Kind {
+extension MasterNavigationController {
+    enum Transition {
+        case normal
         case crossDissolve
         case fadeZoom
         case custom(push: Animator, pop: Animator)
     }
 }
 
-private extension NavigationTransition.Kind {
+private extension MasterNavigationController.Transition {
     var pushAnimator: Animator? {
         switch self {
+        case .normal: return NormalPushAnimator()
         case .crossDissolve: return CrossDissolveAnimator(operation: .push)
         case .fadeZoom: return FadeZoomPushAnimator()
         case .custom(let push, _): return push
@@ -72,6 +85,7 @@ private extension NavigationTransition.Kind {
 
     var popAnimator: Animator? {
         switch self {
+        case .normal: return NormalPopAnimator()
         case .crossDissolve: return CrossDissolveAnimator(operation: .pop)
         case .fadeZoom: return FadeZoomPopAnimator()
         case .custom(_, let pop): return pop

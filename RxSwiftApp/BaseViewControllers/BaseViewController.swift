@@ -19,15 +19,9 @@ class BaseViewController: UIViewController {
         return []
     }
 
-    var transitionKind: NavigationTransition.Kind? {
-        return nil
+    var transition: MasterNavigationController.Transition? {
+        return .normal
     }
-
-    var interactiveDismissAnimator: InteractiveAnimator? {
-        return nil
-    }
-
-    private let navigationTransition = NavigationTransition()
 
     private(set) lazy var disposeBag = DisposeBag()
 
@@ -65,6 +59,7 @@ class BaseViewController: UIViewController {
 
 private extension BaseViewController {
     func setupNavigationBar() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         navigationController?.setNavigationBarHidden(hideNavigationBar, animated: false)
         navigationItem.setHidesBackButton(hidesBackButton, animated: false)
         navigationItem.rightBarButtonItems = rightBarButtonItems
@@ -77,7 +72,5 @@ private extension BaseViewController {
         leftBarButtonItems.forEach {
             $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
         }
-
-        navigationController?.delegate = navigationTransition
     }
 }
