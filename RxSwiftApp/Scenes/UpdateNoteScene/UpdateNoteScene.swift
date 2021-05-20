@@ -68,7 +68,7 @@ final class UpdateNoteScene: BaseViewController, PercentDrivenDimissal {
         return interactionController?.percentDriven
     }
 
-    private var interactionController: FadeZoomInteractionController?
+    private var interactionController: SimpleInteractionController?
 
     private let viewModel: UpdateNoteViewModel
 
@@ -158,7 +158,7 @@ private extension UpdateNoteScene {
     }
 
     func setupInteractionController() {
-        interactionController = FadeZoomInteractionController(interactiveController: self)
+        interactionController = SimpleInteractionController(interactiveController: self)
     }
 }
 

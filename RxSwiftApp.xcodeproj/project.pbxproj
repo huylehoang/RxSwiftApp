@@ -74,6 +74,7 @@
 		8476D0CA26427E8A002C8CB9 /* UserNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8476D0C926427E8A002C8CB9 /* UserNavigator.swift */; };
 		8476D0CE26428B00002C8CB9 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8476D0CD26428B00002C8CB9 /* Application.swift */; };
 		8498160A26567B6E002FE757 /* NormalAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498160926567B6E002FE757 /* NormalAnimators.swift */; };
+		8498161126568517002FE757 /* SimpleInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498161026568517002FE757 /* SimpleInteractionController.swift */; };
 		84F91F7A264D11450064077F /* BaseViewController+UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F91F79264D11450064077F /* BaseViewController+UIAlertController.swift */; };
 		C094B6B9D2F1B8116E6A1C5E /* Pods_RxSwiftApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B480BFB46EDA8A4C57D2EDCD /* Pods_RxSwiftApp.framework */; };
 /* End PBXBuildFile section */
@@ -150,6 +151,7 @@
 		8476D0C926427E8A002C8CB9 /* UserNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNavigator.swift; sourceTree = "<group>"; };
 		8476D0CD26428B00002C8CB9 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		8498160926567B6E002FE757 /* NormalAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalAnimators.swift; sourceTree = "<group>"; };
+		8498161026568517002FE757 /* SimpleInteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInteractionController.swift; sourceTree = "<group>"; };
 		84F91F79264D11450064077F /* BaseViewController+UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BaseViewController+UIAlertController.swift"; sourceTree = "<group>"; };
 		B480BFB46EDA8A4C57D2EDCD /* Pods_RxSwiftApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxSwiftApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -486,11 +488,20 @@
 		8498160D265682DF002FE757 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
+				8498160F265684DB002FE757 /* SimpleInteractionController */,
 				8498160826567B4E002FE757 /* Normal */,
 				1044544B265580D5007E6BEB /* CrossDissolve */,
 				84124AB426550DE00063098F /* FadeZoom */,
 			);
 			path = Transitions;
+			sourceTree = "<group>";
+		};
+		8498160F265684DB002FE757 /* SimpleInteractionController */ = {
+			isa = PBXGroup;
+			children = (
+				8498161026568517002FE757 /* SimpleInteractionController.swift */,
+			);
+			path = SimpleInteractionController;
 			sourceTree = "<group>";
 		};
 		F3BBC5EF14379883360FC48A /* Frameworks */ = {
@@ -639,6 +650,7 @@
 				10AB139C264F8E90007EA523 /* EmptyView.swift in Sources */,
 				8476D0B5264251E3002C8CB9 /* UIApplication+Extensions.swift in Sources */,
 				84124AA52654BD390063098F /* String+Extensions.swift in Sources */,
+				8498161126568517002FE757 /* SimpleInteractionController.swift in Sources */,
 				8476D0B8264259F2002C8CB9 /* IndicatorView.swift in Sources */,
 				845FD5C2264E7BAA00308FB4 /* ServiceType.swift in Sources */,
 				84124ABA265526D10063098F /* UIView+Extension.swift in Sources */,
