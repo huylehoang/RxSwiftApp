@@ -29,7 +29,6 @@ struct HomeViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let indicator = ActivityIndicator()
-        let reloadErrorTracker = ErrorTracker()
         let errorTracker = ErrorTracker()
         let notes = BehaviorRelay(value: [Note]())
 
@@ -67,8 +66,7 @@ struct HomeViewModel: ViewModelType {
 
         let embeddedIndicator = indicator.asDriver()
 
-        let errorMessage = Driver.merge(reloadErrorTracker.asDriver(), errorTracker.asDriver())
-            .map { $0.localizedDescription }
+        let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
         return Output(
             title: title,
