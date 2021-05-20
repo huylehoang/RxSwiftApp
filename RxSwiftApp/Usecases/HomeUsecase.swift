@@ -17,8 +17,9 @@ struct DefaultHomeUsecase: HomeUsecase {
     }
 
     func fetchNotes() -> Observable<[Note]> {
-        // Reload user before fetch notes
+        // Reload user at first
         // Then check User info is synced to USERS table
+        // Finally, fetch notes
         return noteService.reloadUser().flatMap(meService.load).asObservable().flatMap(fetch)
     }
 }
