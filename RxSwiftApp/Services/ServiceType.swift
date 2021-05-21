@@ -2,6 +2,7 @@ import FirebaseAuth
 import RxSwift
 
 protocol ServiceType {
+    func reloadUser() -> Single<Void>
     func getUser() -> Single<User>
 }
 

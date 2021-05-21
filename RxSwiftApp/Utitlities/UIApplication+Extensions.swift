@@ -6,7 +6,7 @@ extension UIApplication {
     }
 
     func getTopViewController(
-        base: UIViewController? = UIApplication.shared.getWindow()?.rootViewController
+        base: UIViewController? = shared.getWindow()?.rootViewController
     ) -> UIViewController? {
         if let nav = base as? UINavigationController {
             return getTopViewController(base: nav.visibleViewController)
