@@ -94,7 +94,7 @@ private extension DefaultNoteService {
             /// Convert to Single and ignore the event error
             /// 'Sequence doesn't contain any elements.'
             /// since we have ignored all elements above
-            .first() // Ignores
+            .first()
             .mapToVoid()
     }
 
