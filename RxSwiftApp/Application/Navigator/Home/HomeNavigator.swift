@@ -29,14 +29,12 @@ struct DefaultHomeNavigator: HomeNavigator {
     func toAddNote() {
         guard let navigationController = navigationController else { return }
         let addNoteScene = Scene.update(.add).build(in: navigationController)
-        addNoteScene.modalPresentationStyle = .overFullScreen
         navigationController.pushViewController(addNoteScene, animated: true)
     }
 
     func toEditNote(_ note: Note) {
         guard let navigationController = navigationController else { return }
         let editNoteScene = Scene.update(.edit(note)).build(in: navigationController)
-        editNoteScene.modalPresentationStyle = .overFullScreen
         navigationController.pushViewController(editNoteScene, animated: true)
     }
 }

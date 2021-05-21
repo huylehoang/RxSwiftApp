@@ -28,10 +28,11 @@ extension MasterNavigationController: UINavigationControllerDelegate {
             else { return nil }
             return pushAnimator
         case .pop:
-            guard let base = fromVC as? BaseViewController else {
-                return nil
-            }
-            if let interactiveDimissal = base as? InteractiveDimissal {
+            guard let base = fromVC as? BaseViewController else { return nil }
+            if
+                let interactiveDimissal = base as? InteractiveDimissal,
+                interactiveDimissal.isInteractivelyDismissing
+            {
                 interactiveDismissAnimator = interactiveDimissal.interactiveDismissAnimator
                 return nil
             } else if
@@ -83,7 +84,7 @@ extension MasterNavigationController {
 }
 
 private extension MasterNavigationController.Transition {
-    var pushAnimator: Animator? {
+    var pushAnimator: Animator {
         switch self {
         case .normal: return NormalPushAnimator()
         case .crossDissolve: return CrossDissolveAnimator(operation: .push)
@@ -92,7 +93,7 @@ private extension MasterNavigationController.Transition {
         }
     }
 
-    var popAnimator: Animator? {
+    var popAnimator: Animator {
         switch self {
         case .normal: return NormalPopAnimator()
         case .crossDissolve: return CrossDissolveAnimator(operation: .pop)
