@@ -32,7 +32,8 @@ final class CrossDissolveAnimator: NSObject, UIViewControllerAnimatedTransitioni
             duration: transitionDuration(using: transitionContext),
             options: .transitionCrossDissolve,
             completion: { _ in
-                transitionContext.completeTransition(true)
+                let cancelled = transitionContext.transitionWasCancelled
+                transitionContext.completeTransition(!cancelled)
             })
     }
 }

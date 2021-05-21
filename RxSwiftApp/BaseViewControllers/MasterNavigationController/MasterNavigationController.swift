@@ -67,12 +67,13 @@ extension MasterNavigationController: UINavigationControllerDelegate {
 extension MasterNavigationController {
     enum Transition {
         /*
-         - 'normal' is default transition animation of navigation controller.
-         - The reason for implementing this custom transition is after we triggered any custom
-         transitions, then we use default transition animation (leave the variable transition
-         in "BaseViewController" to nil) for other view controller, it will cause the "from
-         view controller" disappear from view hierarchy.
-         - This replacement will solve this issue (by not using the default animation)
+         - 'normal' transition's animation is nearly the same as default transition's animation
+         of navigation controller.
+         - The reason for implementing this custom transition (copied from the default) is after we
+         triggered any custom transitions'animation, then we use default transition animation
+         (leave the variable transition in "BaseViewController" to nil) for other view controller,
+         it will cause the "from view controller" disappears from view hierarchy.
+         - This replacement will solve this issue (by not using the default transition's animation)
          */
         case normal
         case crossDissolve

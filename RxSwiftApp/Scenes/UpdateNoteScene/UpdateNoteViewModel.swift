@@ -71,8 +71,9 @@ struct UpdateNoteViewModel: ViewModelType {
 
         let noteDetailsIsEmpty = checkFieldsIsEmpty.map { $0.details.isEmpty }
 
-        let fieldsNotEmpty = Driver.combineLatest(noteTitleIsEmpty, noteDetailsIsEmpty)
-            .map { !$0 && !$1 }
+        let fieldsIsEmpty = Driver.combineLatest(noteTitleIsEmpty, noteDetailsIsEmpty)
+
+        let fieldsNotEmpty = fieldsIsEmpty.map { !$0 && !$1 }
 
         let updatedNoteTitle = input.noteTitle
             .skip(1)
@@ -108,10 +109,20 @@ struct UpdateNoteViewModel: ViewModelType {
             .map { ($0, indicator, errorTracker) }
             .flatMapLatest(deleteNote)
 
+        let fieldsErrorToast = fieldsIsEmpty
+            .compactMap { (titleIsEmpty, detailsIsEmpty) -> String? in
+                switch (titleIsEmpty, detailsIsEmpty) {
+                case (true, false): return "Title can not be empty"
+                case (false, true): return "Details can not be empty"
+                case (true, true): return "Title and details can not be empty"
+                default: return nil
+                }
+            }
+
         let showToast = Driver.merge(
             addedNote.map { "Added Note" },
             deletedNote.map { "Deleted Note" },
-            fieldsNotEmpty.filter { !$0 }.map { _ in "Title and details fields can not be empty" },
+            fieldsErrorToast,
             editedNote.map { "Edited Note" })
 
         let toHome = Driver.merge(addedNote, deletedNote).do(onNext: navigator.toHome)

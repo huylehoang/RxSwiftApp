@@ -31,7 +31,8 @@ final class FadeZoomPushAnimator: NSObject, UIViewControllerAnimatedTransitionin
                 to.view.alpha = 1
             },
             completion: { _ in
-                transitionContext.completeTransition(true)
+                let success = !transitionContext.transitionWasCancelled
+                transitionContext.completeTransition(success)
             })
     }
 }
