@@ -34,7 +34,10 @@ struct DefaultUserUsecase: UserUsecase {
     }
 
     func deleteUser() -> Single<Void> {
-        return noteService.deleteNotes()
+        return reAuthenticate()
+            .mapToVoid() // Re-Authenticate before process delete user
+            .flatMap(noteService.fetchNotes)
+            .flatMap(noteService.deleteNotes)
             .flatMap(meService.delete)
             .flatMap(authService.deleteUser)
             .do(onSuccess: UserDefaults.removeAllValues)

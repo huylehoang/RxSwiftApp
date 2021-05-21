@@ -4,7 +4,7 @@ import RxSwift
 protocol NoteService: ServiceType {
     func fetchNotes() -> Single<[Note]>
     func listenNotes() -> Observable<[Note]>
-    func deleteNotes() -> Single<Void>
+    func deleteNotes(_ notes: [Note]) -> Single<Void>
     func addNote(_ note: Note) -> Single<Void>
     func updateNote(_ note: Note) -> Single<Void>
     func deleteNote(_ note: Note) -> Single<Void>
@@ -35,8 +35,8 @@ struct DefaultNoteService: NoteService {
         return userNotesQuery.asObservable().flatMap(listenNotes)
     }
 
-    func deleteNotes() -> Single<Void> {
-        return userNotes.flatMap(deleteNotes)
+    func deleteNotes(_ notes: [Note]) -> Single<Void> {
+        return userNotes.map { (notes, $0) }.flatMap(deleteNotes)
     }
 
     func addNote(_ note: Note) -> Single<Void> {
@@ -84,20 +84,18 @@ private extension DefaultNoteService {
         }
     }
 
-    func deleteNotes(of userNotes: CollectionReference) -> Single<Void> {
-        return .create { single in
-            userNotes.getDocuments { querySnapshot, error in
-                if let error = error {
-                    single(.failure(error))
-                } else {
-                    querySnapshot?.documents.forEach {
-                        userNotes.document($0.documentID).delete()
-                    }
-                    single(.success(()))
-                }
-            }
-            return Disposables.create()
-        }
+    func deleteNotes(_ notes: [Note], of userNotes: CollectionReference) -> Single<Void> {
+        return Observable.from(notes)
+            .map { ($0, userNotes) }
+            .flatMap(deleteNote)
+            /// Ignores 'onNext' events, wait until 'onCompleted' / 'onError' (Terminated)
+            /// in order to get final result (completed or error) of all delete note requests
+            .ignoreElements()
+            /// Convert to Single and ignore the event error
+            /// 'Sequence doesn't contain any elements.'
+            /// since we have ignored all elements above
+            .first() // Ignores
+            .mapToVoid()
     }
 
     func setNote(_ note: Note, for userNotes: CollectionReference) -> Single<Void> {
