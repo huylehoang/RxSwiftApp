@@ -19,7 +19,7 @@ final class NormalPushAnimator: NSObject, UIViewControllerAnimatedTransitioning 
         container.insertSubview(to.view, aboveSubview: from.view)
         Constraint.activateGroup(to.view.equalToEdges(of: container))
         container.layoutIfNeeded()
-        to.view.transform = CGAffineTransform(translationX: to.view.frame.width, y: 1)
+        to.view.transform = CGAffineTransform(translationX: to.view.frame.width, y: 0)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
@@ -54,7 +54,7 @@ final class NormalPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         container.insertSubview(to.view, belowSubview: from.view)
         Constraint.activateGroup(to.view.equalToEdges(of: container))
         container.layoutIfNeeded()
-        to.view.transform = CGAffineTransform(translationX: -to.view.frame.width * 1/3, y: 1)
+        to.view.transform = CGAffineTransform(translationX: -to.view.frame.width * 1/3, y: 0)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,

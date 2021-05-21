@@ -111,7 +111,7 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
             to.view.bottom.equalTo(containerView.bottom),
             to.view.trailing.equalTo(containerView.trailing).constant(-rightOffset))
         containerView.layoutIfNeeded()
-        to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 1)
+        to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 0)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
@@ -138,13 +138,11 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0.0,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 1,
             options: .curveEaseIn,
             animations: {
                 from.view.transform = CGAffineTransform(
                     translationX: -from.view.frame.size.width,
-                    y: 1)
+                    y: 0)
             },
             completion: { _ in
                 let success = !transitionContext.transitionWasCancelled
@@ -226,7 +224,7 @@ private final class InteractionController {
             percentController?.update(percent)
         default:
             percentController?.completionSpeed = 0.7
-            if percent > 0.5 * 1/2 {
+            if percent > 0.5 * 1/5 {
                 percentController?.finish()
             } else {
                 percentController?.cancel()
