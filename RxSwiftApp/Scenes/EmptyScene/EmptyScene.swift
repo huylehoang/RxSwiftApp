@@ -16,7 +16,7 @@ final class EmptyScene: BaseViewController {
 
 private extension EmptyScene {
     func setupView() {
-        view.backgroundColor = .white
+        contentView.backgroundColor = .white
         let emptyView = EmptyView()
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(emptyView)

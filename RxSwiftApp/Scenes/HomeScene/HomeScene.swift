@@ -11,7 +11,13 @@ final class HomeScene: BaseViewController {
         view.separatorInset.left = 16
         view.estimatedRowHeight = 50
         view.rowHeight = 50
+        view.refreshControl = refreshControl
         view.tableFooterView = UIView()
+        return view
+    }()
+
+    fileprivate lazy var refreshControl: UIRefreshControl = {
+        let view = UIRefreshControl()
         return view
     }()
 
@@ -75,7 +81,8 @@ private extension HomeScene {
 
         let input = HomeViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
-            refreshTrigger: rx.emptyViewAction.asDriver(),
+            emptyRefreshTrigger: rx.emptyViewAction.asDriver(),
+            refreshTrigger: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
             toUserTrigger: organizeButton.rx.tap.asDriver(),
             itemSelected: tableView.rx.itemSelected.asDriver())
@@ -92,7 +99,8 @@ private extension HomeScene {
             },
             output.onAction.drive(),
             output.emptyMessage.drive(rx.showEmbeddedEmptyView(actionTitle: "Refresh")),
-            output.embeddedIndicator.drive(rx.showEmbeddedIndicator),
+            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
+            output.refreshLoading.drive(refreshControl.rx.isRefreshing),
             output.errorMessage.drive(rx.showToast),
         ]
         .forEach { $0.disposed(by: disposeBag) }

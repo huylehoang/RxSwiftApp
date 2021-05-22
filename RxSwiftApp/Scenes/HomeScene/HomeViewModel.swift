@@ -4,6 +4,7 @@ import RxCocoa
 struct HomeViewModel: ViewModelType {
     struct Input {
         let viewDidLoad: Driver<Void>
+        let emptyRefreshTrigger: Driver<Void>
         let refreshTrigger: Driver<Void>
         let toAddNoteTrigger: Driver<Void>
         let toUserTrigger: Driver<Void>
@@ -15,7 +16,8 @@ struct HomeViewModel: ViewModelType {
         let noteTitles: Driver<[String]>
         let onAction: Driver<Void>
         let emptyMessage: Driver<String>
-        let embeddedIndicator: Driver<Bool>
+        let embeddedLoading: Driver<Bool>
+        let refreshLoading: Driver<Bool>
         let errorMessage: Driver<String>
     }
 
@@ -28,12 +30,18 @@ struct HomeViewModel: ViewModelType {
     }
 
     func transform(input: Input) -> Output {
-        let indicator = ActivityIndicator()
+        let embeddedIndicator = ActivityIndicator()
+        let refreshIndicator = ActivityIndicator()
         let errorTracker = ErrorTracker()
         let notes = BehaviorRelay(value: [Note]())
 
-        let fetchedNotes = Driver.merge(input.viewDidLoad, input.refreshTrigger)
-            .map { (indicator, errorTracker) }
+        let embeddedLoadingTrigger = Driver.merge(input.viewDidLoad, input.emptyRefreshTrigger)
+            .map { (embeddedIndicator, refreshIndicator, errorTracker) }
+
+        let refreshLoadingTrigger = input.refreshTrigger
+            .map { (refreshIndicator, embeddedIndicator, errorTracker) }
+
+        let fetchedNotes = Driver.merge(embeddedLoadingTrigger, refreshLoadingTrigger)
             .flatMapLatest(fetchNotes)
             .do(onNext: notes.accept)
             .mapToVoid()
@@ -64,7 +72,9 @@ struct HomeViewModel: ViewModelType {
 
         let emptyMessage = outputNoteTitles.map { $0.isEmpty ? "Empty Notes" : "" }
 
-        let embeddedIndicator = indicator.asDriver()
+        let embeddedLoading = embeddedIndicator.asDriver()
+
+        let refreshLoading = refreshIndicator.asDriver()
 
         let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
@@ -73,15 +83,21 @@ struct HomeViewModel: ViewModelType {
             noteTitles: outputNoteTitles,
             onAction: onAction,
             emptyMessage: emptyMessage,
-            embeddedIndicator: embeddedIndicator,
+            embeddedLoading: embeddedLoading,
+            refreshLoading: refreshLoading,
             errorMessage: errorMessage)
     }
 }
 
 private extension HomeViewModel {
-    func fetchNotes(indicator: ActivityIndicator, errorTracker: ErrorTracker) -> Driver<[Note]> {
+    func fetchNotes(
+        indicator: ActivityIndicator,
+        forcedStopIndicator: ActivityIndicator,
+        errorTracker: ErrorTracker
+    ) -> Driver<[Note]> {
         return usecase.fetchNotes()
             .trackActivity(indicator)
+            .forceStopLoading(forcedStopIndicator)
             .trackError(errorTracker)
             .asDriverOnErrorJustComplete()
     }

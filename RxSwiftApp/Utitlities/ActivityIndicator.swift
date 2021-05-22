@@ -27,6 +27,12 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
             onSubscribe: subscribed)
     }
 
+    fileprivate func forcedStopLoading<O: ObservableConvertibleType>(
+        by source: O
+    ) -> Observable<O.Element> {
+        return source.asObservable().do(onSubscribe: sendStopLoading)
+    }
+
     private func subscribed() {
         _lock.lock()
         _behavior.accept(true)
@@ -47,5 +53,9 @@ final class ActivityIndicator: SharedSequenceConvertibleType {
 extension ObservableConvertibleType {
     func trackActivity(_ activityIndicator: ActivityIndicator) -> Observable<Element> {
         return activityIndicator.trackActivityOfObservable(self)
+    }
+
+    func forceStopLoading(_ activityIndicator: ActivityIndicator) -> Observable<Element> {
+        return activityIndicator.forcedStopLoading(by: self)
     }
 }
