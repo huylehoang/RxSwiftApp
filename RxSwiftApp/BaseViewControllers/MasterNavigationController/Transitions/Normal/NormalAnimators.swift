@@ -27,7 +27,7 @@ final class NormalPushAnimator: NSObject, UIViewControllerAnimatedTransitioning 
             animations: {
                 from.view.transform = CGAffineTransform(
                     translationX: -from.view.frame.width * 1/3,
-                    y: 1)
+                    y: 0)
                 to.view.transform = .identity
             },
             completion: { _ in
@@ -60,9 +60,7 @@ final class NormalPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             delay: 0,
             options: .curveEaseInOut,
             animations: {
-                from.view.transform = CGAffineTransform(
-                    translationX: from.view.frame.width,
-                    y: 1)
+                from.view.transform = CGAffineTransform(translationX: from.view.frame.width, y: 0)
                 to.view.transform = .identity
             },
             completion: { _ in

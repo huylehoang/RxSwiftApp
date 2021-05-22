@@ -3,7 +3,7 @@ import UIKit
 final class SideMenuScene: BaseViewController {
     struct Confirguration {
         let presentDuration: TimeInterval = 0.25
-        let dismissDuration: TimeInterval = 0.35
+        let dismissDuration: TimeInterval = 0.25
         let rightOffset: CGFloat = UIScreen.main.bounds.width * 1/5
         let dimmingColor: UIColor = UIColor(red: 33/255, green: 43/255, blue: 54/255, alpha: 0.76)
     }
@@ -111,11 +111,11 @@ private final class PresentingAnimation: NSObject, UIViewControllerAnimatedTrans
             to.view.bottom.equalTo(containerView.bottom),
             to.view.trailing.equalTo(containerView.trailing).constant(-rightOffset))
         containerView.layoutIfNeeded()
-        to.view.transform = CGAffineTransform(translationX: -to.view.frame.size.width, y: 0)
+        to.view.transform = CGAffineTransform(translationX: -to.view.frame.width, y: 0)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
-            options: .curveEaseOut,
+            options: .curveEaseInOut,
             animations: {
                 to.view.transform = .identity
             },
@@ -138,11 +138,9 @@ private final class DimissingAnimation: NSObject, UIViewControllerAnimatedTransi
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0.0,
-            options: .curveEaseIn,
+            options: .curveEaseInOut,
             animations: {
-                from.view.transform = CGAffineTransform(
-                    translationX: -from.view.frame.size.width,
-                    y: 0)
+                from.view.transform = CGAffineTransform(translationX: -from.view.frame.width, y: 0)
             },
             completion: { _ in
                 let success = !transitionContext.transitionWasCancelled

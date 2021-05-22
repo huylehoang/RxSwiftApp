@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>186665750790-j9ff3jjc722a570u2sv1ueu6qgirqvp0.apps.googleusercontent.com</string>
+	<string>186665750790-3rahob6cv6vecqvaak5grv7apr7era02.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.186665750790-j9ff3jjc722a570u2sv1ueu6qgirqvp0</string>
+	<string>com.googleusercontent.apps.186665750790-3rahob6cv6vecqvaak5grv7apr7era02</string>
 	<key>API_KEY</key>
 	<string>AIzaSyB9d06bYBTKwp6y7G2ZNjI1DIU93l8TuGA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>LeeX.RxSwiftApp.me</string>
+	<string>LeeX.RxSwiftApp.test</string>
 	<key>PROJECT_ID</key>
 	<string>rxswiftapp</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:186665750790:ios:82ad5d006c8da16c95ce87</string>
+	<string>1:186665750790:ios:b2b6ee108d48a31695ce87</string>
 </dict>
 </plist>
