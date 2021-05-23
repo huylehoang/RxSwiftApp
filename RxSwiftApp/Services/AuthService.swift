@@ -58,11 +58,33 @@ struct DefaultAuthService: AuthService {
     }
 
     func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
+        return getUser().map { ($0, email, password) }.flatMap(reAuthenticate)
+    }
+
+    func deleteUser() -> Single<Void> {
+        return getUser().flatMap(deleteUser)
+    }
+
+    func deleteUser(by error: Swift.Error) -> Single<Void> {
+        return getUser().map { ($0, error) }.flatMap(deleteUser)
+    }
+
+    func signOut() -> Single<Void> {
         return .create { single in
-            guard let user = Auth.auth().currentUser else {
-                single(.failure(ServiceError.userNotFound))
-                return Disposables.create()
+            do {
+                try Auth.auth().signOut()
+                single(.success(()))
+            } catch {
+                single(.failure(error))
             }
+            return Disposables.create()
+        }
+    }
+}
+
+private extension DefaultAuthService {
+    func reAuthenticate(_ user: User, withEmail email: String, password: String) -> Single<User> {
+        return .create { single in
             let credential = EmailAuthProvider.credential(withEmail: email, password: password)
             user.reauthenticate(with: credential) { authResult, error in
                 if let user = authResult?.user {
@@ -77,12 +99,8 @@ struct DefaultAuthService: AuthService {
         }
     }
 
-    func deleteUser() -> Single<Void> {
+    func deleteUser(_ user: User) -> Single<Void> {
         return .create { single in
-            guard let user = Auth.auth().currentUser else {
-                single(.failure(ServiceError.userNotFound))
-                return Disposables.create()
-            }
             user.delete { error in
                 if let error = error {
                     single(.failure(error))
@@ -94,30 +112,14 @@ struct DefaultAuthService: AuthService {
         }
     }
 
-    func deleteUser(by error: Swift.Error) -> Single<Void> {
+    func deleteUser(_ user: User, by error: Swift.Error) -> Single<Void> {
         return .create { single in
-            guard let user = Auth.auth().currentUser else {
-                single(.failure(ServiceError.userNotFound))
-                return Disposables.create()
-            }
             user.delete { deletingError in
                 if let deletingError = deletingError {
                     single(.failure(deletingError))
                 } else {
                     single(.failure(error))
                 }
-            }
-            return Disposables.create()
-        }
-    }
-
-    func signOut() -> Single<Void> {
-        return .create { single in
-            do {
-                try Auth.auth().signOut()
-                single(.success(()))
-            } catch {
-                single(.failure(error))
             }
             return Disposables.create()
         }
