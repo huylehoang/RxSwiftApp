@@ -18,9 +18,14 @@ struct DefaultHomeUsecase: HomeUsecase {
 
     func fetchNotes() -> Observable<[Note]> {
         // Reload user at first
-        // Then check User info is synced to USERS table
+        // Next, check User info is synced to USERS table
+        // Then, check user password is still cached
         // Finally, fetch notes
-        return noteService.reloadUser().flatMap(meService.load).asObservable().flatMap(fetch)
+        return noteService.reloadUser()
+            .flatMap(meService.load)
+            .flatMap(checkUserPasswordStillValid)
+            .asObservable()
+            .flatMap(fetch)
     }
 }
 
@@ -29,5 +34,9 @@ private extension DefaultHomeUsecase {
         // Call fetch notes then start notes listener
         // Retry 3 times for listener in case return error
         return noteService.fetchNotes().asObservable().concat(noteService.listenNotes().retry(3))
+    }
+
+    func checkUserPasswordStillValid() -> Single<Void> {
+        return UserDefaults.getStringValue(forKey: .userPassword).mapToVoid()
     }
 }

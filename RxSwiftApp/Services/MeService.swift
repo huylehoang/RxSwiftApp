@@ -1,7 +1,7 @@
 import FirebaseFirestore
 import RxSwift
 
-protocol MeService: ServiceType {
+protocol MeService: CommonService {
     func create() -> Single<Void>
     func load() -> Single<Void>
     func delete() -> Single<Void>

@@ -47,7 +47,7 @@ struct HomeViewModel: ViewModelType {
             .mapToVoid()
 
         let toLogin = errorTracker
-            .filter { $0.userNotFound }
+            .filter { $0.forceSignOut }
             .mapToVoid()
             .do(onNext: navigator.toLogin)
 

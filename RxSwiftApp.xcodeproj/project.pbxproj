@@ -22,6 +22,7 @@
 		1044544826557632007E6BEB /* CrossDissolveAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1044544726557632007E6BEB /* CrossDissolveAnimator.swift */; };
 		104C9BBE2643221A00D4FB8B /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BBD2643221A00D4FB8B /* AuthService.swift */; };
 		104F1A20265963B800112AC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 104F1A1F265963B700112AC6 /* GoogleService-Info.plist */; };
+		108CB6C8265D67B500776901 /* ForceSignOutError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108CB6C7265D67B500776901 /* ForceSignOutError.swift */; };
 		108E9270263FA62600C70AD8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E926F263FA62600C70AD8 /* AppDelegate.swift */; };
 		108E9272263FA62600C70AD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9271263FA62600C70AD8 /* SceneDelegate.swift */; };
 		108E9279263FA62700C70AD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 108E9278263FA62700C70AD8 /* Assets.xcassets */; };
@@ -57,7 +58,7 @@
 		845FD5B8264E751E00308FB4 /* HomeSceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5B7264E751E00308FB4 /* HomeSceneBuilder.swift */; };
 		845FD5BB264E75FD00308FB4 /* HomeUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5BA264E75FD00308FB4 /* HomeUsecase.swift */; };
 		845FD5BF264E772800308FB4 /* NoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5BE264E772800308FB4 /* NoteService.swift */; };
-		845FD5C2264E7BAA00308FB4 /* ServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5C1264E7BAA00308FB4 /* ServiceType.swift */; };
+		845FD5C2264E7BAA00308FB4 /* CommonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5C1264E7BAA00308FB4 /* CommonService.swift */; };
 		845FD5C6264E7C4700308FB4 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5C5264E7C4700308FB4 /* ServiceError.swift */; };
 		845FD5CA264E7E2800308FB4 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5C9264E7E2800308FB4 /* Note.swift */; };
 		845FD5CD264E7F5C00308FB4 /* MutableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5CC264E7F5C00308FB4 /* MutableType.swift */; };
@@ -95,6 +96,7 @@
 		1044544726557632007E6BEB /* CrossDissolveAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossDissolveAnimator.swift; sourceTree = "<group>"; };
 		104C9BBD2643221A00D4FB8B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		104F1A1F265963B700112AC6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		108CB6C7265D67B500776901 /* ForceSignOutError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSignOutError.swift; sourceTree = "<group>"; };
 		108E926C263FA62600C70AD8 /* RxSwiftApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxSwiftApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		108E926F263FA62600C70AD8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		108E9271263FA62600C70AD8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 		845FD5B7264E751E00308FB4 /* HomeSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSceneBuilder.swift; sourceTree = "<group>"; };
 		845FD5BA264E75FD00308FB4 /* HomeUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUsecase.swift; sourceTree = "<group>"; };
 		845FD5BE264E772800308FB4 /* NoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteService.swift; sourceTree = "<group>"; };
-		845FD5C1264E7BAA00308FB4 /* ServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceType.swift; sourceTree = "<group>"; };
+		845FD5C1264E7BAA00308FB4 /* CommonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonService.swift; sourceTree = "<group>"; };
 		845FD5C5264E7C4700308FB4 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		845FD5C9264E7E2800308FB4 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		845FD5CC264E7F5C00308FB4 /* MutableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableType.swift; sourceTree = "<group>"; };
@@ -251,7 +253,7 @@
 		104C9BBC2643220600D4FB8B /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				845FD5C1264E7BAA00308FB4 /* ServiceType.swift */,
+				845FD5C1264E7BAA00308FB4 /* CommonService.swift */,
 				104C9BBD2643221A00D4FB8B /* AuthService.swift */,
 				10049A9A2653052B00139C99 /* MeService.swift */,
 				845FD5BE264E772800308FB4 /* NoteService.swift */,
@@ -361,6 +363,7 @@
 		10CA3569265032B200D49F39 /* Errors */ = {
 			isa = PBXGroup;
 			children = (
+				108CB6C7265D67B500776901 /* ForceSignOutError.swift */,
 				845FD5C5264E7C4700308FB4 /* ServiceError.swift */,
 				10CA356A265032D500D49F39 /* SceneBuidlerError.swift */,
 			);
@@ -652,7 +655,7 @@
 				84124AA52654BD390063098F /* String+Extensions.swift in Sources */,
 				8498161126568517002FE757 /* SimpleInteractionController.swift in Sources */,
 				8476D0B8264259F2002C8CB9 /* IndicatorView.swift in Sources */,
-				845FD5C2264E7BAA00308FB4 /* ServiceType.swift in Sources */,
+				845FD5C2264E7BAA00308FB4 /* CommonService.swift in Sources */,
 				84124ABA265526D10063098F /* UIView+Extension.swift in Sources */,
 				10AB13A326502FC2007EA523 /* EmptyScene.swift in Sources */,
 				8476D0CA26427E8A002C8CB9 /* UserNavigator.swift in Sources */,
@@ -676,6 +679,7 @@
 				1044544826557632007E6BEB /* CrossDissolveAnimator.swift in Sources */,
 				8476D0C426427C80002C8CB9 /* UserViewModel.swift in Sources */,
 				10AB1398264F8DC0007EA523 /* Scene.swift in Sources */,
+				108CB6C8265D67B500776901 /* ForceSignOutError.swift in Sources */,
 				845947ED26524817003A5E0C /* UpdateNoteUsecase.swift in Sources */,
 				84171C002644FF6100DD0074 /* SceneBuilderType.swift in Sources */,
 				1022F75826400F1E007AE3F2 /* ErrorTracker.swift in Sources */,

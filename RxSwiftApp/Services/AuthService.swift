@@ -1,7 +1,7 @@
 import FirebaseAuth
 import RxSwift
 
-protocol AuthService: ServiceType {
+protocol AuthService: CommonService {
     func signIn(withEmail email: String, password: String) -> Single<Void>
     func createUser(withEmail email: String, password: String) -> Single<User>
     func updateUserName(_ name: String, for user: User) -> Single<Void>

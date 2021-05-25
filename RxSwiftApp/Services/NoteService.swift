@@ -1,7 +1,7 @@
 import FirebaseFirestore
 import RxSwift
 
-protocol NoteService: ServiceType {
+protocol NoteService: CommonService {
     func fetchNotes() -> Single<[Note]>
     func listenNotes() -> Observable<[Note]>
     func deleteNotes(_ notes: [Note]) -> Single<Void>

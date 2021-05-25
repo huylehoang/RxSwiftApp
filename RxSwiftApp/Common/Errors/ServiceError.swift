@@ -17,10 +17,3 @@ extension ServiceError: LocalizedError {
         }
     }
 }
-
-extension Error {
-    var userNotFound: Bool {
-        guard let serviceError = self as? ServiceError else { return false }
-        return serviceError == .userNotFound || serviceError == .userNotSync
-    }
-}
