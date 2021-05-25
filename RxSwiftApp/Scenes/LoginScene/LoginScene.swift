@@ -58,6 +58,8 @@ final class LoginScene: BaseViewController {
 
 private extension LoginScene {
     func setupView() {
+        navigationBarUpdate { $0.hidesNavigationBar = true }
+
         contentView.backgroundColor = .white
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false

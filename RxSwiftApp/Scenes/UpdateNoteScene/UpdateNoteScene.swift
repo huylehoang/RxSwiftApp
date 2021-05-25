@@ -45,18 +45,6 @@ final class UpdateNoteScene: BaseViewController, PercentDrivenDimissal {
         return view
     }()
 
-    override var hideNavigationBar: Bool {
-        return false
-    }
-
-    override var hidesBackButton: Bool {
-        return false
-    }
-
-    override var rightBarButtonItems: [UIBarButtonItem] {
-        return [updateButton]
-    }
-
     override var transition: MasterNavigationController.Transition? {
         switch viewModel.kind {
         case .add: return .fadeZoom
@@ -91,6 +79,11 @@ final class UpdateNoteScene: BaseViewController, PercentDrivenDimissal {
 
 private extension UpdateNoteScene {
     func setupView() {
+        navigationBarUpdate {
+            $0.hidesBackButton = false
+            $0.rightBarButtonItems = [updateButton]
+        }
+        
         contentView.backgroundColor = .white
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false

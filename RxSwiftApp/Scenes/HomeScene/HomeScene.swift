@@ -21,8 +21,13 @@ final class HomeScene: BaseViewController {
         return view
     }()
 
-    private lazy var addButton: UIBarButtonItem = {
+    fileprivate lazy var addButton: UIBarButtonItem = {
         let view = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+        return view
+    }()
+
+    fileprivate lazy var refreshButton: UIBarButtonItem = {
+        let view = UIBarButtonItem(barButtonSystemItem: .refresh, target: nil, action: nil)
         return view
     }()
 
@@ -30,18 +35,6 @@ final class HomeScene: BaseViewController {
         let view = UIBarButtonItem(barButtonSystemItem: .organize, target: nil, action: nil)
         return view
     }()
-
-    override var hideNavigationBar: Bool {
-        return false
-    }
-
-    override var leftBarButtonItems: [UIBarButtonItem] {
-        return [organizeButton]
-    }
-
-    override var rightBarButtonItems: [UIBarButtonItem] {
-        return [addButton]
-    }
 
     override var transition: MasterNavigationController.Transition? {
         return .crossDissolve
@@ -67,6 +60,11 @@ final class HomeScene: BaseViewController {
 
 private extension HomeScene {
     func setupView() {
+        navigationBarUpdate {
+            $0.leftBarButtonItems = [organizeButton]
+            $0.rightBarButtonItems = [addButton]
+        }
+        
         contentView.backgroundColor = .white
         contentView.addSubview(tableView)
         Constraint.activateGroup(tableView.equalToEdges(of: contentView))
@@ -81,7 +79,7 @@ private extension HomeScene {
 
         let input = HomeViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
-            emptyRefreshTrigger: rx.emptyViewAction.asDriver(),
+            emptyRefreshTrigger: refreshButton.rx.tap.asDriver(),
             refreshTrigger: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
             toUserTrigger: organizeButton.rx.tap.asDriver(),
@@ -97,12 +95,28 @@ private extension HomeScene {
                 cell.textLabel?.numberOfLines = 0
                 return cell
             },
-            output.onAction.drive(),
-            output.emptyMessage.drive(rx.showEmbeddedEmptyView(actionTitle: "Refresh")),
+            output.isEmpty.drive(isEmpty),
+            output.emptyMessage.drive(rx.showEmbeddedEmptyView()),
             output.embeddedLoading.drive(rx.showEmbeddedIndicator),
             output.refreshLoading.drive(refreshControl.rx.isRefreshing),
             output.errorMessage.drive(rx.showToast),
+            output.onAction.drive(),
         ]
         .forEach { $0.disposed(by: disposeBag) }
+    }
+}
+
+extension HomeScene {
+    var isEmpty: Binder<Bool> {
+        return Binder(self) { base, isEmpty in
+            let rightBarButtonItems: [UIBarButtonItem] = {
+                if isEmpty {
+                    return [base.addButton, base.refreshButton]
+                } else {
+                    return [base.addButton]
+                }
+            }()
+            base.navigationBarUpdate { $0.rightBarButtonItems = rightBarButtonItems }
+        }
     }
 }

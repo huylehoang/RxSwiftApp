@@ -14,11 +14,12 @@ struct HomeViewModel: ViewModelType {
     struct Output {
         let title: Driver<String>
         let noteTitles: Driver<[String]>
-        let onAction: Driver<Void>
+        let isEmpty: Driver<Bool>
         let emptyMessage: Driver<String>
         let embeddedLoading: Driver<Bool>
         let refreshLoading: Driver<Bool>
         let errorMessage: Driver<String>
+        let onAction: Driver<Void>
     }
 
     private let usecase: HomeUsecase
@@ -62,15 +63,15 @@ struct HomeViewModel: ViewModelType {
             .do(onNext: navigator.toEditNote)
             .mapToVoid()
 
-        let onAction = Driver.merge(toLogin, toUser, toAddNote, toEditNote)
-
         let title = Driver.just("Notes")
 
         let outputNoteTitles = Driver.merge(fetchedNotes, errorTracker.mapToVoid())
             .withLatestFrom(notes.asDriver())
             .map { $0.titles() }
 
-        let emptyMessage = outputNoteTitles.map { $0.isEmpty ? "Empty Notes" : "" }
+        let isEmpty = outputNoteTitles.map { $0.isEmpty }
+
+        let emptyMessage = isEmpty.map { $0 ? "Empty Notes" : "" }
 
         let embeddedLoading = embeddedIndicator.asDriver()
 
@@ -78,14 +79,17 @@ struct HomeViewModel: ViewModelType {
 
         let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
+        let onAction = Driver.merge(toLogin, toUser, toAddNote, toEditNote)
+
         return Output(
             title: title,
             noteTitles: outputNoteTitles,
-            onAction: onAction,
+            isEmpty: isEmpty,
             emptyMessage: emptyMessage,
             embeddedLoading: embeddedLoading,
             refreshLoading: refreshLoading,
-            errorMessage: errorMessage)
+            errorMessage: errorMessage,
+            onAction: onAction)
     }
 }
 

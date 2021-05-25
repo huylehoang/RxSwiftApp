@@ -1,29 +1,16 @@
 import RxSwift
+import RxCocoa
 
 class BaseViewController: UIViewController {
     let contentView: UIView
 
-    var hideNavigationBar: Bool {
-        return true
-    }
+    private let navigationBar = BehaviorRelay(value: NavigationBarBuilder())
 
-    var hidesBackButton: Bool {
-        return true
-    }
-
-    var leftBarButtonItems: [UIBarButtonItem] {
-        return []
-    }
-
-    var rightBarButtonItems: [UIBarButtonItem] {
-        return []
-    }
+    private(set) lazy var disposeBag = DisposeBag()
 
     var transition: MasterNavigationController.Transition? {
         return .normal
     }
-
-    private(set) lazy var disposeBag = DisposeBag()
 
     init() {
         contentView = UIView()
@@ -44,10 +31,6 @@ class BaseViewController: UIViewController {
             contentView.trailing.equalTo(view.trailing).priority(.level(999)),
             contentView.top.equalTo(view.top),
             contentView.bottom.equalTo(view.bottom))
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         setupNavigationBar()
     }
 
@@ -57,20 +40,45 @@ class BaseViewController: UIViewController {
     }
 }
 
+extension BaseViewController {
+    struct NavigationBarBuilder: MutableType {
+        var hidesNavigationBar = false
+        var hidesBackButton = true
+        var leftBarButtonItems = [UIBarButtonItem]()
+        var rightBarButtonItems = [UIBarButtonItem]()
+    }
+
+    func navigationBarUpdate(by change: (inout NavigationBarBuilder) -> Void) {
+        navigationBar.accept(navigationBar.value.updated(by: change))
+    }
+}
+
 private extension BaseViewController {
     func setupNavigationBar() {
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        navigationController?.setNavigationBarHidden(hideNavigationBar, animated: false)
-        navigationItem.setHidesBackButton(hidesBackButton, animated: false)
-        navigationItem.rightBarButtonItems = rightBarButtonItems
-        navigationItem.leftBarButtonItems = leftBarButtonItems
+        guard let navigationController = navigationController else { return }
+        navigationController.interactivePopGestureRecognizer?.isEnabled = false
 
-        rightBarButtonItems.forEach {
-            $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
-        }
+        let hideNavigationBar = navigationBar.map { $0.hidesNavigationBar }
+        let hidesBackButton = navigationBar.map { $0.hidesBackButton }
+        let rightBarButtonItems = navigationBar.map { $0.rightBarButtonItems }
+        let leftBarButtonItems = navigationBar.map { $0.leftBarButtonItems }
 
-        leftBarButtonItems.forEach {
-            $0.rx.tap.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
+        [
+            hideNavigationBar.bind(to: navigationController.rx.isNavigationBarHidden),
+            hidesBackButton.bind(to: navigationItem.rx.hidesBackButton),
+            rightBarButtonItems.bind(to: navigationItem.rx.rightBarButtonItems),
+            rightBarButtonItems.bind(to: barButtonsForceEndEditing),
+            leftBarButtonItems.bind(to: navigationItem.rx.leftBarButtonItems),
+            leftBarButtonItems.bind(to: barButtonsForceEndEditing),
+        ]
+        .forEach { $0.disposed(by: disposeBag) }
+    }
+
+    var barButtonsForceEndEditing: Binder<[UIBarButtonItem]> {
+        return Binder(self) { base, barButtons in
+            barButtons.forEach {
+                $0.rx.tap.bind(to: base.rx.forceEndEditing).disposed(by: base.disposeBag)
+            }
         }
     }
 }
