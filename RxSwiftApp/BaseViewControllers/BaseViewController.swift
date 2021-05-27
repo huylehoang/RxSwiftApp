@@ -6,7 +6,7 @@ class BaseViewController: UIViewController {
 
     private let navigationBar = BehaviorRelay(value: NavigationBarBuilder())
 
-    private(set) lazy var disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     var transition: MasterNavigationController.Transition? {
         return .normal
