@@ -3,7 +3,7 @@ import RxSwift
 
 protocol MeService: CommonService {
     func create() -> Single<Void>
-    func load() -> Single<Void>
+    func checkSynced() -> Single<Void>
     func delete() -> Single<Void>
 }
 
@@ -26,8 +26,8 @@ struct DefaultMeService: MeService {
         return credentail.flatMap(create)
     }
 
-    func load() -> Single<Void> {
-        return credentail.flatMap(load)
+    func checkSynced() -> Single<Void> {
+        return credentail.flatMap(checkSynced)
     }
 
     func delete() -> Single<Void> {
@@ -49,16 +49,14 @@ private extension DefaultMeService {
         }
     }
 
-    func load(_ me: Me, for usersCollection: CollectionReference) -> Single<Void> {
+    func checkSynced(_ me: Me, for usersCollection: CollectionReference) -> Single<Void> {
         return .create { single in
             usersCollection.document(me.id).getDocument { snapshot, error in
-                if let _ = error {
+                guard error == nil, let loadedMe = snapshot?.convertToMe(), loadedMe == me else {
                     single(.failure(ServiceError.userNotSync))
-                } else if let loadedMe = snapshot?.convertToMe(), loadedMe != me {
-                    single(.failure(ServiceError.userNotSync))
-                } else {
-                    single(.success(()))
+                    return
                 }
+                single(.success(()))
             }
             return Disposables.create()
         }

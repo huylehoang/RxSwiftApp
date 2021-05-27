@@ -22,7 +22,7 @@ struct DefaultHomeUsecase: HomeUsecase {
         // Then, check user password is still cached
         // Finally, fetch notes
         return noteService.reloadUser()
-            .flatMap(meService.load)
+            .flatMap(meService.checkSynced)
             .flatMap(checkUserPasswordStillValid)
             .asObservable()
             .flatMap(fetch)
