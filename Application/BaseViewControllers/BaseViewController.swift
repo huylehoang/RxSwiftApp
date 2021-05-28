@@ -5,13 +5,13 @@ import Domain
 public class BaseViewController: UIViewController {
     let contentView: UIView
 
-    private let navigationBar = BehaviorRelay(value: NavigationBarBuilder())
-
     let disposeBag = DisposeBag()
 
     var transition: MasterNavigationController.Transition? {
         return .normal
     }
+
+    private let navigationBar = BehaviorRelay(value: NavigationBarBuilder())
 
     init() {
         contentView = UIView()
