@@ -28,7 +28,7 @@ public extension SceneBuilderType {
     }
 }
 
-enum SceneBuidlerError {
+enum SceneBuidlerError: Error {
     case missingUsecaseNavigator
 }
 
