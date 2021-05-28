@@ -16,17 +16,17 @@ final class HomeScene: BaseViewController {
         return view
     }()
 
-    fileprivate lazy var refreshControl: UIRefreshControl = {
+    private lazy var refreshControl: UIRefreshControl = {
         let view = UIRefreshControl()
         return view
     }()
 
-    fileprivate lazy var addButton: UIBarButtonItem = {
+    private lazy var addButton: UIBarButtonItem = {
         let view = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
         return view
     }()
 
-    fileprivate lazy var refreshButton: UIBarButtonItem = {
+    private lazy var refreshButton: UIBarButtonItem = {
         let view = UIBarButtonItem(barButtonSystemItem: .refresh, target: nil, action: nil)
         return view
     }()
@@ -106,7 +106,7 @@ private extension HomeScene {
     }
 }
 
-extension HomeScene {
+private extension HomeScene {
     var isEmpty: Binder<Bool> {
         return Binder(self) { base, isEmpty in
             let rightBarButtonItems: [UIBarButtonItem] = {
