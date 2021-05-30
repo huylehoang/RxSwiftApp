@@ -125,9 +125,9 @@ public struct UpdateNoteViewModel: ViewModelType {
             }
 
         let showToast = Driver.merge(
+            fieldsErrorToast,
             addedNote.map { "Added Note" },
             deletedNote.map { "Deleted Note" },
-            fieldsErrorToast,
             editedNote.map { "Edited Note" })
 
         let toHome = Driver.merge(addedNote, deletedNote).do(onNext: navigator.toHome)

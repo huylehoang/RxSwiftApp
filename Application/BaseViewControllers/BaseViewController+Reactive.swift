@@ -33,7 +33,6 @@ extension Reactive where Base: BaseViewController {
             } else {
                 base.hideEmbeddedEmptyView()
             }
-            
         }
     }
 
