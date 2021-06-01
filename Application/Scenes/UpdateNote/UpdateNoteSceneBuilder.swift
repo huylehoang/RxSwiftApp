@@ -2,7 +2,7 @@ import UIKit
 import Domain
 
 public struct UpdateNoteSceneBuilder: SceneBuilderType {
-    var kind: UpdateNoteViewModel.Kind?
+    private var kind: UpdateNoteViewModel.Kind?
     public var usecase: UpdateNoteUsecase?
     public var navigator: UpdateNoteNavigator?
 
