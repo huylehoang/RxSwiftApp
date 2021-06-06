@@ -2,11 +2,15 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UIViewController {
+    var viewWillAppear: ControlEvent<Void> {
+        return ControlEvent(events: sentMessage(#selector(Base.viewWillAppear)).mapToVoid())
+    }
+
     var viewDidLoad: ControlEvent<Void> {
-        return ControlEvent(events: self.sentMessage(#selector(Base.viewDidLoad)).mapToVoid())
+        return ControlEvent(events: sentMessage(#selector(Base.viewDidLoad)).mapToVoid())
     }
 
     var viewDidDisappear: ControlEvent<Void> {
-        return ControlEvent(events: sentMessage(#selector(Base.viewDidDisappear(_:))).mapToVoid())
+        return ControlEvent(events: sentMessage(#selector(Base.viewDidDisappear)).mapToVoid())
     }
 }

@@ -36,7 +36,7 @@ final class HomeScene: BaseViewController {
         return view
     }()
 
-    override var transition: MasterNavigationController.Transition? {
+    override var transition: MasterNavigationController.Transition {
         return .crossDissolve
     }
 

@@ -22,11 +22,8 @@ extension MasterNavigationController: UINavigationControllerDelegate {
     ) -> UIViewControllerAnimatedTransitioning? {
         switch operation {
         case .push:
-            guard
-                let base = toVC as? BaseViewController,
-                let pushAnimator = base.transition?.pushAnimator
-            else { return nil }
-            return pushAnimator
+            guard let base = toVC as? BaseViewController else { return nil }
+            return base.transition.pushAnimator
         case .pop:
             guard let base = fromVC as? BaseViewController else { return nil }
             if
@@ -35,14 +32,11 @@ extension MasterNavigationController: UINavigationControllerDelegate {
             {
                 interactiveDismissAnimator = interactiveDimissal.interactiveDismissAnimator
                 return nil
-            } else if
-                let percentDrivenDismissal = base as? PercentDrivenDimissal,
-                let popAnimator = base.transition?.popAnimator
-            {
+            } else if let percentDrivenDismissal = base as? PercentDrivenDimissal {
                 interactiveDismissAnimator = percentDrivenDismissal.percentDrivenDismissAnimator
-                return popAnimator
+                return base.transition.popAnimator
             } else {
-                return base.transition?.popAnimator
+                return base.transition.popAnimator
             }
         default:
             return nil

@@ -1,12 +1,12 @@
 import FirebaseAuth
 import RxSwift
 
-public protocol CommonService {
+protocol CommonService {
     func reloadUser() -> Single<Void>
     func getUser() -> Single<User>
 }
 
-public extension CommonService {
+extension CommonService {
     func reloadUser() -> Single<Void> {
         return .create { single in
             guard let user = Auth.auth().currentUser else {

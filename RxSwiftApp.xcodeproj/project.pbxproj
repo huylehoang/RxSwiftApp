@@ -14,6 +14,8 @@
 		108E9279263FA62700C70AD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 108E9278263FA62700C70AD8 /* Assets.xcassets */; };
 		108E927C263FA62700C70AD8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 108E927A263FA62700C70AD8 /* LaunchScreen.storyboard */; };
 		10AB1398264F8DC0007EA523 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB1397264F8DC0007EA523 /* Scene.swift */; };
+		10C424F9266CBB47003E79F8 /* UsecaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C424F8266CBB47003E79F8 /* UsecaseProvider.swift */; };
+		10C424FC266CBB8E003E79F8 /* UsecaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C424FB266CBB8E003E79F8 /* UsecaseProvider.swift */; };
 		3C7856D62B3DC9B9241A4F1D /* Pods_FirebasePlatform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD97AAD1A012C85A32759674 /* Pods_FirebasePlatform.framework */; };
 		845947F2265254DD003A5E0C /* UpdateNoteNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845947F1265254DD003A5E0C /* UpdateNoteNavigator.swift */; };
 		845AABF3265F884D00904D1A /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 845AABF1265F884D00904D1A /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -208,6 +210,8 @@
 		10AB139B264F8E90007EA523 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		10AB139F264F9089007EA523 /* Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		10AB13A226502FC2007EA523 /* EmptyScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScene.swift; sourceTree = "<group>"; };
+		10C424F8266CBB47003E79F8 /* UsecaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsecaseProvider.swift; sourceTree = "<group>"; };
+		10C424FB266CBB8E003E79F8 /* UsecaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsecaseProvider.swift; sourceTree = "<group>"; };
 		2A0DB3696DBC2A9F3DD1715F /* Pods-RxSwiftApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwiftApp.debug.xcconfig"; path = "Target Support Files/Pods-RxSwiftApp/Pods-RxSwiftApp.debug.xcconfig"; sourceTree = "<group>"; };
 		3D7B11DF2E277D73D172BBC3 /* Pods-Domain.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.release.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.release.xcconfig"; sourceTree = "<group>"; };
 		4F4E19F399083403F740F4B7 /* Pods-RxSwiftApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwiftApp.release.xcconfig"; path = "Target Support Files/Pods-RxSwiftApp/Pods-RxSwiftApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -387,6 +391,7 @@
 				845FD5BA264E75FD00308FB4 /* HomeUsecase.swift */,
 				845947EC26524817003A5E0C /* UpdateNoteUsecase.swift */,
 				8476D0BA26427805002C8CB9 /* ProfileUsecase.swift */,
+				10C424FB266CBB8E003E79F8 /* UsecaseProvider.swift */,
 			);
 			path = Usecases;
 			sourceTree = "<group>";
@@ -560,6 +565,7 @@
 				845AAC32265F960900904D1A /* HomeUsecase.swift */,
 				845AAC35265F961D00904D1A /* UpdateNoteUsecase.swift */,
 				845AAC38265F963E00904D1A /* ProfileUsecase.swift */,
+				10C424F8266CBB47003E79F8 /* UsecaseProvider.swift */,
 			);
 			path = Usecase;
 			sourceTree = "<group>";
@@ -1029,6 +1035,7 @@
 				845AAC39265F963E00904D1A /* ProfileUsecase.swift in Sources */,
 				845AAC3F265F969400904D1A /* NavigatorType.swift in Sources */,
 				845AAC5D265F9C9600904D1A /* ErrorType.swift in Sources */,
+				10C424F9266CBB47003E79F8 /* UsecaseProvider.swift in Sources */,
 				845AAC3C265F968C00904D1A /* UsecaseType.swift in Sources */,
 				845AAC59265F9A3100904D1A /* MutableType.swift in Sources */,
 				845AAC33265F960900904D1A /* HomeUsecase.swift in Sources */,
@@ -1051,6 +1058,7 @@
 				84D60790265FA919001403FC /* Observable+Extension.swift in Sources */,
 				845AAC6E265FA09B00904D1A /* ServiceError.swift in Sources */,
 				84C9CAF42660DAB4001D77F9 /* FirebaseHelper.swift in Sources */,
+				10C424FC266CBB8E003E79F8 /* UsecaseProvider.swift in Sources */,
 				84D60708265FA2DD001403FC /* HomeUsecase.swift in Sources */,
 				84D6070F265FA2E7001403FC /* UserDefaults+Extensions.swift in Sources */,
 				84D6070C265FA2E4001403FC /* ProfileUsecase.swift in Sources */,

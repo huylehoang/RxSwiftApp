@@ -1,19 +1,16 @@
 import RxSwift
 import Domain
 
-public struct HomeUsecase: Domain.HomeUsecase {
+struct HomeUsecase: Domain.HomeUsecase {
     private let noteService: NoteService
     private let profileService: ProfileService
 
-    public init(
-        noteService: NoteService = DefaultNoteService(),
-        profileService: ProfileService = DefaultProfileService()
-    ) {
+    init(noteService: NoteService, profileService: ProfileService) {
         self.noteService = noteService
         self.profileService = profileService
     }
 
-    public func fetchNotes() -> Observable<[Note]> {
+    func fetchNotes() -> Observable<[Note]> {
         // Reload user at first
         // Next, check User info is synced to USERS table
         // Then, check user password is still cached

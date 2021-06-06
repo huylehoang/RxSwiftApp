@@ -3,6 +3,8 @@ import Application
 import FirebasePlatform
 
 enum App {
+    static let services = UsecaseProvider()
+
     static func confirgureMainInterface(in window: UIWindow) {
         let navigationController = MasterNavigationController()
         let loginScene = Scene.login.build(in: navigationController)

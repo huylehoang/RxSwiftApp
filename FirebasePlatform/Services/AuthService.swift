@@ -1,7 +1,7 @@
 import FirebaseAuth
 import RxSwift
 
-public protocol AuthService: CommonService {
+protocol AuthService: CommonService {
     func signIn(withEmail email: String, password: String) -> Single<Void>
     func createUser(withEmail email: String, password: String) -> Single<User>
     func updateUserName(_ name: String, for user: User) -> Single<Void>
@@ -11,10 +11,8 @@ public protocol AuthService: CommonService {
     func signOut() -> Single<Void>
 }
 
-public struct DefaultAuthService: AuthService {
-    public init() {}
-
-    public func signIn(withEmail email: String, password: String) -> Single<Void> {
+struct DefaultAuthService: AuthService {
+    func signIn(withEmail email: String, password: String) -> Single<Void> {
         return .create { single in
             Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                 if let _ = authResult?.user {
@@ -29,7 +27,7 @@ public struct DefaultAuthService: AuthService {
         }
     }
 
-    public func createUser(withEmail email: String, password: String) -> Single<User> {
+    func createUser(withEmail email: String, password: String) -> Single<User> {
         return .create { single in
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let user = authResult?.user {
@@ -44,7 +42,7 @@ public struct DefaultAuthService: AuthService {
         }
     }
 
-    public func updateUserName(_ name: String, for user: User) -> Single<Void> {
+    func updateUserName(_ name: String, for user: User) -> Single<Void> {
         return .create { single in
             let changeRequest = user.createProfileChangeRequest()
             changeRequest.displayName = name
@@ -59,19 +57,19 @@ public struct DefaultAuthService: AuthService {
         }
     }
 
-    public func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
+    func reAuthenticate(withEmail email: String, password: String) -> Single<User> {
         return getUser().map { ($0, email, password) }.flatMap(reAuthenticate)
     }
 
-    public func deleteUser() -> Single<Void> {
+    func deleteUser() -> Single<Void> {
         return getUser().flatMap(deleteUser)
     }
 
-    public func deleteUser(by error: Swift.Error) -> Single<Void> {
+    func deleteUser(by error: Swift.Error) -> Single<Void> {
         return getUser().map { ($0, error) }.flatMap(deleteUser)
     }
 
-    public func signOut() -> Single<Void> {
+    func signOut() -> Single<Void> {
         return .create { single in
             do {
                 try Auth.auth().signOut()

@@ -7,7 +7,7 @@ public class BaseViewController: UIViewController {
 
     let disposeBag = DisposeBag()
 
-    var transition: MasterNavigationController.Transition? {
+    var transition: MasterNavigationController.Transition {
         return .normal
     }
 
@@ -41,8 +41,9 @@ public class BaseViewController: UIViewController {
     }
 }
 
+// MARK: - Navigation Bar
 extension BaseViewController {
-    struct NavigationBarBuilder: MutableType {
+    struct NavigationBarBuilder: MutableType, Equatable {
         var hidesNavigationBar = false
         var hidesBackButton = true
         var leftBarButtonItems = [UIBarButtonItem]()
@@ -57,20 +58,22 @@ extension BaseViewController {
 private extension BaseViewController {
     func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
-        navigationController.interactivePopGestureRecognizer?.isEnabled = false
 
-        let hideNavigationBar = navigationBar.map { $0.hidesNavigationBar }
-        let hidesBackButton = navigationBar.map { $0.hidesBackButton }
-        let rightBarButtonItems = navigationBar.map { $0.rightBarButtonItems }
-        let leftBarButtonItems = navigationBar.map { $0.leftBarButtonItems }
+        let updateNavigationBar = rx.viewWillAppear
+            .withLatestFrom(navigationBar)
+            .asDriverOnErrorJustComplete()
+        let hideNavigationBar = updateNavigationBar.map { $0.hidesNavigationBar }
+        let hidesBackButton = updateNavigationBar.map { $0.hidesBackButton }
+        let rightBarButtonItems = updateNavigationBar.map { $0.rightBarButtonItems }
+        let leftBarButtonItems = updateNavigationBar.map { $0.leftBarButtonItems }
 
         [
-            hideNavigationBar.bind(to: navigationController.rx.isNavigationBarHidden),
-            hidesBackButton.bind(to: navigationItem.rx.hidesBackButton),
-            rightBarButtonItems.bind(to: navigationItem.rx.rightBarButtonItems),
-            rightBarButtonItems.bind(to: barButtonsForceEndEditing),
-            leftBarButtonItems.bind(to: navigationItem.rx.leftBarButtonItems),
-            leftBarButtonItems.bind(to: barButtonsForceEndEditing),
+            hideNavigationBar.drive(navigationController.rx.isNavigationBarHidden),
+            hidesBackButton.drive(navigationItem.rx.hidesBackButton),
+            rightBarButtonItems.drive(navigationItem.rx.rightBarButtonItems),
+            rightBarButtonItems.drive(barButtonsForceEndEditing),
+            leftBarButtonItems.drive(navigationItem.rx.leftBarButtonItems),
+            leftBarButtonItems.drive(barButtonsForceEndEditing),
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }

@@ -1,4 +1,4 @@
-public struct Note: MutableType {
+public struct Note: MutableType, Equatable {
     public let id: String?
     public var title: String
     public var details: String

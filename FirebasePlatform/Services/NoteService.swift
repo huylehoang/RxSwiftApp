@@ -2,7 +2,7 @@ import FirebaseFirestore
 import RxSwift
 import Domain
 
-public protocol NoteService: CommonService {
+protocol NoteService: CommonService {
     func fetchNotes() -> Single<[Note]>
     func listenNotes() -> Observable<[Note]>
     func deleteNotes(_ notes: [Note]) -> Single<Void>
@@ -11,7 +11,7 @@ public protocol NoteService: CommonService {
     func deleteNote(_ note: Note) -> Single<Void>
 }
 
-public struct DefaultNoteService: NoteService {
+struct DefaultNoteService: NoteService {
     private let firestore = Observable.just(Firestore.firestore())
 
     private var userId: Observable<String> {
@@ -28,29 +28,27 @@ public struct DefaultNoteService: NoteService {
         return userNotes.map { $0.order(by: "timestamp", descending: true) }
     }
 
-    public init() {}
-
-    public func fetchNotes() -> Single<[Note]> {
+    func fetchNotes() -> Single<[Note]> {
         return userNotesQuery.flatMap(fetchNotes)
     }
 
-    public func listenNotes() -> Observable<[Note]> {
+    func listenNotes() -> Observable<[Note]> {
         return userNotesQuery.asObservable().flatMap(listenNotes)
     }
 
-    public func deleteNotes(_ notes: [Note]) -> Single<Void> {
+    func deleteNotes(_ notes: [Note]) -> Single<Void> {
         return userNotes.map { (notes, $0) }.flatMap(deleteNotes)
     }
 
-    public func addNote(_ note: Note) -> Single<Void> {
+    func addNote(_ note: Note) -> Single<Void> {
         return userNotes.map { (note, $0) }.flatMap(setNote)
     }
 
-    public func updateNote(_ note: Note) -> Single<Void> {
+    func updateNote(_ note: Note) -> Single<Void> {
         return userNotes.map { (note, $0) }.flatMap(updateNote)
     }
 
-    public func deleteNote(_ note: Note) -> Single<Void> {
+    func deleteNote(_ note: Note) -> Single<Void> {
         return userNotes.map { (note, $0) }.flatMap(deleteNote)
     }
 }

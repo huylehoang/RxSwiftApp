@@ -2,13 +2,13 @@ import FirebaseFirestore
 import RxSwift
 import Domain
 
-public protocol ProfileService: CommonService {
+protocol ProfileService: CommonService {
     func create() -> Single<Void>
     func load() -> Single<Profile>
     func delete() -> Single<Void>
 }
 
-public struct DefaultProfileService: ProfileService {
+struct DefaultProfileService: ProfileService {
     private let firestore = Observable.just(Firestore.firestore())
 
     private var profile: Observable<Profile> {
@@ -23,17 +23,15 @@ public struct DefaultProfileService: ProfileService {
         return Observable.combineLatest(profile, usersCollection).asSingle()
     }
 
-    public init() {}
-
-    public func create() -> Single<Void> {
+    func create() -> Single<Void> {
         return credentail.flatMap(create)
     }
 
-    public func load() -> Single<Profile> {
+    func load() -> Single<Profile> {
         return credentail.flatMap(load)
     }
 
-    public func delete() -> Single<Void> {
+    func delete() -> Single<Void> {
         return credentail.flatMap(delete)
     }
 }

@@ -1,6 +1,5 @@
 import UIKit
 import Application
-import FirebasePlatform
 
 enum Scene {
     case login
@@ -14,23 +13,23 @@ extension Scene {
         switch self {
         case .login:
             return LoginSceneBuilder()
-                .withUsecase(LoginUsecase())
+                .withUsecase(App.services.makeLoginUsecase())
                 .withNavigator(LoginNavigator(navigationController: navigationController))
                 .build()
         case .home:
             return HomeSceneBuilder()
-                .withUsecase(HomeUsecase())
+                .withUsecase(App.services.makeHomeUsecase())
                 .withNavigator(HomeNavigator(navigationController: navigationController))
                 .build()
         case .update(let kind):
             return UpdateNoteSceneBuilder()
                 .withKind(kind)
-                .withUsecase(UpdateNoteUsecase())
+                .withUsecase(App.services.makeUpdateNoteUsecase())
                 .withNavigator(UpdateNoteNavigator(navigationController: navigationController))
                 .build()
         case .user:
             return ProfileSceneBuilder()
-                .withUsecase(ProfileUsecase())
+                .withUsecase(App.services.makeProfileUsecase())
                 .withNavigator(ProfileNavigator(navigationController: navigationController))
                 .build()
         }
