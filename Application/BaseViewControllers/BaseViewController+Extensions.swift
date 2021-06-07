@@ -34,7 +34,7 @@ extension BaseViewController {
 }
 
 extension BaseViewController {
-    private static var embeddedIndicatorContext = 0
+    private static var embeddedIndicatorContext = 1
     private var embeddedIndicator: UIActivityIndicatorView {
         guard let indicator = objc_getAssociatedObject(
                 self,
@@ -68,7 +68,7 @@ extension BaseViewController {
 }
 
 extension BaseViewController {
-    private static var embeddedEmptyViewContext = 0
+    private static var embeddedEmptyViewContext = 2
     var embeddedEmptyView: EmptyView {
         guard let emptyView = objc_getAssociatedObject(
                 self,

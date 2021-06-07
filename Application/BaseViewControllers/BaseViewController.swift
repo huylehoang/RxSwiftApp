@@ -59,9 +59,9 @@ private extension BaseViewController {
     func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
 
-        let updateNavigationBar = rx.viewWillAppear
-            .withLatestFrom(navigationBar)
-            .asDriverOnErrorJustComplete()
+        let updateNavigationBar = Driver.merge(
+            rx.viewWillAppear.withLatestFrom(navigationBar).asDriverOnErrorJustComplete(),
+            navigationBar.asDriver())
         let hideNavigationBar = updateNavigationBar.map { $0.hidesNavigationBar }
         let hidesBackButton = updateNavigationBar.map { $0.hidesBackButton }
         let rightBarButtonItems = updateNavigationBar.map { $0.rightBarButtonItems }
