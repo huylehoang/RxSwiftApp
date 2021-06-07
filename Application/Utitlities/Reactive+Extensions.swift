@@ -13,4 +13,8 @@ extension Reactive where Base: UIViewController {
     var viewDidDisappear: ControlEvent<Void> {
         return ControlEvent(events: sentMessage(#selector(Base.viewDidDisappear)).mapToVoid())
     }
+
+    var touchesBegan: ControlEvent<Void> {
+        return ControlEvent(events: sentMessage(#selector(Base.touchesBegan)).mapToVoid())
+    }
 }

@@ -32,12 +32,8 @@ public class BaseViewController: UIViewController {
             contentView.trailing.equalTo(view.trailing).priority(.level(999)),
             contentView.top.equalTo(view.top),
             contentView.bottom.equalTo(view.bottom))
+        setupBinding()
         setupNavigationBar()
-    }
-
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        view.endEditing(true)
     }
 }
 
@@ -56,6 +52,10 @@ extension BaseViewController {
 }
 
 private extension BaseViewController {
+    func setupBinding() {
+        rx.touchesBegan.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
+    }
+
     func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
 
