@@ -125,8 +125,6 @@ private extension HomeScene {
             .mapToVoid()
             .asDriverOnErrorJustComplete()
 
-        let cancelTrigger = cancelButton.rx.tap.asDriver()
-
         let deleteTrigger = deleteButton.rx.tap
             .map {
                 AlertBuilder(
@@ -155,7 +153,7 @@ private extension HomeScene {
             organizeTrigger: organizeButton.rx.tap.asDriver(),
             tableViewDidScroll: tableView.rx.didScroll.asDriver(),
             actionViewDismissed: actionView.rx.dismissed.asDriverOnErrorJustComplete(),
-            cancelTrigger: cancelTrigger,
+            cancelTrigger: cancelButton.rx.tap.asDriver(),
             itemSelected: tableView.rx.modelSelected(CellViewModel.self).asDriver(),
             itemChecked: itemChecked.asDriverOnErrorJustComplete(),
             itemUnchecked: itemUnchecked.asDriverOnErrorJustComplete(),
