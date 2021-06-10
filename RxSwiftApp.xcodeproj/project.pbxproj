@@ -417,14 +417,6 @@
 			path = Usecases;
 			sourceTree = "<group>";
 		};
-		1044544B265580D5007E6BEB /* CrossDissolve */ = {
-			isa = PBXGroup;
-			children = (
-				1044544726557632007E6BEB /* CrossDissolveAnimator.swift */,
-			);
-			path = CrossDissolve;
-			sourceTree = "<group>";
-		};
 		104C9BBC2643220600D4FB8B /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -518,14 +510,6 @@
 				8498160D265682DF002FE757 /* Transitions */,
 			);
 			path = MasterNavigationController;
-			sourceTree = "<group>";
-		};
-		84124AB426550DE00063098F /* FadeZoom */ = {
-			isa = PBXGroup;
-			children = (
-				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
-			);
-			path = FadeZoom;
 			sourceTree = "<group>";
 		};
 		8431025B266F30720091DE47 /* Components */ = {
@@ -687,31 +671,15 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		8498160826567B4E002FE757 /* Normal */ = {
-			isa = PBXGroup;
-			children = (
-				8498160926567B6E002FE757 /* NormalAnimators.swift */,
-			);
-			path = Normal;
-			sourceTree = "<group>";
-		};
 		8498160D265682DF002FE757 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
-				8498160F265684DB002FE757 /* SimpleInteractionController */,
-				8498160826567B4E002FE757 /* Normal */,
-				1044544B265580D5007E6BEB /* CrossDissolve */,
-				84124AB426550DE00063098F /* FadeZoom */,
+				8498161026568517002FE757 /* SimpleInteractionController.swift */,
+				8498160926567B6E002FE757 /* NormalAnimators.swift */,
+				1044544726557632007E6BEB /* CrossDissolveAnimator.swift */,
+				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
 			);
 			path = Transitions;
-			sourceTree = "<group>";
-		};
-		8498160F265684DB002FE757 /* SimpleInteractionController */ = {
-			isa = PBXGroup;
-			children = (
-				8498161026568517002FE757 /* SimpleInteractionController.swift */,
-			);
-			path = SimpleInteractionController;
 			sourceTree = "<group>";
 		};
 		84C9C91C2660A12E001D77F9 /* Application */ = {

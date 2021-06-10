@@ -95,7 +95,7 @@ struct HomeViewModel: ViewModelType {
 
         let selectedNotes = items.asDriver().map { $0.selectedNotes() }
 
-        let enableDelete = Driver.merge(selectedNotes.map { !$0.isEmpty })
+        let enableDelete = selectedNotes.map { !$0.isEmpty }
 
         let onDeleteNotes = input.deleteTrigger
             .withLatestFrom(enableDelete)
