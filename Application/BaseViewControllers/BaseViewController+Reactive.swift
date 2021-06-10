@@ -53,14 +53,6 @@ extension Reactive where Base: BaseViewController {
 }
 
 extension Reactive where Base: BaseViewController {
-    var forceEndEditing: Binder<Void> {
-        return Binder(base) { base, _ in
-            base.view.endEditing(true)
-        }
-    }
-}
-
-extension Reactive where Base: BaseViewController {
     var showToast: Binder<String> {
         return Binder(base) { _, message in
             guard !message.isEmpty else { return }

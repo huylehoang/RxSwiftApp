@@ -81,12 +81,6 @@ private extension LoginScene {
     }
 
     func setupBinding() {
-        Driver.merge(
-            segmentControl.rx.selectedSegmentIndex.asDriver().mapToVoid(),
-            loginButton.rx.tap.asDriver())
-            .drive(rx.forceEndEditing)
-            .disposed(by: disposeBag)
-
         let input = LoginViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
             name: nameField.rx.text.asDriver(),

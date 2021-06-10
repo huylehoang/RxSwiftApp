@@ -2,7 +2,7 @@ import RxSwift
 import RxCocoa
 import Domain
 
-public class BaseViewController: UIViewController {
+public class BaseViewController: UIViewController, KeyboardHandling {
     let contentView: UIView
 
     let disposeBag = DisposeBag()
@@ -58,7 +58,7 @@ extension BaseViewController {
 
 private extension BaseViewController {
     func setupBinding() {
-        rx.touchesBegan.bind(to: rx.forceEndEditing).disposed(by: disposeBag)
+        rx.viewDidLoad.bind(to: rx.setupKeyboardHandling).disposed(by: disposeBag)
     }
 
     func setupNavigationBar() {
@@ -76,18 +76,8 @@ private extension BaseViewController {
             hideNavigationBar.drive(navigationController.rx.isNavigationBarHidden),
             hidesBackButton.drive(navigationItem.rx.hidesBackButton),
             rightBarButtonItems.drive(navigationItem.rx.rightBarButtonItems),
-            rightBarButtonItems.drive(barButtonsForceEndEditing),
             leftBarButtonItems.drive(navigationItem.rx.leftBarButtonItems),
-            leftBarButtonItems.drive(barButtonsForceEndEditing),
         ]
         .forEach { $0.disposed(by: disposeBag) }
-    }
-
-    var barButtonsForceEndEditing: Binder<[UIBarButtonItem]> {
-        return Binder(self) { base, barButtons in
-            barButtons.forEach {
-                $0.rx.tap.bind(to: base.rx.forceEndEditing).disposed(by: base.disposeBag)
-            }
-        }
     }
 }
