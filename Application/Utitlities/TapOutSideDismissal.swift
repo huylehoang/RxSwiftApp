@@ -39,7 +39,7 @@ extension Reactive where Base: TapOutsideDimissal {
     }
 }
 
-private class TapOutsideManager: NSObject {
+private final class TapOutsideManager: NSObject {
     static var context = 0
 
     private lazy var tapGesture: UITapGestureRecognizer = {

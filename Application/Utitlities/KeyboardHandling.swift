@@ -42,7 +42,7 @@ extension Reactive where Base: KeyboardHandling {
     }
 }
 
-private class KeyboardManager: NSObject {
+private final class KeyboardManager: NSObject {
     static var context = 0
 
     private let disposeBag = DisposeBag()
