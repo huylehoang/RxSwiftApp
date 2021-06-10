@@ -101,6 +101,7 @@ extension HomeScene {
         }
 
         fileprivate func dismiss() {
+            dismissed.accept(())
             removeTapOutsideGesture()
             showAnimator?.stopAnimation(true)
             guard !(dismissAnimator?.isRunning ?? false) else { return }
@@ -115,7 +116,6 @@ extension HomeScene {
             dismissAnimator?.addCompletion({ [weak self] _ in
                 guard let self = self else { return }
                 self.removeFromSuperview()
-                self.dismissed.accept(())
             })
             dismissAnimator?.startAnimation()
         }
