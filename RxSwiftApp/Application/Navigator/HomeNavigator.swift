@@ -13,9 +13,9 @@ struct HomeNavigator: Application.HomeNavigator {
         navigationController.popToRootViewController(animated: true)
     }
 
-    func toUser() {
+    func toProfile() {
         guard let navigationController = navigationController else { return }
-        let userScene = Scene.user.build(in: navigationController)
+        let userScene = Scene.profile.build(in: navigationController)
         let sideMenuScene = SideMenuScene(embeddedScene: userScene)
         navigationController.present(sideMenuScene, animated: true)
     }

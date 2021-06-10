@@ -17,6 +17,14 @@
 		10C424F9266CBB47003E79F8 /* UsecaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C424F8266CBB47003E79F8 /* UsecaseProvider.swift */; };
 		10C424FC266CBB8E003E79F8 /* UsecaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C424FB266CBB8E003E79F8 /* UsecaseProvider.swift */; };
 		3C7856D62B3DC9B9241A4F1D /* Pods_FirebasePlatform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD97AAD1A012C85A32759674 /* Pods_FirebasePlatform.framework */; };
+		84310259266F17470091DE47 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84310258266F17470091DE47 /* RadioButton.swift */; };
+		8431025D266F30940091DE47 /* HomeScene+ActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431025C266F30940091DE47 /* HomeScene+ActionView.swift */; };
+		84310261266F442A0091DE47 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84310260266F442A0091DE47 /* UIColor+Extensions.swift */; };
+		843102A1266F83900091DE47 /* TapOutSideDismissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843102A0266F83900091DE47 /* TapOutSideDismissal.swift */; };
+		8451198A267074F4008E04DB /* HomeScene+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84511989267074F4008E04DB /* HomeScene+Cell.swift */; };
+		8451198D26707671008E04DB /* UITableViewUICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451198C26707671008E04DB /* UITableViewUICollectionView+Extensions.swift */; };
+		84511990267076FF008E04DB /* RxTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451198F267076FF008E04DB /* RxTableViewCell.swift */; };
+		8451199F2670BF81008E04DB /* HomeScene+CellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451199E2670BF81008E04DB /* HomeScene+CellViewModel.swift */; };
 		845947F2265254DD003A5E0C /* UpdateNoteNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845947F1265254DD003A5E0C /* UpdateNoteNavigator.swift */; };
 		845AABF3265F884D00904D1A /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 845AABF1265F884D00904D1A /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		845AABF6265F884D00904D1A /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; };
@@ -224,8 +232,16 @@
 		84124AB526550E4F0063098F /* FadeZoomAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeZoomAnimators.swift; sourceTree = "<group>"; };
 		84124AB9265526D10063098F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilderType.swift; sourceTree = "<group>"; };
+		84310258266F17470091DE47 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
+		8431025C266F30940091DE47 /* HomeScene+ActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeScene+ActionView.swift"; sourceTree = "<group>"; };
+		84310260266F442A0091DE47 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		843102A0266F83900091DE47 /* TapOutSideDismissal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapOutSideDismissal.swift; sourceTree = "<group>"; };
 		84320AB72656544A0013533B /* InteractiveDimissal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDimissal.swift; sourceTree = "<group>"; };
 		8442B34E2643C86E006A6312 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
+		84511989267074F4008E04DB /* HomeScene+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeScene+Cell.swift"; sourceTree = "<group>"; };
+		8451198C26707671008E04DB /* UITableViewUICollectionView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewUICollectionView+Extensions.swift"; sourceTree = "<group>"; };
+		8451198F267076FF008E04DB /* RxTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTableViewCell.swift; sourceTree = "<group>"; };
+		8451199E2670BF81008E04DB /* HomeScene+CellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeScene+CellViewModel.swift"; sourceTree = "<group>"; };
 		845947DF26521D1A003A5E0C /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		845947E626524611003A5E0C /* UpdateNoteScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNoteScene.swift; sourceTree = "<group>"; };
 		845947E92652462B003A5E0C /* UpdateNoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNoteViewModel.swift; sourceTree = "<group>"; };
@@ -337,12 +353,14 @@
 			isa = PBXGroup;
 			children = (
 				84018AA7265376FC00E2C8D5 /* RxTableView.swift */,
+				8451198F267076FF008E04DB /* RxTableViewCell.swift */,
 				845947F8265269D5003A5E0C /* PaddingTextField.swift */,
 				845947FC26526DCE003A5E0C /* PlaceholderTextView.swift */,
 				1022F74E263FAE8D007AE3F2 /* ValidationTextfield.swift */,
 				8476D0B7264259F2002C8CB9 /* IndicatorView.swift */,
 				10AB139B264F8E90007EA523 /* EmptyView.swift */,
 				845947DF26521D1A003A5E0C /* Toast.swift */,
+				84310258266F17470091DE47 /* RadioButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -367,6 +385,9 @@
 				84124AA42654BD390063098F /* String+Extensions.swift */,
 				84124AB9265526D10063098F /* UIView+Extension.swift */,
 				10AB139F264F9089007EA523 /* Constraint.swift */,
+				84310260266F442A0091DE47 /* UIColor+Extensions.swift */,
+				843102A0266F83900091DE47 /* TapOutSideDismissal.swift */,
+				8451198C26707671008E04DB /* UITableViewUICollectionView+Extensions.swift */,
 			);
 			path = Utitlities;
 			sourceTree = "<group>";
@@ -507,6 +528,24 @@
 			path = FadeZoom;
 			sourceTree = "<group>";
 		};
+		8431025B266F30720091DE47 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				8451199D2670BF6C008E04DB /* Cells */,
+				8431025C266F30940091DE47 /* HomeScene+ActionView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		8451199D2670BF6C008E04DB /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				84511989267074F4008E04DB /* HomeScene+Cell.swift */,
+				8451199E2670BF81008E04DB /* HomeScene+CellViewModel.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		845947E226521D98003A5E0C /* AnimatedTransitionScenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -595,6 +634,7 @@
 		845FD5AC264E744700308FB4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				8431025B266F30720091DE47 /* Components */,
 				845FD5AD264E74FD00308FB4 /* HomeScene.swift */,
 				845FD5B1264E750800308FB4 /* HomeViewModel.swift */,
 				84C9C9DA2660A572001D77F9 /* HomeNavigator.swift */,
@@ -1069,6 +1109,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84310261266F442A0091DE47 /* UIColor+Extensions.swift in Sources */,
 				84C9C9472660A18A001D77F9 /* SideMenuScene.swift in Sources */,
 				84C9C9812660A1DA001D77F9 /* String+Extensions.swift in Sources */,
 				84C9C9642660A1B6001D77F9 /* PaddingTextField.swift in Sources */,
@@ -1096,18 +1137,25 @@
 				84C9C9572660A1A6001D77F9 /* UpdateNoteScene.swift in Sources */,
 				84C9C96E2660A1C2001D77F9 /* EmptyView.swift in Sources */,
 				84C9C9612660A1B3001D77F9 /* RxTableView.swift in Sources */,
+				8451198D26707671008E04DB /* UITableViewUICollectionView+Extensions.swift in Sources */,
 				84C9C97D2660A1D5001D77F9 /* UIApplication+Extensions.swift in Sources */,
 				84C9C9712660A1C5001D77F9 /* Toast.swift in Sources */,
 				84C9C9872660A1E2001D77F9 /* Constraint.swift in Sources */,
+				843102A1266F83900091DE47 /* TapOutSideDismissal.swift in Sources */,
 				84C9C93E2660A17C001D77F9 /* BaseViewController+Extensions.swift in Sources */,
 				84C9C9842660A1DE001D77F9 /* UIView+Extension.swift in Sources */,
+				84310259266F17470091DE47 /* RadioButton.swift in Sources */,
 				84C9C9F62660AA7F001D77F9 /* SceneBuilderType.swift in Sources */,
 				84C9C9332660A170001D77F9 /* CrossDissolveAnimator.swift in Sources */,
+				8451198A267074F4008E04DB /* HomeScene+Cell.swift in Sources */,
 				84C9C9EB2660A608001D77F9 /* Observable+Extension.swift in Sources */,
+				8431025D266F30940091DE47 /* HomeScene+ActionView.swift in Sources */,
 				84C9C9682660A1BC001D77F9 /* ValidationTextfield.swift in Sources */,
 				84C9C95E2660A1B0001D77F9 /* ProfileViewModel.swift in Sources */,
 				84C9C9422660A184001D77F9 /* BaseViewController+UIAlertController.swift in Sources */,
+				8451199F2670BF81008E04DB /* HomeScene+CellViewModel.swift in Sources */,
 				84C9C94A2660A196001D77F9 /* EmptyScene.swift in Sources */,
+				84511990267076FF008E04DB /* RxTableViewCell.swift in Sources */,
 				84C9C9292660A15D001D77F9 /* MasterNavigationController.swift in Sources */,
 				84C9C9D52660A54F001D77F9 /* ViewModelType.swift in Sources */,
 				84C9C95A2660A1A9001D77F9 /* UpdateNoteViewModel.swift in Sources */,

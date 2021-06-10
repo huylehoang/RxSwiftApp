@@ -1,6 +1,10 @@
 import UIKit
 
 extension UIApplication {
+    var statusBarFrame: CGRect {
+        return getWindow()?.windowScene?.statusBarManager?.statusBarFrame ?? .zero
+    }
+
     func getWindow() -> UIWindow? {
         return UIApplication.shared.windows.filter({ $0.isKeyWindow }).first
     }

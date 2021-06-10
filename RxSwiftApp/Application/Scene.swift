@@ -5,7 +5,7 @@ enum Scene {
     case login
     case home
     case update(UpdateNoteViewModel.Kind)
-    case user
+    case profile
 }
 
 extension Scene {
@@ -27,7 +27,7 @@ extension Scene {
                 .withUsecase(App.services.makeUpdateNoteUsecase())
                 .withNavigator(UpdateNoteNavigator(navigationController: navigationController))
                 .build()
-        case .user:
+        case .profile:
             return ProfileSceneBuilder()
                 .withUsecase(App.services.makeProfileUsecase())
                 .withNavigator(ProfileNavigator(navigationController: navigationController))

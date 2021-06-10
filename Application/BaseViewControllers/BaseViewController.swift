@@ -39,6 +39,11 @@ public class BaseViewController: UIViewController {
 
 // MARK: - Navigation Bar
 extension BaseViewController {
+    var navigationBarHeight: CGFloat {
+        return UIApplication.shared.statusBarFrame.height
+            + (navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+
     struct NavigationBarBuilder: MutableType, Equatable {
         var hidesNavigationBar = false
         var hidesBackButton = true

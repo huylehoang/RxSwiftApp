@@ -1,4 +1,6 @@
+import Domain
 import RxSwift
+import RxCocoa
 
 final class HomeScene: BaseViewController {
     private lazy var tableView: UITableView = {
@@ -9,8 +11,8 @@ final class HomeScene: BaseViewController {
         view.separatorStyle = .singleLine
         view.separatorColor = .lightGray
         view.separatorInset.left = 16
-        view.estimatedRowHeight = 50
-        view.rowHeight = 50
+        view.estimatedRowHeight = 54
+        view.register(Cell.self)
         view.refreshControl = refreshControl
         view.tableFooterView = UIView()
         return view
@@ -36,9 +38,35 @@ final class HomeScene: BaseViewController {
         return view
     }()
 
+    private lazy var cancelButton: UIBarButtonItem = {
+        let view = UIBarButtonItem(barButtonSystemItem: .cancel, target: nil, action: nil)
+        return view
+    }()
+
+    private lazy var actionView: ActionView = {
+        let view = ActionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var deleteButton: UIButton = {
+        let view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setTitle("Delete", for: .normal)
+        view.setTitleColor(.systemBlue, for: .normal)
+        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.7), for: .highlighted)
+        view.setTitleColor(.lightGray, for: .disabled)
+        view.backgroundColor = .white
+        view.titleLabel?.font = .systemFont(ofSize: 18)
+        view.applyMediumShadow()
+        return view
+    }()
+
     override var transition: MasterNavigationController.Transition {
         return .crossDissolve
     }
+
+    private var deleteButtonBottomConstraint: Constraint?
 
     private let viewModel: HomeViewModel
 
@@ -68,13 +96,73 @@ private extension HomeScene {
         contentView.backgroundColor = .white
         contentView.addSubview(tableView)
         Constraint.activateGroup(tableView.equalToEdges(of: contentView))
+        contentView.addSubview(deleteButton)
+        let deleteButtonBottomConstraint = deleteButton.bottom.equalTo(contentView.bottom)
+        Constraint.activate(
+            deleteButtonBottomConstraint,
+            deleteButton.leading.equalTo(contentView.leading),
+            deleteButton.trailing.equalTo(contentView.trailing),
+            deleteButton.height.equalTo(56))
+        self.deleteButtonBottomConstraint = deleteButtonBottomConstraint
     }
 
     func setupBinding() {
+        let itemChecked = PublishRelay<CellViewModel>()
+        let itemUnchecked = PublishRelay<CellViewModel>()
+
         tableView.rx.itemSelected
-            .bind { [weak self] indexPath in
-                self?.tableView.deselectRow(at: indexPath, animated: true)
+            .withUnretained(self)
+            .bind { $0.tableView.deselectRow(at: $1, animated: true) }
+            .disposed(by: disposeBag)
+
+        Observable.merge(
+            organizeButton.rx.tap.map { false },
+            actionView.rx.dismissed.map { true })
+            .bind(to: organizeButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        organizeButton.rx.tap
+            .withUnretained(self)
+            .map { view, _ in view }
+            .bind(to: actionView.rx.show)
+            .disposed(by: disposeBag)
+
+        tableView.rx.didScroll
+            .bind(to: actionView.rx.dimiss)
+            .disposed(by: disposeBag)
+
+        let toProfileTrigger = actionView.rx.didTapAction
+            .filter { $0 == .toProfile }
+            .mapToVoid()
+            .asDriverOnErrorJustComplete()
+
+        let selectAllTrigger = actionView.rx.didTapAction
+            .filter { $0 == .selectAll }
+            .mapToVoid()
+            .asDriverOnErrorJustComplete()
+
+        let cancelTrigger = cancelButton.rx.tap.asDriver()
+
+        let deleteTrigger = deleteButton.rx.tap
+            .map {
+                AlertBuilder(
+                    title: "Delete Notes",
+                    message: "Are your sure you want to delete all selected note?",
+                    style: .alert,
+                    actions: [
+                        .init(title: "Cancel", style: .destructive, tag: 0),
+                        .init(title: "Confirm", style: .default, tag: 1),
+                    ])
             }
+            .withUnretained(self)
+            .flatMap { $0.showAlert(with: $1) }
+            .filter { $0 == 1 }
+            .mapToVoid()
+            .asDriverOnErrorJustComplete()
+
+        cancelTrigger
+            .map { true }
+            .drive(organizeButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
         let input = HomeViewModel.Input(
@@ -82,23 +170,40 @@ private extension HomeScene {
             emptyRefreshTrigger: refreshButton.rx.tap.asDriver(),
             refreshTrigger: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
-            toUserTrigger: organizeButton.rx.tap.asDriver(),
-            itemSelected: tableView.rx.itemSelected.asDriver())
+            toProfileTrigger: toProfileTrigger,
+            selectAllTrigger: selectAllTrigger,
+            cancelTrigger: cancelTrigger,
+            itemSelected: tableView.rx.modelSelected(CellViewModel.self).asDriver(),
+            itemChecked: itemChecked.asDriverOnErrorJustComplete(),
+            itemUnchecked: itemUnchecked.asDriverOnErrorJustComplete(),
+            deleteTrigger: deleteTrigger)
 
         let output = viewModel.transform(input: input)
 
         [
-            output.title.drive(rx.title),
-            output.noteTitles.drive(tableView.rx.items) { _, _, title in
-                let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-                cell.textLabel?.text = title
-                cell.textLabel?.numberOfLines = 0
+            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
+            output.embeddedLoadingView.drive(rx.showEmbeddedIndicatorView),
+            output.refreshLoading.drive(refreshControl.rx.isRefreshing),
+            output.enableDelete.drive(deleteButton.rx.isEnabled),
+            output.isSelectingAll.drive(isSelectingAll),
+            output.items.drive(tableView.rx.items) { tableView, row, item in
+                let indexPath = IndexPath(row: row, section: 0)
+                let cell = tableView.dequeueReusableCell(Cell.self, for: indexPath)
+                cell.item = item
+
+                [
+                    output.isSelectingAll.drive(cell.rx.isSelecting),
+                    cell.rx.itemChecked.bind(to: itemChecked),
+                    cell.rx.itemUnchecked.bind(to: itemUnchecked),
+                ]
+                .forEach { $0.disposed(by: cell.disposeBag) }
+
                 return cell
             },
+            output.disableSelectAll.drive(actionView.rx.disableSelectAll),
+            output.title.drive(rx.title),
             output.isEmpty.drive(isEmpty),
             output.emptyMessage.drive(rx.showEmbeddedEmptyView()),
-            output.embeddedLoading.drive(rx.showEmbeddedIndicator),
-            output.refreshLoading.drive(refreshControl.rx.isRefreshing),
             output.errorMessage.drive(rx.showToast),
             output.onAction.drive(),
         ]
@@ -117,6 +222,24 @@ private extension HomeScene {
                 }
             }()
             base.navigationBarUpdate { $0.rightBarButtonItems = rightBarButtonItems }
+        }
+    }
+
+    var isSelectingAll: Binder<Bool> {
+        return Binder(self) { base, isSelectingAll in
+            let constant: CGFloat = isSelectingAll ? 0 : 56
+            base.deleteButtonBottomConstraint?.constant = constant
+            let leftBarButtonItems = isSelectingAll ? [base.cancelButton] : [base.organizeButton]
+            base.navigationBarUpdate { $0.leftBarButtonItems = leftBarButtonItems }
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 1,
+                options: .curveEaseInOut,
+                animations: {
+                    base.contentView.layoutIfNeeded()
+                })
         }
     }
 }

@@ -22,6 +22,10 @@ struct HomeUsecase: Domain.HomeUsecase {
             .asObservable()
             .flatMap(fetch)
     }
+
+    func deleteNotes(_ notes: [Note]) -> Single<Void> {
+        return noteService.deleteNotes(notes)
+    }
 }
 
 private extension HomeUsecase {
