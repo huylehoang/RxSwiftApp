@@ -2,19 +2,18 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol TapOutSideDimissal {
-    var viewForDimissing: UIView? { get }
+protocol TapOutsideDimissal: UIView {
     func setupTapOutsideGesture()
     func removeTapOutsideGesture()
 }
 
-extension TapOutSideDimissal {
+extension TapOutsideDimissal {
     fileprivate var tapOutsideManager: TapOutsideManager {
         guard let tapOutsideManager = objc_getAssociatedObject(
                 self,
                 &TapOutsideManager.context) as? TapOutsideManager
         else {
-            let tapOutsideManager = TapOutsideManager(view: viewForDimissing)
+            let tapOutsideManager = TapOutsideManager(view: self)
             objc_setAssociatedObject(
                 self,
                 &TapOutsideManager.context,
@@ -34,7 +33,7 @@ extension TapOutSideDimissal {
     }
 }
 
-extension Reactive where Base: TapOutSideDimissal {
+extension Reactive where Base: TapOutsideDimissal {
     var tappedOutside: Observable<Void> {
         return base.tapOutsideManager.tappedOutside.asObservable()
     }

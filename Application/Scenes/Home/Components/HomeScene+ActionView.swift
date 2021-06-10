@@ -45,7 +45,7 @@ extension HomeScene {
         }
     }
 
-    final class ActionView: UIView, TapOutSideDimissal {
+    final class ActionView: UIView, TapOutsideDimissal {
         private lazy var stackView: UIStackView = {
             let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,10 +70,6 @@ extension HomeScene {
         private var dismissAnimator: UIViewPropertyAnimator?
 
         private var constraintsModel = ActionViewConstraintsModel()
-
-        var viewForDimissing: UIView? {
-            return self
-        }
 
         fileprivate let didTapAction = PublishRelay<Action>()
         fileprivate let dismissed = PublishRelay<Void>()
