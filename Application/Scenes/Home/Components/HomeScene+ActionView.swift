@@ -16,15 +16,9 @@ extension Reactive where Base: HomeScene.ActionView {
         }
     }
 
-    var show: Binder<HomeScene> {
-        return Binder(base) { base, homeScene in
-            base.show(in: homeScene)
-        }
-    }
-
-    var dimiss: Binder<Void> {
-        return Binder(base) { base, _ in
-            base.dismiss()
+    var show: Binder<Bool> {
+        return Binder(base) { base, show in
+            show ? base.show() : base.dismiss()
         }
     }
 }
@@ -76,18 +70,20 @@ extension HomeScene {
 
         private let disposeBag = DisposeBag()
 
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        private weak var home: HomeScene?
+
+        init(home: HomeScene) {
+            self.home = home
+            super.init(frame: .zero)
             commonInit()
         }
 
         required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            commonInit()
+            fatalError("init(coder:) has not been implemented")
         }
 
-        fileprivate func show(in home: HomeScene) {
-            setupConstraints(in: home)
+        fileprivate func show() {
+            setupConstraints()
             setupTapOutsideGesture()
             alpha = 0
             transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
@@ -135,8 +131,8 @@ private extension HomeScene.ActionView {
         return bounds.size.width * 0.5
     }
 
-    func setupConstraints(in home: HomeScene) {
-        guard !isDescendant(of: home.contentView) else { return }
+    func setupConstraints() {
+        guard let home = home, !isDescendant(of: home.contentView) else { return }
         home.contentView.addSubview(self)
         constraintsModel.top = top.equalTo(home.contentView.top)
             .constant((home.navigationBarHeight + 4) - topOffSetForAnchorPoint)

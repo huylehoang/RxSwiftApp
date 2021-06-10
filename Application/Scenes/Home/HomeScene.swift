@@ -44,7 +44,7 @@ final class HomeScene: BaseViewController {
     }()
 
     private lazy var actionView: ActionView = {
-        let view = ActionView()
+        let view = ActionView(home: self)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -115,22 +115,6 @@ private extension HomeScene {
             .bind { $0.tableView.deselectRow(at: $1, animated: true) }
             .disposed(by: disposeBag)
 
-        Observable.merge(
-            organizeButton.rx.tap.map { false },
-            actionView.rx.dismissed.map { true })
-            .bind(to: organizeButton.rx.isEnabled)
-            .disposed(by: disposeBag)
-
-        organizeButton.rx.tap
-            .withUnretained(self)
-            .map { view, _ in view }
-            .bind(to: actionView.rx.show)
-            .disposed(by: disposeBag)
-
-        tableView.rx.didScroll
-            .bind(to: actionView.rx.dimiss)
-            .disposed(by: disposeBag)
-
         let toProfileTrigger = actionView.rx.didTapAction
             .filter { $0 == .toProfile }
             .mapToVoid()
@@ -160,18 +144,17 @@ private extension HomeScene {
             .mapToVoid()
             .asDriverOnErrorJustComplete()
 
-        cancelTrigger
-            .map { true }
-            .drive(organizeButton.rx.isEnabled)
-            .disposed(by: disposeBag)
-
         let input = HomeViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
+            viewWillDisappear: rx.viewWillDisappear.asDriver(),
             emptyRefreshTrigger: refreshButton.rx.tap.asDriver(),
             refreshTrigger: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
             toProfileTrigger: toProfileTrigger,
             selectAllTrigger: selectAllTrigger,
+            organizeTrigger: organizeButton.rx.tap.asDriver(),
+            tableViewDidScroll: tableView.rx.didScroll.asDriver(),
+            actionViewDismissed: actionView.rx.dismissed.asDriverOnErrorJustComplete(),
             cancelTrigger: cancelTrigger,
             itemSelected: tableView.rx.modelSelected(CellViewModel.self).asDriver(),
             itemChecked: itemChecked.asDriverOnErrorJustComplete(),
@@ -205,6 +188,8 @@ private extension HomeScene {
             output.isEmpty.drive(isEmpty),
             output.emptyMessage.drive(rx.showEmbeddedEmptyView()),
             output.errorMessage.drive(rx.showToast),
+            output.enableOrganize.drive(organizeButton.rx.isEnabled),
+            output.showActionView.drive(actionView.rx.show),
             output.onAction.drive(),
         ]
         .forEach { $0.disposed(by: disposeBag) }

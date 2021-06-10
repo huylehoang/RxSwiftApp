@@ -7,11 +7,15 @@ struct HomeViewModel: ViewModelType {
 
     struct Input {
         let viewDidLoad: Driver<Void>
+        let viewWillDisappear: Driver<Void>
         let emptyRefreshTrigger: Driver<Void>
         let refreshTrigger: Driver<Void>
         let toAddNoteTrigger: Driver<Void>
         let toProfileTrigger: Driver<Void>
         let selectAllTrigger: Driver<Void>
+        let organizeTrigger: Driver<Void>
+        let tableViewDidScroll: Driver<Void>
+        let actionViewDismissed: Driver<Void>
         let cancelTrigger: Driver<Void>
         let itemSelected: Driver<Item>
         let itemChecked: Driver<Item>
@@ -31,6 +35,8 @@ struct HomeViewModel: ViewModelType {
         let isEmpty: Driver<Bool>
         let emptyMessage: Driver<String>
         let errorMessage: Driver<String>
+        let enableOrganize: Driver<Bool>
+        let showActionView: Driver<Bool>
         let onAction: Driver<Void>
     }
 
@@ -107,10 +113,9 @@ struct HomeViewModel: ViewModelType {
 
         let isSelectingAll = Driver.merge(
             input.selectAllTrigger.map { true },
-            input.itemSelected.map { _ in false },
             input.cancelTrigger.map { false },
             input.refreshTrigger.map { false },
-            input.toAddNoteTrigger.map { false },
+            input.viewWillDisappear.map { false },
             onDeleteNotes.map { false })
             .startWith(false)
             .distinctUntilChanged()
@@ -141,6 +146,15 @@ struct HomeViewModel: ViewModelType {
 
         let errorMessage = errorTracker.asDriver().map { $0.localizedDescription }
 
+        let enableOrganize = Driver.merge(
+            input.organizeTrigger.map { false },
+            input.actionViewDismissed.map { true },
+            input.cancelTrigger.map { true })
+
+        let showActionView = Driver.merge(
+            input.organizeTrigger.map { true },
+            input.tableViewDidScroll.map { false })
+
         let onAction = Driver.merge(
             toLogin,
             toProfile,
@@ -162,6 +176,8 @@ struct HomeViewModel: ViewModelType {
             isEmpty: isEmpty,
             emptyMessage: emptyMessage,
             errorMessage: errorMessage,
+            enableOrganize: enableOrganize,
+            showActionView: showActionView,
             onAction: onAction)
     }
 }
