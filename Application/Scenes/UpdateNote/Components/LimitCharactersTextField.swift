@@ -86,6 +86,7 @@ private extension UpdateNoteScene.LimitCharactersTextField {
             textfield.rx.deleteBackward.asObservable())
             .withUnretained(textfield)
             .compactMap { textfield, _ in textfield.text }
+            .map(getLimitedText)
             .bind(to: currentText)
             .disposed(by: disposeBag)
 
@@ -100,13 +101,12 @@ private extension UpdateNoteScene.LimitCharactersTextField {
             .disposed(by: disposeBag)
 
         currentText
-            .map(getLimitedText)
             .bind(to: textfield.rx.text)
             .disposed(by: disposeBag)
     }
 
     func getLimitedText(from text: String) -> String {
-        return String(text.prefix(limitCharacters - 1))
+        return String(text.prefix(limitCharacters))
     }
 
     func getCounterString(from text: String) -> String {

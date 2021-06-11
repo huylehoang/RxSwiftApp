@@ -171,7 +171,9 @@ private extension HomeScene {
                 let cell = tableView.dequeueReusableCell(Cell.self, for: indexPath)
                 cell.item = item
 
-                output.isSelectingAll.drive(cell.rx.isSelecting).disposed(by: cell.disposeBag)
+                output.isSelectingAll
+                    .drive(cell.rx.isSelecting)
+                    .disposed(by: cell.disposeBag)
 
                 return cell
             },
