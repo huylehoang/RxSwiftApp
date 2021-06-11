@@ -154,12 +154,7 @@ struct HomeViewModel: ViewModelType {
             input.organizeTrigger.map { true },
             input.tableViewDidScroll.map { false })
 
-        let onAction = Driver.merge(
-            toLogin,
-            toProfile,
-            toAddNote,
-            toEditNote,
-            onDeleteNotes)
+        let onAction = Driver.merge(toLogin, toProfile, toAddNote, toEditNote, onDeleteNotes)
 
         return Output(
             embeddedLoading: embeddedLoading,
