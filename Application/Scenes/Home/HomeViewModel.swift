@@ -18,8 +18,6 @@ struct HomeViewModel: ViewModelType {
         let actionViewDismissed: Driver<Void>
         let cancelTrigger: Driver<Void>
         let itemSelected: Driver<Item>
-        let itemChecked: Driver<Item>
-        let itemUnchecked: Driver<Item>
         let deleteTrigger: Driver<Void>
     }
 
@@ -83,22 +81,6 @@ struct HomeViewModel: ViewModelType {
 
         let toAddNote = input.toAddNoteTrigger.do(onNext: navigator.toAddNote)
 
-        let toEditNote = input.itemSelected
-            .map { $0.note }
-            .map(UpdateNoteViewModel.NoteViewModel.init)
-            .do(onNext: navigator.toEditNote)
-            .mapToVoid()
-
-        let onNoteSelected = input.itemChecked
-            .withLatestFrom(items.asDriver(), resultSelector: checkedItem)
-            .do(onNext: items.accept)
-            .mapToVoid()
-
-        let onNoteDeselected = input.itemUnchecked
-            .withLatestFrom(items.asDriver(), resultSelector: uncheckedItem)
-            .do(onNext: items.accept)
-            .mapToVoid()
-
         let selectedNotes = items.asDriver().map { $0.selectedNotes() }
 
         let enableDelete = selectedNotes.map { !$0.isEmpty }
@@ -120,7 +102,23 @@ struct HomeViewModel: ViewModelType {
             .startWith(false)
             .distinctUntilChanged()
 
-        let onRemoveAllSelectedNotes = isSelectingAll
+        let delayedIsSelectingAll = isSelectingAll.delay(.milliseconds(250))
+
+        let onToggleItemIsSelected = input.itemSelected
+            .withLatestFrom(isSelectingAll, resultSelector: getItemForToggleIsSelected)
+            .compactMap { $0 }
+            .withLatestFrom(items.asDriver(), resultSelector: toggleItemIsSelected)
+            .do(onNext: items.accept)
+            .mapToVoid()
+
+        let toEditNote = input.itemSelected
+            .withLatestFrom(isSelectingAll, resultSelector: getNoteForNavigating)
+            .compactMap { $0 }
+            .map(UpdateNoteViewModel.NoteViewModel.init)
+            .do(onNext: navigator.toEditNote)
+            .mapToVoid()
+
+        let onUncheckedAllItems = isSelectingAll
             .filter { !$0 }
             .withLatestFrom(items.asDriver())
             .map(uncheckedAllItems)
@@ -129,7 +127,8 @@ struct HomeViewModel: ViewModelType {
 
         let outputItems = Driver.merge(
             fetchedNotes,
-            onRemoveAllSelectedNotes.skip(1),
+            onUncheckedAllItems,
+            onToggleItemIsSelected,
             errorTracker.mapToVoid())
             .withLatestFrom(items.asDriver())
 
@@ -140,7 +139,7 @@ struct HomeViewModel: ViewModelType {
 
         let title = Driver.just("Notes")
 
-        let isEmpty = outputItems.map { $0.isEmpty }
+        let isEmpty = outputItems.map { $0.isEmpty }.skip(1)
 
         let emptyMessage = isEmpty.map { $0 ? "Empty Notes" : "" }
 
@@ -160,8 +159,6 @@ struct HomeViewModel: ViewModelType {
             toProfile,
             toAddNote,
             toEditNote,
-            onNoteSelected,
-            onNoteDeselected,
             onDeleteNotes)
 
         return Output(
@@ -169,7 +166,7 @@ struct HomeViewModel: ViewModelType {
             embeddedLoadingView: embeddedLoadingView,
             refreshLoading: refreshLoading,
             enableDelete: enableDelete,
-            isSelectingAll: isSelectingAll,
+            isSelectingAll: delayedIsSelectingAll,
             items: outputItems,
             disableSelectAll: disableSelectAll,
             title: title,
@@ -210,12 +207,16 @@ private extension HomeViewModel {
         return notes.map(Item.init)
     }
 
-    func checkedItem(_ item: Item, from items: [Item]) -> [Item] {
-        return handleItemSelection(item: item, isSelected: true, from: items)
+    func getNoteForNavigating(item: Item, isSelectingAll: Bool) -> Note? {
+        return !isSelectingAll ? item.note : nil
     }
 
-    func uncheckedItem(_ item: Item, from items: [Item]) -> [Item] {
-        return handleItemSelection(item: item, isSelected: false, from: items)
+    func getItemForToggleIsSelected(item: Item, isSelectingAll: Bool) -> Item? {
+        return isSelectingAll ? item : nil
+    }
+
+    func toggleItemIsSelected(_ item: Item, from items: [Item]) -> [Item] {
+        return handleItemSelection(item: item, isSelected: !item.isSelected, from: items)
     }
 
     func handleItemSelection(
@@ -232,14 +233,14 @@ private extension HomeViewModel {
     }
 
     func uncheckedAllItems(from items: [Item]) -> [Item] {
-        return items.reduce(into: [Item]()) { items, item in
-            items.append(item.updated { $0.isSelected = false })
+        return items.compactMap { item in
+            item.updated { $0.isSelected = false }
         }
     }
 }
 
 private extension Sequence where Element == HomeViewModel.Item {
     func selectedNotes() -> [Note] {
-        return filter { $0.isSelected }.map { $0.note }
+        return compactMap { $0.isSelected ? $0.note : nil }
     }
 }

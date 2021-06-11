@@ -52,7 +52,7 @@ extension Toast {
     }
 }
 
-private class ToastView: UIView {
+private final class ToastView: UIView {
     private let message: String
     private weak var viewController: UIViewController?
     private let duration: TimeInterval

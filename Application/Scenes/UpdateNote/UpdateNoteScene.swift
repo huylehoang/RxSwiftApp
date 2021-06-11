@@ -2,19 +2,10 @@ import RxSwift
 import RxCocoa
 
 final class UpdateNoteScene: BaseViewController {
-    private lazy var titleTextField: UITextField = {
-        let view = PaddingTextField()
+    private lazy var titleTextField: LimitCharactersTextField = {
+        let view = LimitCharactersTextField(limit: 50)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.placeholder = "Enter title..."
-        view.font = .systemFont(ofSize: 16, weight: .regular)
-        view.borderStyle = .none
-        view.layer.borderColor = UIColor.lightGray.cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 8
-        view.textColor = .darkText
-        view.autocapitalizationType = .none
-        view.autocorrectionType = .no
-        view.borderStyle = .none
         return view
     }()
 
@@ -91,7 +82,7 @@ private extension UpdateNoteScene {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 32
+        stackView.spacing = 16
         stackView.distribution = .fill
         stackView.alignment = .fill
         contentView.addSubview(stackView)
@@ -99,7 +90,7 @@ private extension UpdateNoteScene {
         stackView.addArrangedSubview(detailsTextView)
         contentView.addSubview(deleteButton)
         Constraint.activate(
-            titleTextField.height.equalTo(48),
+            titleTextField.height.equalTo(64),
             stackView.top.equalTo(contentView.safeAreaLayoutGuide.top).constant(12),
             stackView.leading.equalTo(contentView.leading).constant(12),
             stackView.trailing.equalTo(contentView.trailing).constant(-12),
@@ -124,12 +115,12 @@ private extension UpdateNoteScene {
             .mapToVoid()
 
         let endEditing = Driver.merge(
-            titleTextField.rx.controlEvent(.editingDidEnd).asDriver(),
+            titleTextField.rx.endEditing.asDriver(),
             detailsTextView.rx.didEndEditing.asDriver())
 
         let input = UpdateNoteViewModel.Input(
             viewDidLoad: rx.viewDidLoad.asDriver(),
-            noteTitle: titleTextField.rx.text.orEmpty.asDriver(),
+            noteTitle: titleTextField.rx.text.asDriver(),
             noteDetails: detailsTextView.rx.text.orEmpty.asDriver(),
             endEditing: endEditing,
             updateTrigger: updateButton.rx.tap.asDriver(),

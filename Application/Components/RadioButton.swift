@@ -1,4 +1,3 @@
-import UIKit
 import RxSwift
 
 final class RadioButton: UIButton {
@@ -31,7 +30,7 @@ final class RadioButton: UIButton {
 }
 
 extension Reactive where Base: RadioButton {
-    var isSelectedObs: Observable<Bool> {
+    var isSelectedValue: Observable<Bool> {
         return observe(Bool.self, #keyPath(UIButton.isSelected)).compactMap { $0 }
     }
 }
@@ -58,13 +57,13 @@ private extension RadioButton {
             }
             .disposed(by: disposeBag)
         
-        rx.isSelectedObs
+        rx.isSelectedValue
             .map(getBorderColor)
             .distinctUntilChanged()
             .bind(to: layer.rx.borderColor)
             .disposed(by: disposeBag)
 
-        rx.isSelectedObs
+        rx.isSelectedValue
             .map(getImage)
             .distinctUntilChanged()
             .bind(to: rx.image(for: .normal))

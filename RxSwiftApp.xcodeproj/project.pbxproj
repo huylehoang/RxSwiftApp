@@ -48,6 +48,7 @@
 		8476D0CA26427E8A002C8CB9 /* ProfileNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8476D0C926427E8A002C8CB9 /* ProfileNavigator.swift */; };
 		8476D0CE26428B00002C8CB9 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8476D0CD26428B00002C8CB9 /* App.swift */; };
 		8477242A2671CEBC00A47357 /* KeyboardHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847724292671CEBC00A47357 /* KeyboardHandling.swift */; };
+		848F669126735BEE002BDB75 /* LimitCharactersTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848F669026735BEE002BDB75 /* LimitCharactersTextField.swift */; };
 		84C9C8F92660A055001D77F9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; };
 		84C9C8FA2660A055001D77F9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84C9C91F2660A12E001D77F9 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C9C91D2660A12E001D77F9 /* Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -286,6 +287,7 @@
 		8476D0C926427E8A002C8CB9 /* ProfileNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNavigator.swift; sourceTree = "<group>"; };
 		8476D0CD26428B00002C8CB9 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		847724292671CEBC00A47357 /* KeyboardHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandling.swift; sourceTree = "<group>"; };
+		848F669026735BEE002BDB75 /* LimitCharactersTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitCharactersTextField.swift; sourceTree = "<group>"; };
 		8498160926567B6E002FE757 /* NormalAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalAnimators.swift; sourceTree = "<group>"; };
 		8498161026568517002FE757 /* SimpleInteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInteractionController.swift; sourceTree = "<group>"; };
 		84C9C91B2660A12E001D77F9 /* Application.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Application.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -544,6 +546,7 @@
 		845947E5265245F9003A5E0C /* UpdateNote */ = {
 			isa = PBXGroup;
 			children = (
+				848F6694267370BF002BDB75 /* Components */,
 				845947E626524611003A5E0C /* UpdateNoteScene.swift */,
 				845947E92652462B003A5E0C /* UpdateNoteViewModel.swift */,
 				84C9C9DE2660A595001D77F9 /* UpdateNoteNavigator.swift */,
@@ -672,6 +675,14 @@
 				10AB137D264F89EA007EA523 /* Navigator */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		848F6694267370BF002BDB75 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				848F669026735BEE002BDB75 /* LimitCharactersTextField.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		8498160D265682DF002FE757 /* Transitions */ = {
@@ -1089,6 +1100,7 @@
 				84C9C97E2660A1D7001D77F9 /* Reactive+Extensions.swift in Sources */,
 				84C9CA082660AD43001D77F9 /* ProfileSceneBuilder.swift in Sources */,
 				84C9C9672660A1B8001D77F9 /* PlaceholderTextView.swift in Sources */,
+				848F669126735BEE002BDB75 /* LimitCharactersTextField.swift in Sources */,
 				84C9C97A2660A1D1001D77F9 /* TextValidator.swift in Sources */,
 				84C9C92F2660A169001D77F9 /* SimpleInteractionController.swift in Sources */,
 				84C9C9742660A1C9001D77F9 /* ActivityIndicator.swift in Sources */,

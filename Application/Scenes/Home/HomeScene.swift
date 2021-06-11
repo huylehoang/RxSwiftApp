@@ -12,6 +12,7 @@ final class HomeScene: BaseViewController {
         view.separatorColor = .lightGray
         view.separatorInset.left = 16
         view.estimatedRowHeight = 54
+        view.rowHeight = UITableView.automaticDimension
         view.register(Cell.self)
         view.refreshControl = refreshControl
         view.tableFooterView = UIView()
@@ -67,6 +68,7 @@ final class HomeScene: BaseViewController {
     }
 
     private var deleteButtonBottomConstraint: Constraint?
+    private let deleteButtonHeight: CGFloat = 56
 
     private let viewModel: HomeViewModel
 
@@ -97,19 +99,18 @@ private extension HomeScene {
         contentView.addSubview(tableView)
         Constraint.activateGroup(tableView.equalToEdges(of: contentView))
         contentView.addSubview(deleteButton)
-        let deleteButtonBottomConstraint = deleteButton.bottom.equalTo(contentView.bottom)
+        let deleteButtonBottomConstraint = deleteButton.bottom
+            .equalTo(contentView.bottom)
+            .constant(deleteButtonHeight)
         Constraint.activate(
             deleteButtonBottomConstraint,
             deleteButton.leading.equalTo(contentView.leading),
             deleteButton.trailing.equalTo(contentView.trailing),
-            deleteButton.height.equalTo(56))
+            deleteButton.height.equalTo(deleteButtonHeight))
         self.deleteButtonBottomConstraint = deleteButtonBottomConstraint
     }
 
     func setupBinding() {
-        let itemChecked = PublishRelay<CellViewModel>()
-        let itemUnchecked = PublishRelay<CellViewModel>()
-
         tableView.rx.itemSelected
             .withUnretained(self)
             .bind { $0.tableView.deselectRow(at: $1, animated: true) }
@@ -155,8 +156,6 @@ private extension HomeScene {
             actionViewDismissed: actionView.rx.dismissed.asDriverOnErrorJustComplete(),
             cancelTrigger: cancelButton.rx.tap.asDriver(),
             itemSelected: tableView.rx.modelSelected(CellViewModel.self).asDriver(),
-            itemChecked: itemChecked.asDriverOnErrorJustComplete(),
-            itemUnchecked: itemUnchecked.asDriverOnErrorJustComplete(),
             deleteTrigger: deleteTrigger)
 
         let output = viewModel.transform(input: input)
@@ -172,12 +171,7 @@ private extension HomeScene {
                 let cell = tableView.dequeueReusableCell(Cell.self, for: indexPath)
                 cell.item = item
 
-                [
-                    output.isSelectingAll.drive(cell.rx.isSelecting),
-                    cell.rx.itemChecked.bind(to: itemChecked),
-                    cell.rx.itemUnchecked.bind(to: itemUnchecked),
-                ]
-                .forEach { $0.disposed(by: cell.disposeBag) }
+                output.isSelectingAll.drive(cell.rx.isSelecting).disposed(by: cell.disposeBag)
 
                 return cell
             },
@@ -210,7 +204,7 @@ private extension HomeScene {
 
     var isSelectingAll: Binder<Bool> {
         return Binder(self) { base, isSelectingAll in
-            let constant: CGFloat = isSelectingAll ? 0 : 56
+            let constant: CGFloat = isSelectingAll ? 0 : base.deleteButtonHeight
             base.deleteButtonBottomConstraint?.constant = constant
             let leftBarButtonItems = isSelectingAll ? [base.cancelButton] : [base.organizeButton]
             base.navigationBarUpdate { $0.leftBarButtonItems = leftBarButtonItems }

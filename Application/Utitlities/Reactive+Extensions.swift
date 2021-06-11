@@ -18,3 +18,9 @@ extension Reactive where Base: UIViewController {
         return ControlEvent(events: sentMessage(#selector(Base.viewDidDisappear)).mapToVoid())
     }
 }
+
+extension Reactive where Base: UITextField {
+    var deleteBackward: ControlEvent<Void> {
+        return ControlEvent(events: sentMessage(#selector(Base.deleteBackward)).mapToVoid())
+    }
+}
