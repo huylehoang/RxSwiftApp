@@ -119,6 +119,7 @@ struct HomeViewModel: ViewModelType {
             .mapToVoid()
 
         let onUncheckedAllItems = isSelectingAll
+            .skip(1)
             .filter { !$0 }
             .withLatestFrom(items.asDriver())
             .map(uncheckedAllItems)
