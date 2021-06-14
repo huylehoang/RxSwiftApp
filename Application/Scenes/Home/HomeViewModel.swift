@@ -102,8 +102,6 @@ struct HomeViewModel: ViewModelType {
             .startWith(false)
             .distinctUntilChanged()
 
-        let delayedIsSelectingAll = isSelectingAll.delay(.milliseconds(250))
-
         let onToggleItemIsSelected = input.itemSelected
             .withLatestFrom(isSelectingAll, resultSelector: getItemForToggleIsSelected)
             .compactMap { $0 }
@@ -128,7 +126,7 @@ struct HomeViewModel: ViewModelType {
 
         let outputItems = Driver.merge(
             fetchedNotes,
-            onUncheckedAllItems,
+            onUncheckedAllItems.delay(.milliseconds(250)),
             onToggleItemIsSelected,
             errorTracker.mapToVoid())
             .withLatestFrom(items.asDriver())
@@ -162,7 +160,7 @@ struct HomeViewModel: ViewModelType {
             embeddedLoadingView: embeddedLoadingView,
             refreshLoading: refreshLoading,
             enableDelete: enableDelete,
-            isSelectingAll: delayedIsSelectingAll,
+            isSelectingAll: isSelectingAll,
             items: outputItems,
             disableSelectAll: disableSelectAll,
             title: title,

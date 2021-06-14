@@ -15,7 +15,9 @@ final class HomeScene: BaseViewController {
         view.rowHeight = UITableView.automaticDimension
         view.register(Cell.self)
         view.refreshControl = refreshControl
-        view.tableFooterView = UIView()
+        let tableFooterView = UIView()
+        tableFooterView.frame.size.height = deleteButtonHeight
+        view.tableFooterView = tableFooterView
         return view
     }()
 
