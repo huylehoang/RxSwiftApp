@@ -30,6 +30,7 @@ struct HomeViewModel: ViewModelType {
         let items: Driver<[Item]>
         let disableSelectAll: Driver<Bool>
         let title: Driver<String>
+        let hideTableView: Driver<Bool>
         let isEmpty: Driver<Bool>
         let emptyMessage: Driver<String>
         let errorMessage: Driver<String>
@@ -126,6 +127,7 @@ struct HomeViewModel: ViewModelType {
 
         let outputItems = Driver.merge(
             fetchedNotes,
+            isSelectingAll.filter { $0 }.delay(.milliseconds(250)).mapToVoid(),
             onUncheckedAllItems.delay(.milliseconds(250)),
             onToggleItemIsSelected,
             errorTracker.mapToVoid())
@@ -137,6 +139,8 @@ struct HomeViewModel: ViewModelType {
             outputItems.map { $0.isEmpty })
 
         let title = Driver.just("Notes")
+
+        let hideTableView = items.asDriver().map { $0.isEmpty }
 
         let isEmpty = outputItems.map { $0.isEmpty }.skip(1)
 
@@ -164,6 +168,7 @@ struct HomeViewModel: ViewModelType {
             items: outputItems,
             disableSelectAll: disableSelectAll,
             title: title,
+            hideTableView: hideTableView,
             isEmpty: isEmpty,
             emptyMessage: emptyMessage,
             errorMessage: errorMessage,

@@ -72,7 +72,7 @@ private extension HomeScene.Cell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = 8
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         stackView.alignment = .center
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(radioButton)

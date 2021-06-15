@@ -181,6 +181,7 @@ private extension HomeScene {
             },
             output.disableSelectAll.drive(actionView.rx.disableSelectAll),
             output.title.drive(rx.title),
+            output.hideTableView.drive(animateHideTableView),
             output.isEmpty.drive(isEmpty),
             output.emptyMessage.drive(rx.showEmbeddedEmptyView()),
             output.errorMessage.drive(rx.showToast),
@@ -193,6 +194,27 @@ private extension HomeScene {
 }
 
 private extension HomeScene {
+    var animateHideTableView: Binder<Bool> {
+        return Binder(self) { base, isHidden in
+            if !isHidden {
+                base.tableView.isHidden = false
+            }
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 1,
+                options: .curveEaseInOut,
+                animations: {
+                    base.tableView.alpha = isHidden ? 0 : 1
+                },
+                completion: { _ in
+                    guard isHidden else { return }
+                    base.tableView.isHidden = true
+                })
+        }
+    }
+
     var isEmpty: Binder<Bool> {
         return Binder(self) { base, isEmpty in
             let rightBarButtonItems: [UIBarButtonItem] = {
