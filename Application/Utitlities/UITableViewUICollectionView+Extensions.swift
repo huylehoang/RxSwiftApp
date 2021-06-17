@@ -1,7 +1,5 @@
 import UIKit
 
-import UIKit
-
 protocol RegistrableCell {
     static var identifier: String { get }
 }
