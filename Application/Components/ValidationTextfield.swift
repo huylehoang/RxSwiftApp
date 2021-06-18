@@ -20,7 +20,6 @@ final class ValidationTextfield: UIStackView {
         view.numberOfLines = 0
         view.textColor = .systemRed
         view.font = .systemFont(ofSize: 16, weight: .regular)
-        view.isHidden = true
         return view
     }()
 
