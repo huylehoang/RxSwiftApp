@@ -8,20 +8,20 @@ final class LoginScene: BaseViewController {
         return view
     }()
 
-    private lazy var nameField: ValidationTextfield = {
-        let view = ValidationTextfield()
+    private lazy var nameField: ValidationTextField = {
+        let view = ValidationTextField()
         view.placeholder = "Enter name..."
         return view
     }()
 
-    private lazy var emailField: ValidationTextfield = {
-        let view = ValidationTextfield()
+    private lazy var emailField: ValidationTextField = {
+        let view = ValidationTextField()
         view.placeholder = "Enter email..."
         return view
     }()
 
-    private lazy var passwordField: ValidationTextfield = {
-        let view = ValidationTextfield()
+    private lazy var passwordField: ValidationTextField = {
+        let view = ValidationTextField()
         view.placeholder = "Enter password..."
         view.isSecrectTextEntry = true
         return view

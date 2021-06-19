@@ -5,7 +5,7 @@ final class RadioButton: UIButton {
     private let deactiveColor: UIColor = .lightGray
 
     private lazy var activeImageSize: CGSize = {
-        let activeImageOffset = bounds.height * 1/4
+        let activeImageOffset = bounds.height * 1/3
         let width = (bounds.width - activeImageOffset).rounded()
         let height = (bounds.width - activeImageOffset).rounded()
         let imageSize = CGSize(width: width, height: height)

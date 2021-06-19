@@ -48,9 +48,6 @@ struct LoginViewModel: ViewModelType {
         let nameField = BehaviorRelay(value: "")
         let emailField = BehaviorRelay(value: "")
         let passwordField = BehaviorRelay(value: "")
-        let nameValidator = TextValidator(.name, source: nameField.asDriver())
-        let emailValidator = TextValidator(.email, source: emailField.asDriver())
-        let passwordValidator = TextValidator(.password, source: passwordField.asDriver())
 
         let onSegmentChanged = Driver.merge(
             input.segmentChanged.compactMap(Kind.init),
@@ -67,15 +64,15 @@ struct LoginViewModel: ViewModelType {
         let validateTrigger = Driver.merge(input.loginTrigger, onSegmentChanged)
 
         let nameError = validateTrigger
-            .withLatestFrom(nameValidator.validate())
+            .withLatestFrom(TextValidator.validate(.name, for: nameField.asDriver()))
             .distinctUntilChanged()
 
         let emailError = validateTrigger
-            .withLatestFrom(emailValidator.validate())
+            .withLatestFrom(TextValidator.validate(.email, for: emailField.asDriver()))
             .distinctUntilChanged()
 
         let passwordError = validateTrigger
-            .withLatestFrom(passwordValidator.validate())
+            .withLatestFrom(TextValidator.validate(.password, for: passwordField.asDriver()))
             .distinctUntilChanged()
 
         let noneError = Driver.combineLatest(nameError, emailError, passwordError)

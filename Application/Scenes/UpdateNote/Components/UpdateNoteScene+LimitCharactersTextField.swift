@@ -3,7 +3,7 @@ import RxCocoa
 
 extension UpdateNoteScene {
     final class LimitCharactersTextField: UIStackView {
-        fileprivate lazy var textfield: UITextField = {
+        fileprivate lazy var textField: UITextField = {
             let view = PaddingTextField()
             view.translatesAutoresizingMaskIntoConstraints = false
             view.font = .systemFont(ofSize: 16, weight: .regular)
@@ -28,7 +28,7 @@ extension UpdateNoteScene {
 
         var placeholder: String? {
             didSet {
-                textfield.placeholder = placeholder
+                textField.placeholder = placeholder
             }
         }
 
@@ -58,7 +58,7 @@ extension Reactive where Base: UpdateNoteScene.LimitCharactersTextField {
     }
 
     var endEditing: ControlEvent<Void> {
-        return base.textfield.rx.controlEvent(.editingDidEnd)
+        return base.textField.rx.controlEvent(.editingDidEnd)
     }
 }
 
@@ -73,19 +73,19 @@ private extension UpdateNoteScene.LimitCharactersTextField {
         alignment = .trailing
         distribution = .fill
         spacing = 8
-        addArrangedSubview(textfield)
+        addArrangedSubview(textField)
         addArrangedSubview(counterLabel)
         Constraint.activate(
-            textfield.width.equalTo(width),
-            textfield.height.equalTo(height, multiplier: 2/3))
+            textField.width.equalTo(width),
+            textField.height.equalTo(height, multiplier: 2/3))
     }
 
     func setupBinding() {
         Observable.merge(
-            textfield.rx.controlEvent(.editingChanged).asObservable(),
-            textfield.rx.deleteBackward.asObservable())
-            .withUnretained(textfield)
-            .compactMap { textfield, _ in textfield.text }
+            textField.rx.controlEvent(.editingChanged).asObservable(),
+            textField.rx.deleteBackward.asObservable())
+            .withUnretained(textField)
+            .compactMap { textField, _ in textField.text }
             .map(getLimitedText)
             .bind(to: currentText)
             .disposed(by: disposeBag)
@@ -101,7 +101,7 @@ private extension UpdateNoteScene.LimitCharactersTextField {
             .disposed(by: disposeBag)
 
         currentText
-            .bind(to: textfield.rx.text)
+            .bind(to: textField.rx.text)
             .disposed(by: disposeBag)
     }
 
