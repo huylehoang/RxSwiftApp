@@ -2,25 +2,23 @@ import RxSwift
 import RxCocoa
 
 enum TextValidator {
-    enum Kind {
-        case name
-        case email
-        case password
-    }
+    case name
+    case email
+    case password
 
-    static func validate(_ kind: Kind, for source: Driver<String>) -> Driver<String> {
-        return source.map { onValidate(kind, forText: $0) }.distinctUntilChanged()
-    }
-
-    private static func onValidate(_ kind: Kind, forText text: String) -> String {
-        guard !text.isEmpty else { return "" }
-        let predicate = NSPredicate(format: "SELF MATCHES %@", kind.regEx)
-        let evaluate = predicate.evaluate(with: text)
-        return evaluate ? "" : kind.error
+    func validate(_ source: Driver<String>) -> Driver<String> {
+        return source.map(onValidate).distinctUntilChanged()
     }
 }
 
-private extension TextValidator.Kind {
+private extension TextValidator {
+    func onValidate(_ text: String) -> String {
+        guard !text.isEmpty else { return "" }
+        let predicate = NSPredicate(format: "SELF MATCHES %@", regEx)
+        let evaluate = predicate.evaluate(with: text)
+        return evaluate ? "" : error
+    }
+
     var regEx: String {
         switch self {
         case .name:

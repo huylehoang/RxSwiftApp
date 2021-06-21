@@ -64,15 +64,15 @@ struct LoginViewModel: ViewModelType {
         let validateTrigger = Driver.merge(input.loginTrigger, onSegmentChanged)
 
         let nameError = validateTrigger
-            .withLatestFrom(TextValidator.validate(.name, for: nameField.asDriver()))
+            .withLatestFrom(TextValidator.name.validate(nameField.asDriver()))
             .distinctUntilChanged()
 
         let emailError = validateTrigger
-            .withLatestFrom(TextValidator.validate(.email, for: emailField.asDriver()))
+            .withLatestFrom(TextValidator.email.validate(emailField.asDriver()))
             .distinctUntilChanged()
 
         let passwordError = validateTrigger
-            .withLatestFrom(TextValidator.validate(.password, for: passwordField.asDriver()))
+            .withLatestFrom(TextValidator.password.validate(passwordField.asDriver()))
             .distinctUntilChanged()
 
         let noneError = Driver.combineLatest(nameError, emailError, passwordError)
