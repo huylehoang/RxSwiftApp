@@ -85,20 +85,17 @@ enum LayoutPriority {
     case defaultHigh
     case defaultLow
     case level(Float)
-    case normal
 
-    private var priority: UILayoutPriority? {
+    private var priority: UILayoutPriority {
         switch self {
         case .required: return .required
         case .defaultHigh: return .defaultHigh
         case .defaultLow: return .defaultLow
         case .level(let level): return UILayoutPriority(level)
-        case .normal: return nil
         }
     }
 
     fileprivate func setPriority(for constraint: NSLayoutConstraint) {
-        guard let priority = priority else { return }
         constraint.priority = priority
     }
 }
