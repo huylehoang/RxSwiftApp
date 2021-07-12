@@ -45,7 +45,7 @@ extension Toast {
     struct Configuration {
         let textFont: UIFont = .systemFont(ofSize: 16, weight: .regular)
         let textColor: UIColor = .white
-        let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.7)
+        let backgroundColor: UIColor = .black.withAlphaComponent(0.7)
         let horizontalPadding: CGFloat = 24
         let duration: TimeInterval = 1 // seconds
         let bottomSpace: CGFloat = 20

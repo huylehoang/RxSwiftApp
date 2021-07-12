@@ -31,7 +31,7 @@ final class UpdateNoteScene: BaseViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setTitle("Delete", for: .normal)
         view.setTitleColor(.systemBlue, for: .normal)
-        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
+        view.setTitleColor(.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
     }()
@@ -43,7 +43,7 @@ final class UpdateNoteScene: BaseViewController {
         }
     }
 
-    private var interactionController: SimpleInteractionController?
+    private var percentDrivenController: PercentDrivenController?
 
     private let viewModel: UpdateNoteViewModel
 
@@ -67,7 +67,7 @@ final class UpdateNoteScene: BaseViewController {
 // MARK: - PercentDrivenDimissal
 extension UpdateNoteScene: PercentDrivenDimissal {
     var percentDrivenDismissAnimator: PercentDrivenAnimator? {
-        return interactionController?.percentDriven
+        return percentDrivenController?.percentDriven
     }
 }
 
@@ -145,7 +145,13 @@ private extension UpdateNoteScene {
     }
 
     func setupInteractionController() {
-        interactionController = SimpleInteractionController(interactiveController: self)
+        switch viewModel.kind {
+        case .add:
+            percentDrivenController = FadeZoomPercentDrivenController(
+                interactiveViewController: self)
+        case .edit:
+            percentDrivenController = NormalPercentDrivenController(interactiveViewController: self)
+        }
     }
 }
 

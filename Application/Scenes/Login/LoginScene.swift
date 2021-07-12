@@ -33,7 +33,7 @@ final class LoginScene: BaseViewController {
         view.backgroundColor = .systemBlue
         view.setTitleColor(.white, for: .normal)
         view.setTitleColor(.lightGray, for: .disabled)
-        view.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
+        view.setTitleColor(.white.withAlphaComponent(0.7), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         return view
     }()

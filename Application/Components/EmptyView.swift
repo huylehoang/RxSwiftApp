@@ -17,7 +17,7 @@ final class EmptyView: UIView {
         let view = UIButton()
         view.isHidden = true
         view.setTitleColor(.link, for: .normal)
-        view.setTitleColor(UIColor.link.withAlphaComponent(0.7), for: .highlighted)
+        view.setTitleColor(.link.withAlphaComponent(0.7), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
     }()

@@ -126,6 +126,6 @@ private extension LoginScene.ValidationTextField {
     }
 
     func getSeparatorColor(with text: String) -> UIColor {
-        return text.isEmpty ? UIColor.lightGray.withAlphaComponent(0.7) : .systemBlue
+        return text.isEmpty ? .lightGray.withAlphaComponent(0.7) : .systemBlue
     }
 }

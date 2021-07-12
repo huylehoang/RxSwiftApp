@@ -196,7 +196,7 @@ private extension HomeScene.ActionView {
         view.contentHorizontalAlignment = .leading
         view.setTitle(action.rawValue, for: .normal)
         view.setTitleColor(.darkText, for: .normal)
-        view.setTitleColor(UIColor.darkText.withAlphaComponent(0.5), for: .disabled)
+        view.setTitleColor(.darkText.withAlphaComponent(0.5), for: .disabled)
         view.setBackgroundImage(
             UIColor.white.withAlphaComponent(0.5).toImage(),
             for: .highlighted)
@@ -206,7 +206,7 @@ private extension HomeScene.ActionView {
     func makeSeparator() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        view.backgroundColor = .white.withAlphaComponent(0.5)
         return view
     }
 }

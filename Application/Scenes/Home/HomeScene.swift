@@ -57,7 +57,7 @@ final class HomeScene: BaseViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setTitle("Delete", for: .normal)
         view.setTitleColor(.systemBlue, for: .normal)
-        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.7), for: .highlighted)
+        view.setTitleColor(.systemBlue.withAlphaComponent(0.7), for: .highlighted)
         view.setTitleColor(.lightGray, for: .disabled)
         view.backgroundColor = .white
         view.titleLabel?.font = .systemFont(ofSize: 18)

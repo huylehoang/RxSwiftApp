@@ -27,7 +27,7 @@ final class ProfileScene: BaseViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setTitle("SIGN OUT", for: .normal)
         view.setTitleColor(.systemBlue, for: .normal)
-        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
+        view.setTitleColor(.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
         view.contentHorizontalAlignment = .leading
         return view
@@ -121,7 +121,7 @@ private extension ProfileScene {
     func makeUserActionButton() -> UIButton {
         let view = UIButton()
         view.setTitleColor(.systemBlue, for: .normal)
-        view.setTitleColor(UIColor.systemBlue.withAlphaComponent(0.5), for: .highlighted)
+        view.setTitleColor(.systemBlue.withAlphaComponent(0.5), for: .highlighted)
         view.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         return view
     }

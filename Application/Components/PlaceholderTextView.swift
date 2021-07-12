@@ -5,7 +5,7 @@ final class PlaceholderTextView: UITextView {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.numberOfLines = 1
-        view.textColor = UIColor.lightGray.withAlphaComponent(0.7)
+        view.textColor = .lightGray.withAlphaComponent(0.7)
         return view
     }()
 

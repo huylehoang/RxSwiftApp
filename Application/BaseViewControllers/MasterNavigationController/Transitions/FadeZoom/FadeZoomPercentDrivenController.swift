@@ -1,14 +1,14 @@
 import UIKit
 
-final class SimpleInteractionController {
-    private weak var interactiveController: BaseViewController?
+final class FadeZoomPercentDrivenController: PercentDrivenController {
+    private weak var interactiveViewController: BaseViewController?
 
     private(set) var percentDriven: UIPercentDrivenInteractiveTransition?
 
-    init(interactiveController: BaseViewController) {
-        self.interactiveController = interactiveController
+    init(interactiveViewController: BaseViewController) {
+        self.interactiveViewController = interactiveViewController
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        interactiveController.contentView.addGestureRecognizer(panGesture)
+        interactiveViewController.contentView.addGestureRecognizer(panGesture)
     }
 
     @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
@@ -23,7 +23,7 @@ final class SimpleInteractionController {
         switch sender.state {
         case .began:
             percentDriven = UIPercentDrivenInteractiveTransition()
-            interactiveController?.navigationController?.popViewController(animated: true)
+            interactiveViewController?.navigationController?.popViewController(animated: true)
             percentDriven?.update(percent)
         case .changed:
             percentDriven?.update(percent)

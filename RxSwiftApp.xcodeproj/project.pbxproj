@@ -56,7 +56,7 @@
 		84C9C9232660A12E001D77F9 /* Application.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84C9C91B2660A12E001D77F9 /* Application.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84C9C9292660A15D001D77F9 /* MasterNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AA92654FDD60063098F /* MasterNavigationController.swift */; };
 		84C9C92C2660A161001D77F9 /* InteractiveDimissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84320AB72656544A0013533B /* InteractiveDimissal.swift */; };
-		84C9C92F2660A169001D77F9 /* SimpleInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498161026568517002FE757 /* SimpleInteractionController.swift */; };
+		84C9C92F2660A169001D77F9 /* FadeZoomPercentDrivenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498161026568517002FE757 /* FadeZoomPercentDrivenController.swift */; };
 		84C9C9322660A16D001D77F9 /* NormalAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498160926567B6E002FE757 /* NormalAnimators.swift */; };
 		84C9C9332660A170001D77F9 /* CrossDissolveAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1044544726557632007E6BEB /* CrossDissolveAnimator.swift */; };
 		84C9C9362660A174001D77F9 /* FadeZoomAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AB526550E4F0063098F /* FadeZoomAnimators.swift */; };
@@ -104,6 +104,8 @@
 		84C9CA3B2660B0E7001D77F9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84C9CAEF2660D9C0001D77F9 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C9CAEE2660D9C0001D77F9 /* FirebaseService.swift */; };
 		84C9CAF42660DAB4001D77F9 /* FirebaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C9CAF32660DAB4001D77F9 /* FirebaseHelper.swift */; };
+		84D41907269BE72900DE527D /* PercentDrivenDismissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D41906269BE72900DE527D /* PercentDrivenDismissal.swift */; };
+		84D4190B269BEBD800DE527D /* NormalPercentDrivenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D4190A269BEBD800DE527D /* NormalPercentDrivenController.swift */; };
 		84D606FD265FA2CB001403FC /* CommonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FD5C1264E7BAA00308FB4 /* CommonService.swift */; };
 		84D60702265FA2CF001403FC /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C9BBD2643221A00D4FB8B /* AuthService.swift */; };
 		84D60703265FA2D2001403FC /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10049A9A2653052B00139C99 /* ProfileService.swift */; };
@@ -289,7 +291,7 @@
 		847724292671CEBC00A47357 /* KeyboardHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandling.swift; sourceTree = "<group>"; };
 		848F669026735BEE002BDB75 /* UpdateNoteScene+LimitCharactersTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdateNoteScene+LimitCharactersTextField.swift"; sourceTree = "<group>"; };
 		8498160926567B6E002FE757 /* NormalAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalAnimators.swift; sourceTree = "<group>"; };
-		8498161026568517002FE757 /* SimpleInteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInteractionController.swift; sourceTree = "<group>"; };
+		8498161026568517002FE757 /* FadeZoomPercentDrivenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeZoomPercentDrivenController.swift; sourceTree = "<group>"; };
 		84C9C91B2660A12E001D77F9 /* Application.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Application.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C9C91D2660A12E001D77F9 /* Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		84C9C91E2660A12E001D77F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -304,6 +306,8 @@
 		84C9CA072660AD43001D77F9 /* ProfileSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSceneBuilder.swift; sourceTree = "<group>"; };
 		84C9CAEE2660D9C0001D77F9 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		84C9CAF32660DAB4001D77F9 /* FirebaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHelper.swift; sourceTree = "<group>"; };
+		84D41906269BE72900DE527D /* PercentDrivenDismissal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentDrivenDismissal.swift; sourceTree = "<group>"; };
+		84D4190A269BEBD800DE527D /* NormalPercentDrivenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalPercentDrivenController.swift; sourceTree = "<group>"; };
 		84F91F79264D11450064077F /* BaseViewController+UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BaseViewController+UIAlertController.swift"; sourceTree = "<group>"; };
 		A17DA98BA5784A05B594CB96 /* Pods-Domain.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.debug.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.debug.xcconfig"; sourceTree = "<group>"; };
 		AD220ACE855F7D80B3866817 /* Pods_Application.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Application.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -511,6 +515,7 @@
 			children = (
 				84124AA92654FDD60063098F /* MasterNavigationController.swift */,
 				84320AB72656544A0013533B /* InteractiveDimissal.swift */,
+				84D41906269BE72900DE527D /* PercentDrivenDismissal.swift */,
 				8498160D265682DF002FE757 /* Transitions */,
 			);
 			path = MasterNavigationController;
@@ -696,10 +701,9 @@
 		8498160D265682DF002FE757 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
-				8498161026568517002FE757 /* SimpleInteractionController.swift */,
-				8498160926567B6E002FE757 /* NormalAnimators.swift */,
+				84D41909269BEBB800DE527D /* Normal */,
+				84D41908269BEB6500DE527D /* FadeZoom */,
 				1044544726557632007E6BEB /* CrossDissolveAnimator.swift */,
-				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
 			);
 			path = Transitions;
 			sourceTree = "<group>";
@@ -725,6 +729,24 @@
 				1022F76E26404930007AE3F2 /* ViewModelType.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		84D41908269BEB6500DE527D /* FadeZoom */ = {
+			isa = PBXGroup;
+			children = (
+				84124AB526550E4F0063098F /* FadeZoomAnimators.swift */,
+				8498161026568517002FE757 /* FadeZoomPercentDrivenController.swift */,
+			);
+			path = FadeZoom;
+			sourceTree = "<group>";
+		};
+		84D41909269BEBB800DE527D /* Normal */ = {
+			isa = PBXGroup;
+			children = (
+				8498160926567B6E002FE757 /* NormalAnimators.swift */,
+				84D4190A269BEBD800DE527D /* NormalPercentDrivenController.swift */,
+			);
+			path = Normal;
 			sourceTree = "<group>";
 		};
 		F3BBC5EF14379883360FC48A /* Frameworks */ = {
@@ -1108,12 +1130,14 @@
 				84C9C97E2660A1D7001D77F9 /* Reactive+Extensions.swift in Sources */,
 				84C9CA082660AD43001D77F9 /* ProfileSceneBuilder.swift in Sources */,
 				84C9C9672660A1B8001D77F9 /* PlaceholderTextView.swift in Sources */,
+				84D41907269BE72900DE527D /* PercentDrivenDismissal.swift in Sources */,
 				848F669126735BEE002BDB75 /* UpdateNoteScene+LimitCharactersTextField.swift in Sources */,
 				84C9C97A2660A1D1001D77F9 /* TextValidator.swift in Sources */,
-				84C9C92F2660A169001D77F9 /* SimpleInteractionController.swift in Sources */,
+				84C9C92F2660A169001D77F9 /* FadeZoomPercentDrivenController.swift in Sources */,
 				84C9C9742660A1C9001D77F9 /* ActivityIndicator.swift in Sources */,
 				84C9C96B2660A1BF001D77F9 /* IndicatorView.swift in Sources */,
 				84C9C93F2660A17F001D77F9 /* BaseViewController+Reactive.swift in Sources */,
+				84D4190B269BEBD800DE527D /* NormalPercentDrivenController.swift in Sources */,
 				84C9C9542660A1A3001D77F9 /* HomeViewModel.swift in Sources */,
 				84C9C9512660A1A0001D77F9 /* HomeScene.swift in Sources */,
 				84C9C9362660A174001D77F9 /* FadeZoomAnimators.swift in Sources */,
