@@ -101,7 +101,8 @@ private final class KeyboardManager: NSObject {
 extension KeyboardManager: UIGestureRecognizerDelegate {
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch) -> Bool {
+        shouldReceive touch: UITouch
+    ) -> Bool {
         guard
             let focusView = UIResponder.currentFirstResponder as? UIView,
             nil != supportViewTypes.firstIndex(where: { focusView.isKind(of: $0) }),

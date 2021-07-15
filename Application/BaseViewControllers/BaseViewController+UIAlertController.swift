@@ -17,7 +17,7 @@ extension BaseViewController {
             title: String? = nil,
             message: String? = nil,
             style: UIAlertController.Style = .alert,
-            actions: [AlertAction]
+            actions: [AlertAction] = []
         ) {
             self.title = title
             self.message = message
@@ -53,20 +53,5 @@ extension BaseViewController {
                 alert.dismiss(animated: true)
             }
         }
-    }
-
-    /* Usage:
-     let observable: Observalbe<Void>
-     observable
-        .map { "Notify Title" }
-        .withUnretained(self) (self is viewController that inherit from BaseViewController)
-        .flatMap { scene, title in return scene.showNotify(with: title) }
-        ...
-    */
-    func showNotify(with title: String, confirmButtonTitle: String = "OK") -> Observable<Void> {
-        let buidler = AlertBuilder(
-            title: title,
-            actions: [.init(title: confirmButtonTitle, style: .default, tag: 0)])
-        return showAlert(with: buidler).mapToVoid()
     }
 }

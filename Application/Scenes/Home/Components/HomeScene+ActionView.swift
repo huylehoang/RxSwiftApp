@@ -175,13 +175,16 @@ private extension HomeScene.ActionView {
 
     func setupButtonsInStackView(at index: Int, with action: HomeScene.Action) {
         let button = makeButton(with: action)
+
         // Action
         button.rx.tap
             .withLatestFrom(Observable.just(action))
             .bind(to: didTapAction)
             .disposed(by: disposeBag)
+
         Constraint.activate(button.height.equalTo(50))
         stackView.addArrangedSubview(button)
+
         // Add separator
         guard index != actions.count - 1 else { return }
         let separator = makeSeparator()
