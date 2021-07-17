@@ -65,6 +65,16 @@ final class HomeScene: BaseViewController {
         return view
     }()
 
+    private lazy var searchController: UISearchController = {
+        let controller = UISearchController()
+        controller.hidesNavigationBarDuringPresentation = false
+        controller.obscuresBackgroundDuringPresentation = false
+        controller.searchBar.placeholder = "Search..."
+        controller.searchBar.showsCancelButton = true
+        definesPresentationContext = true
+        return controller
+    }()
+
     override var transition: MasterNavigationController.Transition {
         return .crossDissolve
     }
@@ -118,15 +128,21 @@ private extension HomeScene {
             .bind { $0.tableView.deselectRow(at: $1, animated: true) }
             .disposed(by: disposeBag)
 
+        let searchTrigger = actionView.rx.didTapAction
+            .filter { $0 == .search }
+            .mapToVoid()
+
+        let cancelSearchTrigger = searchController.searchBar.rx.cancelButtonClicked.asDriver()
+
+        let searchText = searchController.searchBar.rx.text.orEmpty.asDriver()
+
         let toProfileTrigger = actionView.rx.didTapAction
             .filter { $0 == .toProfile }
             .mapToVoid()
-            .asDriverOnErrorJustComplete()
 
         let selectAllTrigger = actionView.rx.didTapAction
             .filter { $0 == .selectAll }
             .mapToVoid()
-            .asDriverOnErrorJustComplete()
 
         let deleteTrigger = deleteButton.rx.tap
             .map {
@@ -152,10 +168,13 @@ private extension HomeScene {
             refreshTrigger: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
             toAddNoteTrigger: addButton.rx.tap.asDriver(),
             toProfileTrigger: toProfileTrigger,
+            searchTrigger: searchTrigger,
+            cancelSearchTrigger: cancelSearchTrigger,
+            searchText: searchText,
             selectAllTrigger: selectAllTrigger,
             organizeTrigger: organizeButton.rx.tap.asDriver(),
             tableViewDidScroll: tableView.rx.didScroll.asDriver(),
-            actionViewDismissed: actionView.rx.dismissed.asDriverOnErrorJustComplete(),
+            actionViewDismissed: actionView.rx.dismissed,
             cancelTrigger: cancelButton.rx.tap.asDriver(),
             itemSelected: tableView.rx.modelSelected(CellViewModel.self).asDriver(),
             deleteTrigger: deleteTrigger)
@@ -168,6 +187,7 @@ private extension HomeScene {
             output.refreshLoading.drive(refreshControl.rx.isRefreshing),
             output.enableDelete.drive(deleteButton.rx.isEnabled),
             output.isSelectingAll.drive(isSelectingAll),
+            output.enableSearch.drive(enableSearch),
             output.items.drive(tableView.rx.items) { tableView, row, item in
                 let indexPath = IndexPath(row: row, section: 0)
                 let cell = tableView.dequeueReusableCell(Cell.self, for: indexPath)
@@ -179,7 +199,7 @@ private extension HomeScene {
 
                 return cell
             },
-            output.disableSelectAll.drive(actionView.rx.disableSelectAll),
+            output.disableActions.drive(actionView.rx.disableActions(.search, .selectAll)),
             output.title.drive(rx.title),
             output.hideTableView.drive(animateHideTableView),
             output.isEmpty.drive(isEmpty),
@@ -243,6 +263,33 @@ private extension HomeScene {
                 animations: {
                     base.contentView.layoutIfNeeded()
                 })
+        }
+    }
+
+    var enableSearch: Binder<Bool> {
+        return Binder(self) { base, enableSearch in
+            if !enableSearch {
+                base.tableView.refreshControl = base.refreshControl
+                base.searchController.searchBar.text = ""
+                base.searchController.searchBar.resignFirstResponder()
+                UIView.animate(
+                    withDuration: 0.25,
+                    animations: {
+                        base.searchController.searchBar.alpha = 0
+                    },
+                    completion: { _ in
+                        base.navigationBarUpdate { $0.searchController = nil }
+                    })
+            } else {
+                base.tableView.refreshControl = nil
+                base.navigationBarUpdate { $0.searchController = base.searchController }
+                base.searchController.searchBar.alpha = 0
+                UIView.animate(
+                    withDuration: 0.25,
+                    animations: {
+                        base.searchController.searchBar.alpha = 1
+                    })
+            }
         }
     }
 }

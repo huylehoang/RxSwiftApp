@@ -2,6 +2,26 @@ import Domain
 import RxSwift
 import RxCocoa
 
+extension Reactive where Base: HomeScene.Cell {
+    var isSelecting: Binder<Bool> {
+        return Binder(base) { base, isSelecting in
+            base.selectionStyle = isSelecting ? .none : .default
+            guard base.radioButton.isHidden != !isSelecting else { return }
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 1,
+                options: .curveEaseInOut,
+                animations: {
+                    base.radioButton.isHidden = !isSelecting
+                    base.radioButton.alpha = isSelecting ? 1 : 0
+                    base.radioButton.superview?.layoutIfNeeded()
+                })
+        }
+    }
+}
+
 extension HomeScene {
     final class Cell: RxTableViewCell {
         private lazy var titleLabel: UILabel = {
@@ -35,26 +55,6 @@ extension HomeScene {
         required init?(coder: NSCoder) {
             super.init(coder: coder)
             setupView()
-        }
-    }
-}
-
-extension Reactive where Base: HomeScene.Cell {
-    var isSelecting: Binder<Bool> {
-        return Binder(base) { base, isSelecting in
-            base.selectionStyle = isSelecting ? .none : .default
-            guard base.radioButton.isHidden != !isSelecting else { return }
-            UIView.animate(
-                withDuration: 0.25,
-                delay: 0,
-                usingSpringWithDamping: 1,
-                initialSpringVelocity: 1,
-                options: .curveEaseInOut,
-                animations: {
-                    base.radioButton.isHidden = !isSelecting
-                    base.radioButton.alpha = isSelecting ? 1 : 0
-                    base.radioButton.superview?.layoutIfNeeded()
-                })
         }
     }
 }

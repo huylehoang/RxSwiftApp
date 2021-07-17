@@ -12,6 +12,9 @@ struct HomeViewModel: ViewModelType {
         let refreshTrigger: Driver<Void>
         let toAddNoteTrigger: Driver<Void>
         let toProfileTrigger: Driver<Void>
+        let searchTrigger: Driver<Void>
+        let cancelSearchTrigger: Driver<Void>
+        let searchText: Driver<String>
         let selectAllTrigger: Driver<Void>
         let organizeTrigger: Driver<Void>
         let tableViewDidScroll: Driver<Void>
@@ -27,8 +30,9 @@ struct HomeViewModel: ViewModelType {
         let refreshLoading: Driver<Bool>
         let enableDelete: Driver<Bool>
         let isSelectingAll: Driver<Bool>
+        let enableSearch: Driver<Bool>
         let items: Driver<[Item]>
-        let disableSelectAll: Driver<Bool>
+        let disableActions: Driver<Bool>
         let title: Driver<String>
         let hideTableView: Driver<Bool>
         let isEmpty: Driver<Bool>
@@ -125,15 +129,26 @@ struct HomeViewModel: ViewModelType {
             .do(onNext: items.accept)
             .mapToVoid()
 
-        let outputItems = Driver.merge(
+        let enableSearch = Driver.merge(
+            input.searchTrigger.map { true },
+            input.cancelSearchTrigger.map { false })
+            .distinctUntilChanged()
+
+        let currentItems = Driver.merge(
             fetchedNotes,
             isSelectingAll.filter { $0 }.delay(.milliseconds(250)).mapToVoid(),
             onUncheckedAllItems.delay(.milliseconds(250)),
             onToggleItemIsSelected,
-            errorTracker.mapToVoid())
+            errorTracker.mapToVoid(),
+            input.cancelSearchTrigger)
             .withLatestFrom(items.asDriver())
 
-        let disableSelectAll = Driver.merge(
+        let searchedItems = input.searchText
+            .withLatestFrom(items.asDriver(), resultSelector: getSearchedItems)
+
+        let outputItems = Driver.merge(currentItems, searchedItems)
+
+        let disableActions = Driver.merge(
             embeddedLoading,
             refreshLoading,
             outputItems.map { $0.isEmpty })
@@ -142,7 +157,9 @@ struct HomeViewModel: ViewModelType {
 
         let hideTableView = items.asDriver().map { $0.isEmpty }
 
-        let isEmpty = outputItems.map { $0.isEmpty }.skip(1)
+        let isEmpty = outputItems
+            .withLatestFrom(enableSearch) { $1 ? false : $0.isEmpty }
+            .skip(1)
 
         let emptyMessage = isEmpty.map { $0 ? "Empty Notes" : "" }
 
@@ -165,8 +182,9 @@ struct HomeViewModel: ViewModelType {
             refreshLoading: refreshLoading,
             enableDelete: enableDelete,
             isSelectingAll: isSelectingAll,
+            enableSearch: enableSearch,
             items: outputItems,
-            disableSelectAll: disableSelectAll,
+            disableActions: disableActions,
             title: title,
             hideTableView: hideTableView,
             isEmpty: isEmpty,
@@ -235,6 +253,10 @@ private extension HomeViewModel {
         return items.compactMap { item in
             item.updated { $0.isSelected = false }
         }
+    }
+
+    func getSearchedItems(searchText: String, items: [Item]) -> [Item] {
+        return searchText.isEmpty ? items : items.filter { $0.note.title.hasPrefix(searchText) }
     }
 }
 

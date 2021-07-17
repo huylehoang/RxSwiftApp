@@ -2,17 +2,22 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: HomeScene.ActionView {
-    var didTapAction: Observable<HomeScene.Action> {
-        return base.didTapAction.asObservable()
+    var didTapAction: Driver<HomeScene.Action> {
+        return base.didTapAction.asDriverOnErrorJustComplete()
     }
 
-    var dismissed: Observable<Void> {
-        return base.dismissed.asObservable()
+    var dismissed: Driver<Void> {
+        return base.dismissed.asDriverOnErrorJustComplete()
     }
 
-    var disableSelectAll: Binder<Bool> {
+    func disableActions(_ actions: HomeScene.Action...) -> Binder<Bool> {
         return Binder(base) { base, disable in
-            base.selectAllButton?.isEnabled = !disable
+            base
+                .stackView
+                .arrangedSubviews
+                .compactMap { $0 as? UIButton }
+                .filter { actions.map { $0.rawValue }.contains($0.currentTitle)  }
+                .forEach { $0.isEnabled = !disable }
         }
     }
 
@@ -25,6 +30,7 @@ extension Reactive where Base: HomeScene.ActionView {
 
 extension HomeScene {
     enum Action: String, CaseIterable {
+        case search = "Search"
         case selectAll = "Select All"
         case toProfile = "Profile"
     }
@@ -40,7 +46,7 @@ extension HomeScene {
     }
 
     final class ActionView: UIView, TapOutsideDimissal {
-        private lazy var stackView: UIStackView = {
+        fileprivate lazy var stackView: UIStackView = {
             let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.clipsToBounds = true
@@ -138,7 +144,7 @@ private extension HomeScene.ActionView {
             .constant((home.navigationBarHeight + 4) - topOffSetForAnchorPoint)
         constraintsModel.leading = leading.equalTo(home.contentView.leading)
             .constant(16 - leadingOffSetForAnchorPoint)
-        constraintsModel.width = width.equalTo(home.contentView.width, multiplier: 2/5)
+        constraintsModel.width = width.equalTo(home.contentView.width, multiplier: 3/5)
         Constraint.activate(constraintsModel.constraints)
     }
 

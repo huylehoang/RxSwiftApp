@@ -1,6 +1,18 @@
 import RxSwift
 import RxCocoa
 
+extension Reactive where Base: UpdateNoteScene.LimitCharactersTextField {
+    var text: ControlProperty<String> {
+        return ControlProperty(
+            values: base.currentText.asObservable(),
+            valueSink: base.currentText.asObserver())
+    }
+
+    var endEditing: ControlEvent<Void> {
+        return base.textField.rx.controlEvent(.editingDidEnd)
+    }
+}
+
 extension UpdateNoteScene {
     final class LimitCharactersTextField: UIStackView {
         fileprivate lazy var textField: UITextField = {
@@ -47,18 +59,6 @@ extension UpdateNoteScene {
         required init(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-    }
-}
-
-extension Reactive where Base: UpdateNoteScene.LimitCharactersTextField {
-    var text: ControlProperty<String> {
-        return ControlProperty(
-            values: base.currentText.asObservable(),
-            valueSink: base.currentText.asObserver())
-    }
-
-    var endEditing: ControlEvent<Void> {
-        return base.textField.rx.controlEvent(.editingDidEnd)
     }
 }
 

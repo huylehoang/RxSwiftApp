@@ -1,5 +1,11 @@
 import RxSwift
 
+extension Reactive where Base: RadioButton {
+    var isSelectedValue: Observable<Bool> {
+        return observe(Bool.self, #keyPath(UIButton.isSelected)).compactMap { $0 }
+    }
+}
+
 final class RadioButton: UIButton {
     private let activeColor: UIColor = .systemBlue
     private let deactiveColor: UIColor = .lightGray
@@ -26,12 +32,6 @@ final class RadioButton: UIButton {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
-    }
-}
-
-extension Reactive where Base: RadioButton {
-    var isSelectedValue: Observable<Bool> {
-        return observe(Bool.self, #keyPath(UIButton.isSelected)).compactMap { $0 }
     }
 }
 
