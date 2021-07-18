@@ -78,7 +78,11 @@ final class HomeScene: BaseViewController {
         return .crossDissolve
     }
 
-    private var deleteButtonBottomConstraint: Constraint?
+    private lazy var deleteButtonBottomConstraint: Constraint = {
+        let contraint = deleteButton.bottom.equalTo(contentView.bottom).constant(deleteButtonHeight)
+        return contraint
+    }()
+
     private let deleteButtonHeight: CGFloat = 56
 
     private let viewModel: HomeViewModel
@@ -110,15 +114,11 @@ private extension HomeScene {
         contentView.addSubview(tableView)
         Constraint.activateGroup(tableView.equalToEdges(of: contentView))
         contentView.addSubview(deleteButton)
-        let deleteButtonBottomConstraint = deleteButton.bottom
-            .equalTo(contentView.bottom)
-            .constant(deleteButtonHeight)
         Constraint.activate(
             deleteButtonBottomConstraint,
             deleteButton.leading.equalTo(contentView.leading),
             deleteButton.trailing.equalTo(contentView.trailing),
             deleteButton.height.equalTo(deleteButtonHeight))
-        self.deleteButtonBottomConstraint = deleteButtonBottomConstraint
     }
 
     func setupBinding() {
@@ -250,7 +250,7 @@ private extension HomeScene {
     var isSelectingAll: Binder<Bool> {
         return Binder(self) { base, isSelectingAll in
             let constant: CGFloat = isSelectingAll ? 0 : base.deleteButtonHeight
-            base.deleteButtonBottomConstraint?.constant = constant
+            base.deleteButtonBottomConstraint.constant = constant
             let leftBarButtonItems = isSelectingAll ? [base.cancelButton] : [base.organizeButton]
             base.navigationBarUpdate { $0.leftBarButtonItems = leftBarButtonItems }
             UIView.animate(
