@@ -48,7 +48,6 @@ final class HomeScene: BaseViewController {
 
     private lazy var actionView: ActionView = {
         let view = ActionView(home: self)
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
@@ -71,7 +70,7 @@ final class HomeScene: BaseViewController {
         controller.obscuresBackgroundDuringPresentation = false
         controller.searchBar.placeholder = "Search..."
         controller.searchBar.showsCancelButton = true
-        definesPresentationContext = true
+        controller.searchBar.autocapitalizationType = .none
         return controller
     }()
 

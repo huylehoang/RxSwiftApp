@@ -57,13 +57,6 @@ extension HomeScene {
             return stackView
         }()
 
-        fileprivate var selectAllButton: UIButton? {
-            return stackView
-                .arrangedSubviews
-                .compactMap { $0 as? UIButton }
-                .first(where: { $0.currentTitle == HomeScene.Action.selectAll.rawValue })
-        }
-
         private let actions = HomeScene.Action.allCases
         private let animationDuration: TimeInterval = 0.25
         private var showAnimator: UIViewPropertyAnimator?
@@ -154,6 +147,7 @@ private extension HomeScene.ActionView {
     }
 
     func setupView() {
+        translatesAutoresizingMaskIntoConstraints = false
         layer.anchorPoint = .zero
         layer.cornerRadius = 16
         clipsToBounds = true

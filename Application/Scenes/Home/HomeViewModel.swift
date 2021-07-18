@@ -256,12 +256,16 @@ private extension HomeViewModel {
     }
 
     func getSearchedItems(searchText: String, items: [Item]) -> [Item] {
-        return searchText.isEmpty ? items : items.filter { $0.note.title.hasPrefix(searchText) }
+        return searchText.isEmpty ? items : items.search(with: searchText)
     }
 }
 
 private extension Sequence where Element == HomeViewModel.Item {
     func selectedNotes() -> [Note] {
         return compactMap { $0.isSelected ? $0.note : nil }
+    }
+
+    func search(with text: String) -> [HomeViewModel.Item] {
+        return filter { $0.note.title.lowercased().hasPrefix(text.lowercased()) }
     }
 }
