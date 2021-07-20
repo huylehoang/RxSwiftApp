@@ -1,5 +1,3 @@
-import UIKit
-
 protocol PercentDrivenController {
     var percentDriven: PercentDrivenAnimator? { get }
 }
