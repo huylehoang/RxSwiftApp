@@ -17,13 +17,9 @@ public final class SideMenuScene: BaseViewController {
         super.init()
         self.embeddedScene = embeddedScene
         setupEmbeddedView()
+        setupInteractionController()
         transitioningDelegate = self
         modalPresentationStyle = .custom
-    }
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        setupInteractionController()
     }
 }
 
