@@ -107,12 +107,8 @@ private extension LoginScene.ValidationTextField {
     }
 
     func setupBinding() {
-        Observable.merge(
-            textField.rx.controlEvent(.editingChanged).asObservable(),
-            textField.rx.deleteBackward.asObservable())
-            .withUnretained(textField)
-            .compactMap { textField, _ in textField.text }
-            .bind(to: currentText)
+        textField.rx.currentText
+            .drive(currentText)
             .disposed(by: disposeBag)
 
         currentText

@@ -81,13 +81,9 @@ private extension UpdateNoteScene.LimitCharactersTextField {
     }
 
     func setupBinding() {
-        Observable.merge(
-            textField.rx.controlEvent(.editingChanged).asObservable(),
-            textField.rx.deleteBackward.asObservable())
-            .withUnretained(textField)
-            .compactMap { textField, _ in textField.text }
+        textField.rx.currentText
             .map(getLimitedText)
-            .bind(to: currentText)
+            .drive(currentText)
             .disposed(by: disposeBag)
 
         currentText

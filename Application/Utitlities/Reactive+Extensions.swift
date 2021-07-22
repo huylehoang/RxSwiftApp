@@ -23,4 +23,12 @@ extension Reactive where Base: UITextField {
     var deleteBackward: ControlEvent<Void> {
         return ControlEvent(events: sentMessage(#selector(Base.deleteBackward)).mapToVoid())
     }
+
+    var currentText: Driver<String> {
+        return Observable.merge(
+            controlEvent(.editingChanged).asObservable(),
+            deleteBackward.asObservable())
+            .compactMap { base.text }
+            .asDriverOnErrorJustComplete()
+    }
 }
