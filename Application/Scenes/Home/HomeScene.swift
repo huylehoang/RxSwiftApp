@@ -127,21 +127,15 @@ private extension HomeScene {
             .bind { $0.tableView.deselectRow(at: $1, animated: true) }
             .disposed(by: disposeBag)
 
-        let searchTrigger = actionView.rx.didTapAction
-            .filter { $0 == .search }
-            .mapToVoid()
+        let searchTrigger = actionView.rx.didTapAction.filter { $0 == .search }.mapToVoid()
 
         let cancelSearchTrigger = searchController.searchBar.rx.cancelButtonClicked.asDriver()
 
         let searchText = searchController.searchBar.rx.text.orEmpty.asDriver()
 
-        let toProfileTrigger = actionView.rx.didTapAction
-            .filter { $0 == .toProfile }
-            .mapToVoid()
+        let toProfileTrigger = actionView.rx.didTapAction.filter { $0 == .toProfile }.mapToVoid()
 
-        let selectAllTrigger = actionView.rx.didTapAction
-            .filter { $0 == .selectAll }
-            .mapToVoid()
+        let selectAllTrigger = actionView.rx.didTapAction.filter { $0 == .selectAll }.mapToVoid()
 
         let deleteTrigger = deleteButton.rx.tap
             .map {
