@@ -26,6 +26,7 @@
 		84511990267076FF008E04DB /* RxTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451198F267076FF008E04DB /* RxTableViewCell.swift */; };
 		8451199F2670BF81008E04DB /* HomeScene+CellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451199E2670BF81008E04DB /* HomeScene+CellViewModel.swift */; };
 		845947F2265254DD003A5E0C /* UpdateNoteNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845947F1265254DD003A5E0C /* UpdateNoteNavigator.swift */; };
+		84598C7A26B271F600EF5EA5 /* NavigatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845AAC3E265F969400904D1A /* NavigatorType.swift */; };
 		845AABF3265F884D00904D1A /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 845AABF1265F884D00904D1A /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		845AABF6265F884D00904D1A /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; };
 		845AABF7265F884D00904D1A /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 845AABEF265F884D00904D1A /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -36,7 +37,6 @@
 		845AAC36265F961D00904D1A /* UpdateNoteUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845AAC35265F961D00904D1A /* UpdateNoteUsecase.swift */; };
 		845AAC39265F963E00904D1A /* ProfileUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845AAC38265F963E00904D1A /* ProfileUsecase.swift */; };
 		845AAC3C265F968C00904D1A /* UsecaseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845AAC3B265F968C00904D1A /* UsecaseType.swift */; };
-		845AAC3F265F969400904D1A /* NavigatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845AAC3E265F969400904D1A /* NavigatorType.swift */; };
 		845AAC4A265F974400904D1A /* FirebasePlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 845AAC48265F974400904D1A /* FirebasePlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		845AAC4D265F974400904D1A /* FirebasePlatform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AAC46265F974400904D1A /* FirebasePlatform.framework */; };
 		845AAC4E265F974400904D1A /* FirebasePlatform.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 845AAC46265F974400904D1A /* FirebasePlatform.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -54,7 +54,7 @@
 		84C9C91F2660A12E001D77F9 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C9C91D2660A12E001D77F9 /* Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84C9C9222660A12E001D77F9 /* Application.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C9C91B2660A12E001D77F9 /* Application.framework */; };
 		84C9C9232660A12E001D77F9 /* Application.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84C9C91B2660A12E001D77F9 /* Application.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		84C9C9292660A15D001D77F9 /* MasterNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AA92654FDD60063098F /* MasterNavigationController.swift */; };
+		84C9C9292660A15D001D77F9 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124AA92654FDD60063098F /* MainNavigationController.swift */; };
 		84C9C92C2660A161001D77F9 /* InteractiveDimissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84320AB72656544A0013533B /* InteractiveDimissal.swift */; };
 		84C9C92F2660A169001D77F9 /* FadeZoomPercentDrivenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498161026568517002FE757 /* FadeZoomPercentDrivenController.swift */; };
 		84C9C9322660A16D001D77F9 /* NormalAnimators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498160926567B6E002FE757 /* NormalAnimators.swift */; };
@@ -232,7 +232,7 @@
 		7B092623A457686A70B17CD7 /* Pods-Application.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application.debug.xcconfig"; path = "Target Support Files/Pods-Application/Pods-Application.debug.xcconfig"; sourceTree = "<group>"; };
 		84018AA7265376FC00E2C8D5 /* RxTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTableView.swift; sourceTree = "<group>"; };
 		84124AA42654BD390063098F /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
-		84124AA92654FDD60063098F /* MasterNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterNavigationController.swift; sourceTree = "<group>"; };
+		84124AA92654FDD60063098F /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		84124AB526550E4F0063098F /* FadeZoomAnimators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeZoomAnimators.swift; sourceTree = "<group>"; };
 		84124AB9265526D10063098F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilderType.swift; sourceTree = "<group>"; };
@@ -510,15 +510,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		84124AB226550D200063098F /* MasterNavigationController */ = {
+		84124AB226550D200063098F /* MainNavigationController */ = {
 			isa = PBXGroup;
 			children = (
-				84124AA92654FDD60063098F /* MasterNavigationController.swift */,
+				84124AA92654FDD60063098F /* MainNavigationController.swift */,
 				84320AB72656544A0013533B /* InteractiveDimissal.swift */,
 				84D41906269BE72900DE527D /* PercentDrivenDismissal.swift */,
 				8498160D265682DF002FE757 /* Transitions */,
 			);
-			path = MasterNavigationController;
+			path = MainNavigationController;
 			sourceTree = "<group>";
 		};
 		8415D3EE267DB49D00A2AEDC /* Components */ = {
@@ -594,7 +594,6 @@
 				845AAC5C265F9C9600904D1A /* ErrorType.swift */,
 				845AAC58265F9A3100904D1A /* MutableType.swift */,
 				845AAC3B265F968C00904D1A /* UsecaseType.swift */,
-				845AAC3E265F969400904D1A /* NavigatorType.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -648,7 +647,6 @@
 		8476D0A926424804002C8CB9 /* BaseViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				84124AB226550D200063098F /* MasterNavigationController */,
 				8476D0AA26424814002C8CB9 /* BaseViewController.swift */,
 				8476D0AD264248F7002C8CB9 /* BaseViewController+Extensions.swift */,
 				8476D0B026424F20002C8CB9 /* BaseViewController+Reactive.swift */,
@@ -711,6 +709,7 @@
 		84C9C91C2660A12E001D77F9 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				84124AB226550D200063098F /* MainNavigationController */,
 				8476D0A926424804002C8CB9 /* BaseViewControllers */,
 				84C9C9D42660A53D001D77F9 /* Common */,
 				1022F76126402BA4007AE3F2 /* Scenes */,
@@ -727,6 +726,7 @@
 			children = (
 				84171BFF2644FF6100DD0074 /* SceneBuilderType.swift */,
 				1022F76E26404930007AE3F2 /* ViewModelType.swift */,
+				845AAC3E265F969400904D1A /* NavigatorType.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1085,7 +1085,6 @@
 				845AAC0C265F903E00904D1A /* Profile.swift in Sources */,
 				845AAC2F265F945E00904D1A /* LoginUsecase.swift in Sources */,
 				845AAC39265F963E00904D1A /* ProfileUsecase.swift in Sources */,
-				845AAC3F265F969400904D1A /* NavigatorType.swift in Sources */,
 				845AAC5D265F9C9600904D1A /* ErrorType.swift in Sources */,
 				10C424F9266CBB47003E79F8 /* UsecaseProvider.swift in Sources */,
 				845AAC3C265F968C00904D1A /* UsecaseType.swift in Sources */,
@@ -1128,6 +1127,7 @@
 				84C9C9D12660A4B8001D77F9 /* LoginNavigator.swift in Sources */,
 				84C9C9DF2660A595001D77F9 /* UpdateNoteNavigator.swift in Sources */,
 				84C9C97E2660A1D7001D77F9 /* Reactive+Extensions.swift in Sources */,
+				84598C7A26B271F600EF5EA5 /* NavigatorType.swift in Sources */,
 				84C9CA082660AD43001D77F9 /* ProfileSceneBuilder.swift in Sources */,
 				84C9C9672660A1B8001D77F9 /* PlaceholderTextView.swift in Sources */,
 				84D41907269BE72900DE527D /* PercentDrivenDismissal.swift in Sources */,
@@ -1172,7 +1172,7 @@
 				8451199F2670BF81008E04DB /* HomeScene+CellViewModel.swift in Sources */,
 				84C9C94A2660A196001D77F9 /* EmptyScene.swift in Sources */,
 				84511990267076FF008E04DB /* RxTableViewCell.swift in Sources */,
-				84C9C9292660A15D001D77F9 /* MasterNavigationController.swift in Sources */,
+				84C9C9292660A15D001D77F9 /* MainNavigationController.swift in Sources */,
 				84C9C9D52660A54F001D77F9 /* ViewModelType.swift in Sources */,
 				84C9C95A2660A1A9001D77F9 /* UpdateNoteViewModel.swift in Sources */,
 				84C9C93B2660A179001D77F9 /* BaseViewController.swift in Sources */,

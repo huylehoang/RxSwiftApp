@@ -6,7 +6,7 @@ enum App {
     static let services = UsecaseProvider()
 
     static func confirgureMainInterface(in window: UIWindow) {
-        let navigationController = MasterNavigationController()
+        let navigationController = MainNavigationController()
         let loginScene = Scene.login.build(in: navigationController)
         var scenes: [UIViewController] = [loginScene]
 

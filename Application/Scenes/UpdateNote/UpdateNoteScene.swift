@@ -36,7 +36,7 @@ final class UpdateNoteScene: BaseViewController {
         return view
     }()
 
-    override var transition: MasterNavigationController.Transition {
+    override var transition: MainNavigationController.Transition {
         switch viewModel.kind {
         case .add: return .fadeZoom
         case .edit: return .normal

@@ -4,7 +4,7 @@ typealias Animator = UIViewControllerAnimatedTransitioning
 typealias InteractiveAnimator = UIViewControllerInteractiveTransitioning
 typealias PercentDrivenAnimator = UIPercentDrivenInteractiveTransition
 
-public final class MasterNavigationController: UINavigationController {
+public final class MainNavigationController: UINavigationController {
     private var interactiveDismissAnimator: InteractiveAnimator?
 
     public override func viewDidLoad() {
@@ -13,7 +13,7 @@ public final class MasterNavigationController: UINavigationController {
     }
 }
 
-extension MasterNavigationController: UINavigationControllerDelegate {
+extension MainNavigationController: UINavigationControllerDelegate {
     public func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
@@ -59,7 +59,7 @@ extension MasterNavigationController: UINavigationControllerDelegate {
     }
 }
 
-extension MasterNavigationController {
+extension MainNavigationController {
     enum Transition {
         /*
          - 'normal' transition's animation is nearly the same as default transition's animation
@@ -77,7 +77,7 @@ extension MasterNavigationController {
     }
 }
 
-private extension MasterNavigationController.Transition {
+private extension MainNavigationController.Transition {
     var pushAnimator: Animator {
         switch self {
         case .normal: return NormalPushAnimator()

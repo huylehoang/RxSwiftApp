@@ -7,7 +7,7 @@ public class BaseViewController: UIViewController, KeyboardHandling {
 
     let disposeBag = DisposeBag()
 
-    var transition: MasterNavigationController.Transition {
+    var transition: MainNavigationController.Transition {
         return .normal
     }
 
