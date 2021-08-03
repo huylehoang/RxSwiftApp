@@ -50,6 +50,7 @@ extension BaseViewController {
         var leftBarButtonItems = [UIBarButtonItem]()
         var rightBarButtonItems = [UIBarButtonItem]()
         var searchController: UISearchController?
+        var hidesSearchBarWhenScrolling = false
     }
 
     func navigationBarUpdate(by change: (inout NavigationBarBuilder) -> Void) {
@@ -65,8 +66,6 @@ private extension BaseViewController {
     func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
 
-        navigationItem.hidesSearchBarWhenScrolling = false
-
         let updateNavigationBar = Driver.merge(
             rx.viewWillAppear.withLatestFrom(navigationBar).asDriverOnErrorJustComplete(),
             navigationBar.asDriver())
@@ -75,6 +74,7 @@ private extension BaseViewController {
         let rightBarButtonItems = updateNavigationBar.map { $0.rightBarButtonItems }
         let leftBarButtonItems = updateNavigationBar.map { $0.leftBarButtonItems }
         let searchController = updateNavigationBar.map { $0.searchController }
+        let hidesSearchBarWhenScrolling = updateNavigationBar.map { $0.hidesSearchBarWhenScrolling }
 
         [
             hideNavigationBar.drive(navigationController.rx.isNavigationBarHidden),
@@ -82,6 +82,7 @@ private extension BaseViewController {
             rightBarButtonItems.drive(navigationItem.rx.rightBarButtonItems),
             leftBarButtonItems.drive(navigationItem.rx.leftBarButtonItems),
             searchController.drive(navigationItem.rx.searchController),
+            hidesSearchBarWhenScrolling.drive(navigationItem.rx.hidesSearchBarWhenScrolling)
         ]
         .forEach { $0.disposed(by: disposeBag) }
     }

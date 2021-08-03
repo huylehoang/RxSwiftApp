@@ -151,7 +151,8 @@ struct HomeViewModel: ViewModelType {
         let disableActions = Driver.merge(
             embeddedLoading,
             refreshLoading,
-            outputItems.map { $0.isEmpty })
+            enableSearch,
+            items.asDriver().map { $0.isEmpty })
 
         let title = Driver.just("Notes")
 
